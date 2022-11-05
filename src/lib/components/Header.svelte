@@ -22,22 +22,18 @@
 		SkipToContent
 	} from 'carbon-components-svelte';
 
-	export let theme: string;
+	export let theme: string = 'g100';
 	function switchTheme() {
 		theme == 'g10' ? (theme = 'g100') : (theme = 'g10');
 	}
 
-	let loading = false;
-
 	const handleLogout: SubmitFunction = () => {
-		loading = true;
 		return async ({ result }) => {
 			if (result.type === 'redirect') {
 				await invalidate('supabase:auth');
 			} else {
 				await applyAction(result);
 			}
-			loading = false;
 		};
 	};
 </script>

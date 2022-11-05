@@ -3,6 +3,7 @@
 	import { invalidate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Header from '$lib/components/Header.svelte';
+	import { Content } from 'carbon-components-svelte';
 
 	let loading = false;
 
@@ -23,21 +24,9 @@
 <svelte:head>
 	<title>Email and Password Demo - Supabase Auth Helpers</title>
 </svelte:head>
-<Header bind:theme />
-App Layout
-<main class="container is-max-desktop">
-	<div class="navbar-menu my-4">
-		<div class="navbar-start">
-			<a class="my-2" href="/">Supabase Auth Helpers Demo</a>
-		</div>
-		<div class="navbar-end">
-			{#if $page.data.session}
-				<form action="/logout" method="post" use:enhance={handleLogout}>
-					<button disabled={loading} type="submit">Sign out</button>
-				</form>
-			{/if}
-		</div>
-	</div>
 
+<Header bind:theme />
+
+<Content>
 	<slot />
-</main>
+</Content>
