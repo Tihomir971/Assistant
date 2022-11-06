@@ -15,14 +15,10 @@
 		{ key: 'frontend_input', value: 'frontend_input' },
 		{ key: 'entity_type_id', value: 'entity_type_id' }
 	];
-
-	function handleMessage(event: CustomEvent<{ command: string; id?: number }>) {
-		console.log(`Notify fired! Detail: ${event.detail.command}, 'with', ${event.detail.id}`);
-	}
 </script>
 
 <Grid>
 	{#if rows != null}
-		<DataTable title="Atributes" {headers} {rows} on:message={handleMessage} />
+		<DataTable title="Products" {headers} {rows} />
 	{/if}
 </Grid>

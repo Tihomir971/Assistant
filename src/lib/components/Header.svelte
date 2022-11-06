@@ -54,8 +54,11 @@
 				href="/catalog/attributes"
 				isSelected={$page.url.pathname === '/catalog/attributes'}
 			/>
-			<HeaderNavItem text="Products" href="/catalog/products" />
-			<HeaderNavItem text="Products" href="/catalog/products" />
+			<HeaderNavItem
+				text="Families"
+				href="/catalog/families"
+				isSelected={$page.url.pathname === '/catalog/families'}
+			/>
 		</HeaderNavMenu>
 	</HeaderNav>
 	<HeaderUtilities>

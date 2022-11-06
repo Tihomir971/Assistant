@@ -16,7 +16,7 @@
 		ToolbarSearch
 	} from 'carbon-components-svelte';
 	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
+	const dispatch = createEventDispatcher<{ message: { command: string; id?: number } }>();
 
 	export let title: string | undefined = undefined;
 	export let rows: DataTableRow[];
@@ -31,11 +31,15 @@
 	<svelte:fragment slot="cell" let:row let:cell>
 		{#if cell.key === 'columnMenu'}
 			<OverflowMenu flipped>
-				<OverflowMenuItem>Edit</OverflowMenuItem>
+				<OverflowMenuItem
+					on:click={() => {
+						dispatch('message', { command: 'edit', id: row.id });
+					}}>Edit</OverflowMenuItem
+				>
 				<OverflowMenuItem
 					danger
-					on:click={(e) => {
-						console.log('Delete');
+					on:click={() => {
+						dispatch('message', { command: 'delete', id: row.id });
 					}}
 				>
 					Delete
@@ -59,9 +63,7 @@
 				kind="ghost"
 				icon={Add}
 				on:click={() => {
-					dispatch('message', {
-						text: 'Add'
-					});
+					dispatch('message', { command: 'add' });
 				}}
 			/>
 			<Button
@@ -70,9 +72,7 @@
 				iconDescription="Refresh"
 				icon={UpdateNow}
 				on:click={() => {
-					dispatch('message', {
-						text: 'refresh'
-					});
+					dispatch('message', { command: 'refresh' });
 				}}
 			/>
 		</ToolbarContent>
