@@ -45,6 +45,7 @@
 						<TextInput
 							id="email"
 							name="email"
+							autocomplete="username"
 							value={form?.values?.email ?? ''}
 							labelText="Email"
 							placeholder="Enter email..."
@@ -69,6 +70,7 @@
 						<PasswordInput
 							id="password"
 							name="password"
+							autocomplete="current-password"
 							labelText="Password"
 							placeholder="Enter password..."
 							required

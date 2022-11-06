@@ -7,7 +7,6 @@
 	import Moon from 'carbon-icons-svelte/lib/Moon.svelte';
 	import User from 'carbon-icons-svelte/lib/User.svelte';
 	import {
-		Button,
 		Header,
 		HeaderAction,
 		HeaderGlobalAction,
@@ -18,7 +17,6 @@
 		HeaderPanelLink,
 		HeaderPanelLinks,
 		HeaderUtilities,
-		Link,
 		SkipToContent
 	} from 'carbon-components-svelte';
 
@@ -46,18 +44,18 @@
 		<HeaderNavMenu text="Catalog">
 			<HeaderNavItem
 				text="Products"
-				href="/catalog/products"
-				isSelected={$page.url.pathname === '/catalog/products'}
+				href="/catalog/product"
+				isSelected={$page.url.pathname === '/catalog/product'}
 			/>
 			<HeaderNavItem
 				text="Attributes"
-				href="/catalog/attributes"
-				isSelected={$page.url.pathname === '/catalog/attributes'}
+				href="/catalog/attribute"
+				isSelected={$page.url.pathname === '/catalog/attribute'}
 			/>
 			<HeaderNavItem
 				text="Families"
-				href="/catalog/families"
-				isSelected={$page.url.pathname === '/catalog/families'}
+				href="/catalog/family"
+				isSelected={$page.url.pathname === '/catalog/family'}
 			/>
 		</HeaderNavMenu>
 	</HeaderNav>

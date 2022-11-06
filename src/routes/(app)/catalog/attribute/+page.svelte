@@ -2,6 +2,7 @@
 	import { Grid } from 'carbon-components-svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
 	import type { PageData } from './$types';
+	import { goto } from '$app/navigation';
 
 	export let data: PageData;
 
@@ -17,7 +18,16 @@
 	];
 
 	function handleMessage(event: CustomEvent<{ command: string; id?: number }>) {
-		console.log(`Notify fired! Detail: ${event.detail.command}, 'with', ${event.detail.id}`);
+		if (event.detail.command === 'add') {
+			console.log(`Notify fired! Create: ${event.detail.command}, 'with', ${event.detail.id}`);
+			goto('/catalog/attribute/new');
+		} else if (event.detail.command === 'edit') {
+			console.log(`Notify fired! Edit: ${event.detail.command}, 'with', ${event.detail.id}`);
+		} else if (event.detail.command === 'refresh') {
+			console.log(`Notify fired! Refresh: ${event.detail.command}, 'with', ${event.detail.id}`);
+		} else {
+			console.log(`Notify fired! Delete: ${event.detail.command}, 'with', ${event.detail.id}`);
+		}
 	}
 </script>
 
