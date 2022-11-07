@@ -54,9 +54,6 @@ export interface Database {
 				};
 				Insert: {
 					id: number | null;
-					created_at: Date | null;
-					updated_at: Date | null;
-					isactive: boolean | null;
 					code: string | null;
 					name: string | null;
 					backend_type: string | null;
