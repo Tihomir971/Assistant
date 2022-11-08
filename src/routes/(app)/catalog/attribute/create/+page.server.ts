@@ -1,6 +1,6 @@
 import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 import { AuthApiError } from '@supabase/supabase-js';
-import { invalid, type ValidationError } from '@sveltejs/kit';
+import { invalid, redirect, type ValidationError } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
 export const actions: Actions = {
@@ -8,11 +8,9 @@ export const actions: Actions = {
 		| ValidationError<{
 				error: string;
 				values?: {
-					code: string;
-					name: string;
-					backend_type: string;
-					frontend_input: string;
-					entity_type_id: number;
+					code?: string | null;
+					name?: string | null;
+					message?: string | null;
 				};
 		  }>
 		| { message: string }
@@ -25,15 +23,15 @@ export const actions: Actions = {
 		//const isactive = formData.get('isactive') as boolean;
 		const code = formData.get('code') as string | null;
 		const name = formData.get('name') as string;
-		const backend_type = formData.get('backend_type') as string;
-		const frontend_input = formData.get('frontend_input') as string;
-		const entity_type_id = formData.get('entity_type_id') as number;
 
-		const { error } = await supabaseClient
+		const { data, error } = await supabaseClient
 			.from('eav_attribute')
-			.insert({ id: null, code, name, backend_type, frontend_input, entity_type_id });
+			.insert({ code, name })
+			.select('id,code,name');
 
+		console.log('Data', data);
 		if (error) {
+			console.log('Error', error);
 			if (error instanceof AuthApiError && error.status === 400) {
 				return invalid(400, {
 					error: 'Invalid credentials.',
@@ -46,11 +44,12 @@ export const actions: Actions = {
 			return invalid(500, {
 				error: 'Server error. Try again later.',
 				values: {
-					code
+					message: error.message
 				}
 			});
 		}
 
+		//		throw redirect(303, `/catalog/attribute/${data.id}`);
 		return {
 			message: 'Please check your email for a magic link to log into the website.'
 		};

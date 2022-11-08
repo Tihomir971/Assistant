@@ -1,12 +1,16 @@
 <script lang="ts">
-	import { Grid } from 'carbon-components-svelte';
+	import { FormGroup, Grid, Modal, TextInput, Button } from 'carbon-components-svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
 	import type { PageData } from './$types';
 	import { goto } from '$app/navigation';
+	import { applyAction, type SubmitFunction } from '$app/forms';
 
 	export let data: PageData;
 
 	$: ({ rows } = data);
+	//	$: ({ event } = data);
+	//	$: console.log( (event,2,0));
+
 	let headers = [
 		{ key: 'id', value: 'ID' },
 		{ key: 'isactive', value: 'isactive' },
@@ -17,10 +21,17 @@
 		{ key: 'entity_type_id', value: 'entity_type_id' }
 	];
 
+	const handleSubmit: SubmitFunction = () => {
+		return async ({ result }) => {
+			await applyAction(result);
+		};
+	};
+
 	function handleMessage(event: CustomEvent<{ command: string; id?: number }>) {
-		if (event.detail.command === 'add') {
-			console.log(`Notify fired! Create: ${event.detail.command}, 'with', ${event.detail.id}`);
-			goto('/catalog/attribute/new');
+		if (event.detail.command === 'create') {
+			//openCreate = true;
+			//console.log(`Notify fired! Create: ${event.detail.command}, 'with', ${event.detail.id}`);
+			goto('/catalog/attribute/create');
 		} else if (event.detail.command === 'edit') {
 			console.log(`Notify fired! Edit: ${event.detail.command}, 'with', ${event.detail.id}`);
 		} else if (event.detail.command === 'refresh') {

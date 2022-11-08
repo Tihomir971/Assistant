@@ -63,7 +63,7 @@
 				kind="ghost"
 				icon={Add}
 				on:click={() => {
-					dispatch('message', { command: 'add' });
+					dispatch('message', { command: 'create' });
 				}}
 			/>
 			<Button

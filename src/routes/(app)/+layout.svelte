@@ -27,6 +27,8 @@
 
 <Header bind:theme />
 
-<Content>
+<Content
+	style="min-height: calc(100vh - 3rem); display: flex; align-items: center; justify-content: center;"
+>
 	<slot />
 </Content>
