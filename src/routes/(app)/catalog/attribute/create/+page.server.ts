@@ -15,21 +15,21 @@ export const actions: Actions = {
 		  }>
 		| { message: string }
 	> {
-		const { request, url } = event;
+		const { request } = event;
 		const { supabaseClient } = await getSupabase(event);
 
 		const formData = await request.formData();
 
 		//const isactive = formData.get('isactive') as boolean;
-		const code = formData.get('code') as string | null;
+		const code = formData.get('code') as string;
 		const name = formData.get('name') as string;
 
 		const { data, error } = await supabaseClient
 			.from('eav_attribute')
 			.insert({ code, name })
-			.select('id,code,name');
+			.select('id')
+			.single();
 
-		console.log('Data', data);
 		if (error) {
 			console.log('Error', error);
 			if (error instanceof AuthApiError && error.status === 400) {
@@ -49,7 +49,7 @@ export const actions: Actions = {
 			});
 		}
 
-		//		throw redirect(303, `/catalog/attribute/${data.id}`);
+		throw redirect(303, `/catalog/attribute/${data.id}`);
 		return {
 			message: 'Please check your email for a magic link to log into the website.'
 		};

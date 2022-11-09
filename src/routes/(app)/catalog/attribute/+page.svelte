@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { FormGroup, Grid, Modal, TextInput, Button } from 'carbon-components-svelte';
+	import { Grid } from 'carbon-components-svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
 	import type { PageData } from './$types';
 	import { goto } from '$app/navigation';
-	import { applyAction, type SubmitFunction } from '$app/forms';
+	import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 
 	export let data: PageData;
 
@@ -21,23 +21,25 @@
 		{ key: 'entity_type_id', value: 'entity_type_id' }
 	];
 
-	const handleSubmit: SubmitFunction = () => {
-		return async ({ result }) => {
-			await applyAction(result);
-		};
-	};
+	async function handleDelete(id: number | undefined) {
+		const { supabaseClient } = await getSupabase(event);
+		const { error } = await supabaseClient.from('eav_attribute').delete().eq('id');
+		if (error) {
+			console.log(error);
+			return;
+		}
+	}
 
 	function handleMessage(event: CustomEvent<{ command: string; id?: number }>) {
 		if (event.detail.command === 'create') {
-			//openCreate = true;
-			//console.log(`Notify fired! Create: ${event.detail.command}, 'with', ${event.detail.id}`);
 			goto('/catalog/attribute/create');
 		} else if (event.detail.command === 'edit') {
 			console.log(`Notify fired! Edit: ${event.detail.command}, 'with', ${event.detail.id}`);
+		} else if (event.detail.command === 'delete') {
+			handleDelete(event.detail.id);
+			console.log(`Notify fired! Delete: ${event.detail.command}, 'with', ${event.detail.id}`);
 		} else if (event.detail.command === 'refresh') {
 			console.log(`Notify fired! Refresh: ${event.detail.command}, 'with', ${event.detail.id}`);
-		} else {
-			console.log(`Notify fired! Delete: ${event.detail.command}, 'with', ${event.detail.id}`);
 		}
 	}
 </script>

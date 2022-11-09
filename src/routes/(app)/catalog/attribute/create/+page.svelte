@@ -9,7 +9,7 @@
 
 	const handleSubmit: SubmitFunction = () => {
 		loading = true;
-		console.log('ERR', form?.error, 'Mess', form?.message);
+		//	console.log('ERR', form?.error, 'Mess', form?.message);
 		return async ({ result }) => {
 			await applyAction(result);
 			loading = false;
