@@ -15,6 +15,7 @@ export const load: PageServerLoad = async (event) => {
 		.select('id, isactive, code, name, backend_type, frontend_input, entity_type_id')
 		.match({ id })
 		.maybeSingle();
+	console.log(rows);
 	return {
 		rows
 	};

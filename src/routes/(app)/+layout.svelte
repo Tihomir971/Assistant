@@ -3,7 +3,7 @@
 	import { invalidate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Header from '$lib/components/Header.svelte';
-	import { Content } from 'carbon-components-svelte';
+	import { Content, Grid } from 'carbon-components-svelte';
 
 	let loading = false;
 
@@ -27,8 +27,8 @@
 
 <Header bind:theme />
 
-<Content
-	style="min-height: calc(100vh - 3rem); display: flex; align-items: center; justify-content: center;"
->
-	<slot />
+<Content>
+	<Grid>
+		<slot />
+	</Grid>
 </Content>

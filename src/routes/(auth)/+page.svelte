@@ -30,29 +30,27 @@
 	};
 </script>
 
-<Content>
-	<Row>
-		<Column lg={4}>
-			<Tile>
-				<FormGroup>
-					<h2>Sign in</h2>
-				</FormGroup>
-				{#if form?.error}
-					<div class="block notification is-danger">{form.error}</div>
-				{/if}
-				<form method="post" use:enhance={handleSubmit}>
-					<FormGroup>
-						<TextInput
-							id="email"
-							name="email"
-							autocomplete="username"
-							value={form?.values?.email ?? ''}
-							labelText="Email"
-							placeholder="Enter email..."
-							required
-						/>
-					</FormGroup>
-					<!-- <div class="field">
+<Content class="center-content">
+	<Tile style="width: 375px">
+		<FormGroup>
+			<h2>Sign in</h2>
+		</FormGroup>
+		{#if form?.error}
+			<div class="block notification is-danger">{form.error}</div>
+		{/if}
+		<form method="post" use:enhance={handleSubmit}>
+			<FormGroup>
+				<TextInput
+					id="email"
+					name="email"
+					autocomplete="username"
+					value={form?.values?.email ?? ''}
+					labelText="Email"
+					placeholder="Enter email..."
+					required
+				/>
+			</FormGroup>
+			<!-- <div class="field">
 								<label for="email" class="label">Email</label>
 								<p class="control">
 									<input
@@ -66,17 +64,17 @@
 									/>
 								</p>
 							</div> -->
-					<FormGroup>
-						<PasswordInput
-							id="password"
-							name="password"
-							autocomplete="current-password"
-							labelText="Password"
-							placeholder="Enter password..."
-							required
-						/>
-					</FormGroup>
-					<!-- <div class="field">
+			<FormGroup>
+				<PasswordInput
+					id="password"
+					name="password"
+					autocomplete="current-password"
+					labelText="Password"
+					placeholder="Enter password..."
+					required
+				/>
+			</FormGroup>
+			<!-- <div class="field">
 								<label for="password" class="label">Password</label>
 								<p class="control">
 									<input
@@ -89,18 +87,13 @@
 									/>
 								</p>
 							</div> -->
-					<FormGroup>
-						<Button type="submit" disabled={loading}>Sign in</Button>
-					</FormGroup>
-				</form>
+			<FormGroup>
+				<Button type="submit" disabled={loading}>Sign in</Button>
+			</FormGroup>
+		</form>
 
-				<div class="mt-6">
-					<p>
-						Don't have an account? <a href="/signup">Sign up</a>
-					</p>
-				</div>
-			</Tile>
-		</Column>
-		<Column />
-	</Row>
+		<p>
+			Don't have an account? <a href="/signup">Sign up</a>
+		</p>
+	</Tile>
 </Content>

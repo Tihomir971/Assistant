@@ -4,6 +4,7 @@
 	import type { PageData } from './$types';
 	import { goto } from '$app/navigation';
 	import { getSupabase } from '@supabase/auth-helpers-sveltekit';
+	import { redirect } from '@sveltejs/kit';
 
 	export let data: PageData;
 
@@ -21,22 +22,22 @@
 		{ key: 'entity_type_id', value: 'entity_type_id' }
 	];
 
-	async function handleDelete(id: number | undefined) {
+	/* 	async function handleDelete(id: number | undefined) {
 		const { supabaseClient } = await getSupabase(event);
 		const { error } = await supabaseClient.from('eav_attribute').delete().eq('id');
 		if (error) {
 			console.log(error);
 			return;
 		}
-	}
+	} */
 
 	function handleMessage(event: CustomEvent<{ command: string; id?: number }>) {
 		if (event.detail.command === 'create') {
 			goto('/catalog/attribute/create');
 		} else if (event.detail.command === 'edit') {
-			console.log(`Notify fired! Edit: ${event.detail.command}, 'with', ${event.detail.id}`);
+			goto(`/catalog/attribute/${event.detail.id}`);
 		} else if (event.detail.command === 'delete') {
-			handleDelete(event.detail.id);
+			//			handleDelete(event.detail.id);
 			console.log(`Notify fired! Delete: ${event.detail.command}, 'with', ${event.detail.id}`);
 		} else if (event.detail.command === 'refresh') {
 			console.log(`Notify fired! Refresh: ${event.detail.command}, 'with', ${event.detail.id}`);
