@@ -14,8 +14,8 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
-		"@typescript-eslint/eslint-plugin": "^5.42.0",
-		"@typescript-eslint/parser": "^5.42.0",
+		"@typescript-eslint/eslint-plugin": "^5.42.1",
+		"@typescript-eslint/parser": "^5.42.1",
 		"carbon-components-svelte": "^0.70.12",
 		"carbon-icons-svelte": "^11.4.0",
 		"eslint": "^8.27.0",
@@ -23,7 +23,7 @@
 		"eslint-plugin-svelte3": "^4.0.0",
 		"prettier": "^2.7.1",
 		"prettier-plugin-svelte": "^2.8.0",
-		"svelte": "^3.52.0",
+		"svelte": "^3.53.1",
 		"svelte-check": "^2.9.2",
 		"svelte-preprocess": "^4.10.7",
 		"tslib": "^2.4.1",
@@ -33,6 +33,6 @@
 	"type": "module",
 	"dependencies": {
 		"@supabase/auth-helpers-sveltekit": "^0.8.6",
-		"@supabase/supabase-js": "^2.0.5"
+		"@supabase/supabase-js": "^2.1.0"
 	}
 }

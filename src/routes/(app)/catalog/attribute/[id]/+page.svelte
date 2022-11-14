@@ -1,5 +1,8 @@
 <script lang="ts">
+	import DataTable from '$lib/components/DataTable.svelte';
 	import {
+		Breadcrumb,
+		BreadcrumbItem,
 		Column,
 		Grid,
 		Row,
@@ -13,17 +16,33 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+	$: ({ rows, attribute_options } = data);
 
-	$: ({ rows } = data);
+	let headers = [
+		{ key: 'id', value: 'ID' },
+		{ key: 'code', value: 'code' },
+		{ key: 'name', value: 'name' }
+	];
 </script>
 
 <Grid>
 	<Row>
 		<Column>
+			<Breadcrumb>
+				<BreadcrumbItem href="/">Catalog</BreadcrumbItem>
+				<BreadcrumbItem href="/catalog/attribute">Attributes</BreadcrumbItem>
+				<BreadcrumbItem href="/reports/2019" isCurrentPage>{rows.name}</BreadcrumbItem>
+			</Breadcrumb>
+		</Column>
+	</Row>
+	<Row>
+		<Column>
 			<h3 style="margin-bottom: 2rem;">{rows?.name}</h3>
 			<Tabs>
 				<Tab label="Properties" />
-				<Tab label="Options" />
+				{#if attribute_options}
+					<Tab label="Options" />
+				{/if}
 				<Tab label="Label translations" />
 				<svelte:fragment slot="content">
 					<TabContent>
@@ -34,7 +53,9 @@
 						<TextInput labelText="Frontend Input" value={rows?.frontend_input} />
 						<TextInput labelText="Entity Type" value={rows?.entity_type_id} /></TabContent
 					>
-					<TabContent>Content 2</TabContent>
+					{#if attribute_options}
+						<TabContent><DataTable {headers} rows={attribute_options} /></TabContent>
+					{/if}
 					<TabContent>Content 3</TabContent>
 				</svelte:fragment>
 			</Tabs>
