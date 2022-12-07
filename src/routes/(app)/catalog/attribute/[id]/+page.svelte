@@ -1,12 +1,10 @@
 <script lang="ts">
 	import DataTable from '$lib/components/DataTable.svelte';
+	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
 	import {
-		Breadcrumb,
-		BreadcrumbItem,
 		Column,
 		Grid,
 		Row,
-		Switch,
 		Tab,
 		TabContent,
 		Tabs,
@@ -23,18 +21,15 @@
 		{ key: 'code', value: 'code' },
 		{ key: 'name', value: 'name' }
 	];
+	let nav = [
+		{ href: '/', text: 'Catalog' },
+		{ href: '/catalog/attribute', text: 'Attributes' },
+		{ href: '/catalog/attribute', text: 'Atribut' }
+	];
 </script>
 
 <Grid>
-	<Row>
-		<Column>
-			<Breadcrumb>
-				<BreadcrumbItem href="/">Catalog</BreadcrumbItem>
-				<BreadcrumbItem href="/catalog/attribute">Attributes</BreadcrumbItem>
-				<BreadcrumbItem href="/reports/2019" isCurrentPage>{rows.name}</BreadcrumbItem>
-			</Breadcrumb>
-		</Column>
-	</Row>
+	<Breadcrumb {nav} />
 	<Row>
 		<Column>
 			<h3 style="margin-bottom: 2rem;">{rows?.name}</h3>

@@ -1,18 +1,15 @@
 import type { PageServerLoad } from './$types';
 import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 import { redirect } from '@sveltejs/kit';
+import { attribute } from '$lib/api/attribute';
 
 export const load: PageServerLoad = async (event) => {
-	const { session, supabaseClient } = await getSupabase(event);
+	const { session } = await getSupabase(event);
 	if (!session) {
 		throw redirect(303, '/');
 	}
 
-	const { data: rows } = await supabaseClient
-		.from('eav_attribute')
-		.select('id, isactive, code, name, backend_type, frontend_input, entity_type_id');
-	console.log(rows);
 	return {
-		rows
+		rows: attribute.getAll()
 	};
 };
