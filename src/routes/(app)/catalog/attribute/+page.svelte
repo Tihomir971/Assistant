@@ -1,10 +1,12 @@
 <script lang="ts">
-	import { Grid } from 'carbon-components-svelte';
+	import { Grid, Modal } from 'carbon-components-svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
 	import type { PageData } from './$types';
 	import { goto } from '$app/navigation';
 	import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 	import { redirect } from '@sveltejs/kit';
+
+	let openCreate = false;
 
 	export let data: PageData;
 
@@ -50,3 +52,16 @@
 		<DataTable title="Atributes" {headers} {rows} on:message={handleMessage} />
 	{/if}
 </Grid>
+
+<Modal
+	bind:open={openCreate}
+	modalHeading="Create database"
+	primaryButtonText="Confirm"
+	secondaryButtonText="Cancel"
+	on:click:button--secondary={() => (openCreate = false)}
+	on:open
+	on:close
+	on:submit
+>
+	<p>Create a new Cloudant database in the US South region.</p>
+</Modal>
