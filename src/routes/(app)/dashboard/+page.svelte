@@ -2,13 +2,13 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	$: ({ userTable, user } = data);
+	$: ({ testTable, user } = data);
 </script>
 
-<p>Protected content for {user.email}</p>
 <div class="block">
-	<p>ad_user Table</p>
-	<pre>{JSON.stringify(userTable, null, 2)}</pre>
+	<p>Protected content for {user.email}</p>
+	<p>server-side fetched data with RLS:</p>
+	<pre>{JSON.stringify(testTable, null, 2)}</pre>
 </div>
 <div class="block">
 	<p>user:</p>

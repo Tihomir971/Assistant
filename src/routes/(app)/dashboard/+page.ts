@@ -1,16 +1,15 @@
 import type { PageLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
-import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 
-export const load: PageLoad = async (event) => {
-	const { session, supabaseClient } = await getSupabase(event);
+export const load: PageLoad = async ({ parent }) => {
+	const { session, supabase } = await parent();
 	if (!session) {
 		throw redirect(303, '/');
 	}
 
-	const { data: userTable } = await supabaseClient.from('ad_user').select('*');
+	const { data: testTable } = await supabase.from('m_product').select('*');
 	return {
-		userTable,
+		testTable,
 		user: session.user
 	};
 };

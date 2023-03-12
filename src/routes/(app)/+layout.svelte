@@ -2,8 +2,6 @@
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 	import { invalidate } from '$app/navigation';
 	import { page } from '$app/stores';
-	import Header from '$lib/components/Header.svelte';
-	import { Content, Grid } from 'carbon-components-svelte';
 
 	let loading = false;
 
@@ -18,17 +16,25 @@
 			loading = false;
 		};
 	};
-	export let theme: string;
 </script>
 
 <svelte:head>
 	<title>Email and Password Demo - Supabase Auth Helpers</title>
 </svelte:head>
 
-<Header bind:theme />
+<main class="container is-max-desktop">
+	<div class="navbar-menu my-4">
+		<div class="navbar-start">
+			<a class="my-2" href="/">Supabase Auth Helpers Demo</a>
+		</div>
+		<div class="navbar-end">
+			{#if $page.data.session}
+				<form action="/logout" method="post" use:enhance={handleLogout}>
+					<button disabled={loading} type="submit">Sign out</button>
+				</form>
+			{/if}
+		</div>
+	</div>
 
-<Content>
-	<Grid>
-		<slot />
-	</Grid>
-</Content>
+	<slot />
+</main>
