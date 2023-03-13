@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { DataTable } from 'carbon-components-svelte';
+	import TreeView from '$lib/components/TreeView.svelte';
 	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
-	$: ({ categoryTable, user } = data);
+	$: ({ children, categoryTable, user } = data);
 </script>
 
 <div class="block">
@@ -13,12 +13,5 @@
 </div>
 <slot>Catalog Layout</slot>
 {#if categoryTable}
-	<DataTable
-		headers={[
-			{ key: 'id', value: 'ID' },
-			{ key: 'parent_id', value: 'Parent' },
-			{ key: 'name', value: 'Name' }
-		]}
-		rows={categoryTable}
-	/>
+	<TreeView {children} {categoryTable} />
 {/if}

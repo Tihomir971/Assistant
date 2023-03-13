@@ -37,14 +37,11 @@
 		<HeaderNavItem href="/" text="Link 2" />
 		<HeaderNavItem href="/" text="Link 3" />
 	</HeaderNav>
-	<a class="my-2" href="/">Supabase Auth Helpers Demo</a>
-	<div class="navbar-end">
-		{#if $page.data.session}
-			<form action="/logout" method="post" use:enhance={handleLogout}>
-				<button disabled={loading} type="submit">Sign out</button>
-			</form>
-		{/if}
-	</div>
+	{#if $page.data.session}
+		<form action="/logout" method="post" use:enhance={handleLogout}>
+			<button disabled={loading} type="submit">Sign out</button>
+		</form>
+	{/if}
 </Header>
 <Content>
 	<slot />
