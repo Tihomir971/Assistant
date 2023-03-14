@@ -33,9 +33,8 @@ function removeProperty(items: TreeNode[], property: keyof TreeNode) {
 function createTree(data: Array<DataTableRow>): TreeNode[] {
 	//Add empty children
 	data.forEach((item) => {
-		item.children = [id: "1",text:"test"];
+		item.children = [];
 	});
-	console.log('addchildren', data);
 
 	//Create tree structure
 	const tree: Array<TreeNode> = [];
@@ -45,6 +44,7 @@ function createTree(data: Array<DataTableRow>): TreeNode[] {
 			tree.push(item);
 		} else {
 			const parent = data.find((parent) => parent.id === item.parent_id);
+			//			console.log('parent', parent);
 			if (parent && parent.children) {
 				parent.children.push(item);
 			}

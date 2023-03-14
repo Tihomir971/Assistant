@@ -45,6 +45,7 @@
 				class="input"
 				type="email"
 				placeholder="Enter your email"
+				autocomplete="email"
 				required
 			/>
 		</FormGroup>
@@ -56,6 +57,7 @@
 				class="input"
 				type="password"
 				placeholder="Enter password"
+				autocomplete="current-password"
 				required
 			/>
 		</FormGroup>

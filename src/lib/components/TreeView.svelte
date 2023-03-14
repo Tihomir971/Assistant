@@ -18,7 +18,8 @@
 		TreeNodeId
 	} from 'carbon-components-svelte/types/TreeView/TreeView.svelte';
 
-	export let children: TreeNode[] | undefined;
+	//export
+	let children: TreeNode[] | undefined;
 	export let categoryTable:
 		| {
 				id: number;
@@ -29,7 +30,14 @@
 	export let activeId: TreeNodeId = '';
 
 	let value: any = '';
-	let searchRow: ReadonlyArray<DataTableRow>;
+	let searchRow:
+		| {
+				id: number;
+				text: string;
+				parent_id: number | null;
+		  }[]
+		| null;
+	//	let searchRow: ReadonlyArray<DataTableRow>;
 	let treeview: TreeView;
 
 	import { createEventDispatcher } from 'svelte';
@@ -37,13 +45,19 @@
 	const dispatch = createEventDispatcher();
 	let expanded: boolean = false;
 	$: children = convertToTreeStructure(categoryTable);
-	/* 	$: if (rows) {searchRow = {rows.filter((row) => {
-		let rowName = row.text.toLowerCase();
-		if (rowName.includes(value.toLowerCase())) {
-			return true;
-		}
-		return false;
-	})} */
+	$: if (categoryTable) {
+		searchRow = categoryTable.filter(
+			(row: { id: number; text: string; parent_id: number | null }) => {
+				let rowName = row.text.toLowerCase();
+				if (rowName.includes(value.toLowerCase())) {
+					return true;
+				}
+				return false;
+			}
+		);
+	} else {
+		searchRow = [];
+	}
 </script>
 
 <Toolbar>
@@ -81,7 +95,7 @@
 	</ToolbarContent>
 </Toolbar>
 
-{#if value}
+{#if value && searchRow}
 	<DataTable
 		style="overflow: auto; height: 100%"
 		size="short"
