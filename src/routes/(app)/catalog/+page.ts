@@ -12,10 +12,5 @@ export const load = (async ({ parent }) => {
 		.select('id,parent_id,text: name')
 		.order('name');
 
-	const { data: productData } = await supabase
-		.from('m_product')
-		.select('id,barcode,sku,name')
-		.order('name');
-
-	return { categoryTable, productData, user: session.user };
+	return { categoryTable, user: session.user };
 }) satisfies PageLoad;
