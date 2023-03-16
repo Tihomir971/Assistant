@@ -1,12 +1,13 @@
 <script lang="ts">
 	import TreeView from '$lib/components/TreeView.svelte';
-	import { Column, DataTable, Grid, Row } from 'carbon-components-svelte';
+	import DataTable from '$lib/components/DataTable.svelte';
+	import { Column, Grid, Row } from 'carbon-components-svelte';
 	import type { DataTableRow } from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
 	import type { TreeNodeId } from 'carbon-components-svelte/types/TreeView/TreeView.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	$: ({ categoryTable, user, supabase } = data);
+	$: ({ categoryTable, user, supabase, session } = data);
 
 	let activeId: TreeNodeId;
 	let productData: ReadonlyArray<DataTableRow> = [];
@@ -14,10 +15,12 @@
 	async function loadData() {
 		const { data } = await supabase
 			.from('m_product')
-			.select('id,barcode,sku,name')
+			.select('id,barcode,sku,name,m_storageonhand(qtyonhand)')
 			.order('name')
 			.eq('m_product_category_id', activeId)
+			.eq('m_storageonhand.warehouse_id', 5)
 			.limit(20);
+		console.log('data', data);
 		if (data) {
 			productData = data;
 		}
@@ -30,23 +33,24 @@
 
 <Grid fullWidth noGutter>
 	<Row>
-		<Column lg={3}>
+		<Column noGutterLeft lg={3}>
 			{#if categoryTable}
-				{activeId}
-				<!-- <TreeView {children} {categoryTable} /> -->
 				<TreeView {categoryTable} bind:activeId />
 			{/if}
 		</Column>
-		<Column>
+		<Column noGutter style="padding: 0px; max-height: calc(100vh - 3rem - 3rem - 3rem)">
 			{#if productData}
 				<DataTable
+					style="overflow: auto; height: calc(100vh - 3rem);padding-top: 0px;"
 					size="short"
 					headers={[
-						{ key: 'barcode', value: 'barcode' },
-						{ key: 'sku', value: 'sku' },
-						{ key: 'name', value: 'Name' }
+						{ key: 'sku', value: 'SKU' },
+						{ key: 'barcode', value: 'Barcode' },
+						{ key: 'name', value: 'Name' },
+						{ key: 'm_storageonhand[0].qtyonhand', value: 'Qty.' }
 					]}
 					rows={productData}
+					{session}
 				/>
 			{/if}
 		</Column>

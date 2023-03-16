@@ -15,7 +15,5 @@
 {#if !session}
 	<h1>I am not logged in</h1>
 {:else}
-	<DataTable {headers} {rows} />
-	<h1>Welcome {session.user.email}</h1>
-	<p>I am logged in!</p>
+	<DataTable style="height: 100%" {headers} {rows} {...$$restProps} />
 {/if}

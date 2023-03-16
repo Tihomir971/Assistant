@@ -106,7 +106,7 @@
 			activeId = e.detail.id;
 		}}
 	/>
-{:else}
+{:else if children}
 	<TreeView
 		style="overflow: auto; height: 100%"
 		hideLabel
