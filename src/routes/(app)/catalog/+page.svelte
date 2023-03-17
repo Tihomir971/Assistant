@@ -18,8 +18,7 @@
 			.select('id,barcode,sku,name,m_storageonhand(qtyonhand)')
 			.order('name')
 			.eq('m_product_category_id', activeId)
-			.eq('m_storageonhand.warehouse_id', 5)
-			.limit(20);
+			.eq('m_storageonhand.warehouse_id', 5);
 		console.log('data', data);
 		if (data) {
 			productData = data;
@@ -41,7 +40,7 @@
 		<Column noGutter style="padding: 0px; max-height: calc(100vh - 3rem - 3rem - 3rem)">
 			{#if productData}
 				<DataTable
-					style="overflow: auto; height: calc(100vh - 3rem);padding-top: 0px;"
+					style="overflow: auto; height: calc(100vh - 3rem -2rem);padding-top: 0px;"
 					size="short"
 					headers={[
 						{ key: 'sku', value: 'SKU' },
