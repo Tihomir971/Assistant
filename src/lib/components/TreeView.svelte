@@ -108,7 +108,7 @@
 	/>
 {:else if children}
 	<TreeView
-		style="overflow: auto; height: 100%"
+		style="overflow: auto; height: calc(100% - 50px);"
 		hideLabel
 		bind:activeId
 		bind:this={treeview}

@@ -15,10 +15,11 @@
 	async function loadData() {
 		const { data } = await supabase
 			.from('m_product')
-			.select('id,barcode,sku,name,m_storageonhand(qtyonhand)')
+			.select('id,barcode,sku,name,m_storageonhand(qtyonhand),m_productprice(pricestd)')
 			.order('name')
 			.eq('m_product_category_id', activeId)
-			.eq('m_storageonhand.warehouse_id', 5);
+			.eq('m_storageonhand.warehouse_id', 5)
+			.eq('m_productprice.m_pricelist_version_id', 13);
 		console.log('data', data);
 		if (data) {
 			productData = data;
@@ -30,23 +31,35 @@
 	}
 </script>
 
-<Grid fullWidth noGutter>
-	<Row>
-		<Column noGutterLeft lg={3}>
+<Grid fullWidth style="height: 100%">
+	<Row style="margin-left: 0rem; height: 100%">
+		<Column
+			noGutter
+			style="height: 100%; border-color: #c6c6c6; border-right-width: 2px; border-right-style: solid"
+			lg={3}
+		>
 			{#if categoryTable}
 				<TreeView {categoryTable} bind:activeId />
 			{/if}
 		</Column>
-		<Column noGutter style="padding: 0px; max-height: calc(100vh - 3rem - 3rem - 3rem)">
+		<Column noGutter style="height: 100%">
 			{#if productData}
 				<DataTable
-					style="overflow: auto; height: calc(100vh - 3rem -2rem);padding-top: 0px;"
 					size="short"
 					headers={[
 						{ key: 'sku', value: 'SKU' },
 						{ key: 'barcode', value: 'Barcode' },
 						{ key: 'name', value: 'Name' },
-						{ key: 'm_storageonhand[0].qtyonhand', value: 'Qty.' }
+						{ key: 'm_storageonhand[0].qtyonhand', value: 'Qty.' },
+						{
+							key: 'm_productprice[0].pricestd',
+							value: 'Price.',
+							display: (pricestd) =>
+								new Intl.NumberFormat('sr-Latn-RS', {
+									minimumFractionDigits: 2,
+									maximumFractionDigits: 2
+								}).format(pricestd)
+						}
 					]}
 					rows={productData}
 					{session}

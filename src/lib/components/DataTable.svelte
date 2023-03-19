@@ -4,7 +4,7 @@
 		DataTableHeader,
 		DataTableRow
 	} from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
-	import { DataTable } from 'carbon-components-svelte';
+	import { DataTable, Toolbar, ToolbarContent, ToolbarSearch } from 'carbon-components-svelte';
 
 	export let session: Session | null;
 
@@ -15,5 +15,29 @@
 {#if !session}
 	<h1>I am not logged in</h1>
 {:else}
-	<DataTable style="height: 100%" {headers} {rows} {...$$restProps} />
+	<DataTable
+		sortable
+		style="padding: 0px; overflow: auto; max-height: 100%;"
+		{headers}
+		{rows}
+		{...$$restProps}
+	>
+		<Toolbar>
+			<ToolbarContent>
+				<ToolbarSearch shouldFilterRows />
+			</ToolbarContent>
+		</Toolbar>
+		<svelte:fragment slot="cell" let:cell let:row>
+			{#if typeof cell.value === 'number'}
+				<div style="text-align: right">
+					{new Intl.NumberFormat('sr-Latn-RS', {
+						minimumFractionDigits: 2,
+						maximumFractionDigits: 2
+					}).format(cell.value)}
+				</div>
+			{:else}
+				{cell.value}
+			{/if}
+		</svelte:fragment>
+	</DataTable>
 {/if}

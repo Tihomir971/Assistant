@@ -43,6 +43,6 @@
 		</form>
 	{/if}
 </Header>
-<Content>
+<Content style="padding: 0px; height: calc(100vh - 3rem);">
 	<slot />
 </Content>
