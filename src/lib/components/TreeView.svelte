@@ -30,6 +30,7 @@
 	export let activeId: TreeNodeId = '';
 
 	let value: any = '';
+	export let openCreateCategory: boolean = false;
 	let searchRow:
 		| {
 				id: number;
@@ -68,7 +69,7 @@
 				tooltipAlignment="start"
 				kind="ghost"
 				icon={RowInsert}
-				on:click={() => dispatch('create')}
+				on:click={() => (openCreateCategory = true)}
 			/>
 			<Button
 				iconDescription="Delete"

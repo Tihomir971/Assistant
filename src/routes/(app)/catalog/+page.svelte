@@ -1,7 +1,7 @@
 <script lang="ts">
 	import TreeView from '$lib/components/TreeView.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
-	import { Column, Grid, Row } from 'carbon-components-svelte';
+	import { Column, Grid, Modal, Row } from 'carbon-components-svelte';
 	import type { DataTableRow } from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
 	import type { TreeNodeId } from 'carbon-components-svelte/types/TreeView/TreeView.svelte';
 	import type { PageData } from './$types';
@@ -9,6 +9,7 @@
 	export let data: PageData;
 	$: ({ categoryTable, user, supabase, session } = data);
 
+	let openCreateCategory: boolean = false;
 	let activeId: TreeNodeId;
 	let productData: ReadonlyArray<DataTableRow> = [];
 
@@ -25,24 +26,31 @@
 			productData = data;
 		}
 	}
+	async function createCategory() {
+		openCreateCategory = false;
+		//		const { data } = await supabase
+		//			.from('m_product_category')
+		//			.insert([{ name: 'ime', parent_id: Number(activeId) }]);
+		//		console.log('createCategory', data);
+	}
 
 	$: if (data.session && activeId) {
 		loadData();
 	}
 </script>
 
-<Grid fullWidth style="height: 100%">
-	<Row style="margin-left: 0rem; height: 100%">
+<Grid fullWidth style="height: 100%; width;: 100%; padding: 0px">
+	<Row style="margin: 0rem; height: 100%; width: 100%">
 		<Column
 			noGutter
 			style="height: 100%; border-color: #c6c6c6; border-right-width: 2px; border-right-style: solid"
 			lg={3}
 		>
 			{#if categoryTable}
-				<TreeView {categoryTable} bind:activeId />
+				<TreeView {categoryTable} bind:activeId bind:openCreateCategory />
 			{/if}
 		</Column>
-		<Column noGutter style="height: 100%">
+		<Column noGutter style="height: 100%; width;: 100%">
 			{#if productData}
 				<DataTable
 					size="short"
@@ -68,3 +76,18 @@
 		</Column>
 	</Row>
 </Grid>
+<Modal
+	bind:open={openCreateCategory}
+	modalHeading="Create category"
+	primaryButtonText="Confirm"
+	secondaryButtonText="Cancel"
+	on:click:button--secondary={() => (openCreateCategory = false)}
+	on:open
+	on:close
+	on:submit={() => {
+		openCreateCategory = false;
+		createCategory();
+	}}
+>
+	<p>Create a new Cloudant database in the US South region.</p>
+</Modal>
