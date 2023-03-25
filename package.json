@@ -13,7 +13,8 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
-		"@sveltejs/kit": "^1.13.0",
+		"@sveltejs/adapter-node": "^1.2.3",
+		"@sveltejs/kit": "^1.14.0",
 		"@typescript-eslint/eslint-plugin": "^5.56.0",
 		"@typescript-eslint/parser": "^5.56.0",
 		"carbon-components-svelte": "^0.73.4",
