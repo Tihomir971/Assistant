@@ -1,12 +1,18 @@
 <script lang="ts">
-	import type { Session } from '@supabase/supabase-js';
+	import { enhance } from '$app/forms';
+	import { page } from '$app/stores';
+	import { Header, HeaderNav, HeaderNavItem, SkipToContent } from 'carbon-components-svelte';
 
-	export let session: Session | null;
+	let loading = false;
 </script>
 
-{#if !session}
-	<h1>I am not logged in</h1>
-{:else}
-	<h1>Welcome {session.user.email}</h1>
-	<p>I am logged in!</p>
-{/if}
+<Header company="Kalisi" platformName="Assistant">
+	<svelte:fragment slot="skip-to-content">
+		<SkipToContent />
+	</svelte:fragment>
+	<HeaderNav>
+		<HeaderNavItem href="/catalog" text="Products" />
+		<HeaderNavItem href="/catalog/report/pricing" text="Pricing" />
+		<HeaderNavItem href="/" text="Link 3" />
+	</HeaderNav>
+</Header>

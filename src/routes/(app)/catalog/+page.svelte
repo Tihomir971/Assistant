@@ -10,13 +10,12 @@
 	//const { products, currentDate } = data;
 
 	function rerunLoadFunction() {
-		invalidate('load:products');
+		invalidate('catalog:products');
 		return;
 		//invalidateAll();
 	}
 </script>
 
-<Button on:click={rerunLoadFunction}>Rerun</Button>
 {#if products}
 	<DataTable
 		size="short"

@@ -60,12 +60,9 @@
 		searchRow = [];
 	}
 	function rerunLoadFunction() {
-		console.log('rerun');
-		invalidate('load:products');
+		invalidate('catalog:products');
 		return;
-		//invalidateAll();
 	}
-	//	$: $activeId, rerunLoadFunction();
 </script>
 
 <Toolbar>
@@ -111,6 +108,7 @@
 		pageSize={16}
 		on:click:row={(e) => {
 			$activeId = e.detail.id;
+			rerunLoadFunction();
 		}}
 	/>
 {:else if children}

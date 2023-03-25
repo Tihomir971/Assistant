@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutLoad } from './$types';
 
-export const load = (async ({ parent }) => {
+export const load = (async ({ parent, depends }) => {
 	const { session, supabase } = await parent();
 	if (!session) {
 		throw redirect(303, '/');
@@ -12,6 +12,7 @@ export const load = (async ({ parent }) => {
 		.select('id,parent_id,text: name')
 		.order('name');
 
+	depends('catalog:categories');
+
 	return { categories };
-	
 }) satisfies LayoutLoad;

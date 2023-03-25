@@ -15,11 +15,15 @@ export const load = (async ({ parent, depends }) => {
 
 	const { data: products } = await supabase
 		.from('m_product')
-		.select('id,barcode,sku,name')
+		.select(
+			'id,barcode,sku,name,m_storageonhand(qtyonhand),m_productprice(m_pricelist_version_id,pricestd),m_product_po(pricelist)'
+		)
 		.eq('m_product_category_id', activeCategory)
+		.eq('m_storageonhand.warehouse_id', 5)
+		.in('m_productprice.m_pricelist_version_id', [13])
 		.order('name');
 
-	depends('load:products');
+	depends('catalog:products');
 
 	if (products) {
 		return { products };

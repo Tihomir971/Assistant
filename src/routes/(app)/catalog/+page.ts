@@ -25,7 +25,7 @@ export const load = (async ({ parent, depends }) => {
 		.in('m_productprice.m_pricelist_version_id', [13])
 		.order('m_pricelist_version_id', { foreignTable: 'm_productprice' });
 
-	depends('load:products');
+	depends('catalog:products');
 
 	return { products };
 }) satisfies PageLoad;

@@ -2,14 +2,8 @@
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 	import { invalidate } from '$app/navigation';
 	import { page } from '$app/stores';
-	import {
-		Content,
-		Header,
-		HeaderNav,
-		HeaderNavItem,
-		SkipToContent
-	} from 'carbon-components-svelte';
-
+	import Header from '$lib/components/Header.svelte';
+	import { Content } from 'carbon-components-svelte';
 	let loading = false;
 
 	const handleLogout: SubmitFunction = () => {
@@ -28,7 +22,8 @@
 <svelte:head>
 	<title>Email and Password Demo - Supabase Auth Helpers</title>
 </svelte:head>
-<Header company="Kalisi" platformName="Assistant">
+<Header />
+<!-- <Header company="Kalisi" platformName="Assistant">
 	<svelte:fragment slot="skip-to-content">
 		<SkipToContent />
 	</svelte:fragment>
@@ -42,7 +37,7 @@
 			<button disabled={loading} type="submit">Sign out</button>
 		</form>
 	{/if}
-</Header>
+</Header> -->
 <Content style="padding: 0px; height: calc(100vh - 3rem);">
 	<slot />
 </Content>
