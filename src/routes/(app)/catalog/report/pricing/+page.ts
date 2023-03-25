@@ -12,20 +12,16 @@ export const load = (async ({ parent, depends }) => {
 	if (!session) {
 		throw redirect(303, '/');
 	}
+
 	const { data: products } = await supabase
 		.from('m_product')
-		.select(
-			'id,barcode,sku,name,m_storageonhand(qtyonhand),m_productprice(m_pricelist_version_id,pricestd),m_product_po(pricelist)'
-			//'id,barcode,sku,name'
-		)
-		.order('name')
+		.select('id,barcode,sku,name')
 		.eq('m_product_category_id', activeCategory)
-		.eq('m_storageonhand.warehouse_id', 5)
-		.eq('m_productprice.m_pricelist_version_id', 13)
-		.in('m_productprice.m_pricelist_version_id', [13])
-		.order('m_pricelist_version_id', { foreignTable: 'm_productprice' });
+		.order('name');
 
 	depends('load:products');
 
-	return { products };
+	if (products) {
+		return { products };
+	}
 }) satisfies PageLoad;

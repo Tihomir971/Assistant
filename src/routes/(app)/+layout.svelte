@@ -34,7 +34,7 @@
 	</svelte:fragment>
 	<HeaderNav>
 		<HeaderNavItem href="/catalog" text="Products" />
-		<HeaderNavItem href="/" text="Link 2" />
+		<HeaderNavItem href="/catalog/report/pricing" text="Pricing" />
 		<HeaderNavItem href="/" text="Link 3" />
 	</HeaderNav>
 	{#if $page.data.session}

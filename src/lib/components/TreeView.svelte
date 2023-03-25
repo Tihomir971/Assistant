@@ -20,14 +20,15 @@
 
 	//export
 	let children: TreeNode[] | undefined;
-	export let categoryTable:
+	export let categories:
 		| {
 				id: number;
 				text: string;
 				parent_id: number | null;
 		  }[]
 		| null;
-	export let activeId: TreeNodeId = '';
+	//export let activeId: TreeNodeId = '';
+	import { activeId } from '$lib/stores/categoryStore';
 
 	let value: any = '';
 	export let openCreateCategory: boolean = false;
@@ -43,22 +44,28 @@
 
 	import { createEventDispatcher } from 'svelte';
 	import { convertToTreeStructure } from '$lib/utils/tree';
+	import { invalidate, invalidateAll } from '$app/navigation';
 	const dispatch = createEventDispatcher();
 	let expanded: boolean = false;
-	$: children = convertToTreeStructure(categoryTable);
-	$: if (categoryTable) {
-		searchRow = categoryTable.filter(
-			(row: { id: number; text: string; parent_id: number | null }) => {
-				let rowName = row.text.toLowerCase();
-				if (rowName.includes(value.toLowerCase())) {
-					return true;
-				}
-				return false;
+	$: children = convertToTreeStructure(categories);
+	$: if (categories) {
+		searchRow = categories.filter((row: { id: number; text: string; parent_id: number | null }) => {
+			let rowName = row.text.toLowerCase();
+			if (rowName.includes(value.toLowerCase())) {
+				return true;
 			}
-		);
+			return false;
+		});
 	} else {
 		searchRow = [];
 	}
+	function rerunLoadFunction() {
+		console.log('rerun');
+		invalidate('load:products');
+		return;
+		//invalidateAll();
+	}
+	//	$: $activeId, rerunLoadFunction();
 </script>
 
 <Toolbar>
@@ -95,7 +102,6 @@
 		<ToolbarSearch bind:expanded bind:value />
 	</ToolbarContent>
 </Toolbar>
-
 {#if value && searchRow}
 	<DataTable
 		style="overflow: auto; height: 100%"
@@ -104,15 +110,16 @@
 		headers={[{ key: 'text', value: 'Choose Category' }]}
 		pageSize={16}
 		on:click:row={(e) => {
-			activeId = e.detail.id;
+			$activeId = e.detail.id;
 		}}
 	/>
 {:else if children}
 	<TreeView
 		style="overflow: auto; height: calc(100% - 50px);"
 		hideLabel
-		bind:activeId
+		bind:activeId={$activeId}
 		bind:this={treeview}
+		on:select={() => rerunLoadFunction()}
 		{children}
 	/>
 {/if}

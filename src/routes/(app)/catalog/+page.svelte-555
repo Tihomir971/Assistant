@@ -1,0 +1,67 @@
+<script lang="ts">
+	import DataTable from '$lib/components/DataTable.svelte';
+	import { Modal } from 'carbon-components-svelte';
+	import type { DataTableRow } from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
+	$: ({ productData, user } = data);
+
+	import { activeId } from '$lib/stores/categoryStore';
+	import { invalidate, invalidateAll } from '$app/navigation';
+	import { browser } from '$app/environment';
+	let openCreateCategory: boolean = false;
+	//let activeId: TreeNodeId;
+
+	async function createCategory() {
+		openCreateCategory = false;
+		//		const { data } = await supabase
+		//			.from('m_product_category')
+		//			.insert([{ name: 'ime', parent_id: Number(activeId) }]);
+		//		console.log('createCategory', data);
+	}
+
+	$: if (data.session && $activeId && browser) {
+		console.log('page.svelte', $activeId);
+		invalidate('stocks:actively-trading');
+
+		//loadData();
+	}
+</script>
+
+{#if productData}
+	<DataTable
+		size="short"
+		headers={[
+			{ key: 'sku', value: 'SKU' },
+			{ key: 'barcode', value: 'Barcode' },
+			{ key: 'name', value: 'Name' },
+			{ key: 'm_storageonhand[0].qtyonhand', value: 'Qty.' },
+			{
+				key: 'm_product_po[0].pricelist',
+				value: 'Market Price'
+			},
+			{
+				key: 'm_productprice[0].pricestd',
+				value: 'Retail Price'
+			}
+		]}
+		rows={productData}
+	/>
+{/if}
+
+<Modal
+	bind:open={openCreateCategory}
+	modalHeading="Create category"
+	primaryButtonText="Confirm"
+	secondaryButtonText="Cancel"
+	on:click:button--secondary={() => (openCreateCategory = false)}
+	on:open
+	on:close
+	on:submit={() => {
+		openCreateCategory = false;
+		createCategory();
+	}}
+>
+	<p>Create a new Cloudant database in the US South region.</p>
+</Modal>
