@@ -21,7 +21,6 @@ export const load = (async ({ parent, depends }) => {
 		.order('name')
 		.eq('m_product_category_id', activeCategory)
 		.eq('m_storageonhand.warehouse_id', 5)
-		.eq('m_productprice.m_pricelist_version_id', 13)
 		.in('m_productprice.m_pricelist_version_id', [13])
 		.order('m_pricelist_version_id', { foreignTable: 'm_productprice' });
 
