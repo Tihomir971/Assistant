@@ -3,24 +3,31 @@
 		DataTableHeader,
 		DataTableRow
 	} from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 	import {
+		Button,
+		ButtonSet,
 		DataTable,
+		OverflowMenu,
+		OverflowMenuItem,
 		Select,
 		SelectItem,
 		Toolbar,
 		ToolbarContent,
 		ToolbarSearch
 	} from 'carbon-components-svelte';
-
-	export let headers: ReadonlyArray<DataTableHeader>;
-	export let rows: ReadonlyArray<DataTableRow>;
+	import Edit from 'carbon-icons-svelte/lib/Edit.svelte';
+	export let headers: DataTableHeader[];
+	export let rows: DataTableRow[];
+	$: headers.push({ key: 'menu', empty: true });
 </script>
 
 <DataTable
 	size="short"
 	batchSelection
 	sortable
-	style="padding: 0px; overflow: auto; max-height: 100%; max-width: 100%;"
+	style="padding: 0px; overflow: auto; height: 100%; max-width: 100%;"
 	{headers}
 	{rows}
 	{...$$restProps}
@@ -45,6 +52,23 @@
 					maximumFractionDigits: 2
 				}).format(cell.value)}
 			</div>
+		{:else if cell.key === 'menu'}
+			<OverflowMenu flipped>
+				<OverflowMenuItem
+					on:click={() => {
+						dispatch('edit', row.id);
+					}}
+					>Edit
+				</OverflowMenuItem>
+				<OverflowMenuItem
+					danger
+					on:click={() => {
+						dispatch('delete', row.id);
+					}}
+				>
+					Delete
+				</OverflowMenuItem>
+			</OverflowMenu>
 		{:else}
 			{cell.value}
 		{/if}

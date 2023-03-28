@@ -1,18 +1,22 @@
 <script lang="ts">
-	import { invalidate, invalidateAll } from '$app/navigation';
+	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import DataTable from '$lib/components/DataTable.svelte';
 	import { activeId } from '$lib/stores/categoryStore';
-	import { Button } from 'carbon-components-svelte';
+	import { Button, Modal } from 'carbon-components-svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 	$: ({ products } = data);
-	//const { products, currentDate } = data;
 
+	//const { products, currentDate } = data;
+	let openEdit = false;
 	function rerunLoadFunction() {
 		invalidate('catalog:products');
 		return;
-		//invalidateAll();
+	}
+	function callbackFunction(event: CustomEvent) {
+		console.log(`Notify fired! Detail: ${event.detail}`);
+		goto(`/catalog/product/${event.detail}`);
 	}
 </script>
 
@@ -34,5 +38,6 @@
 			}
 		]}
 		rows={products}
+		on:edit={callbackFunction}
 	/>
 {/if}

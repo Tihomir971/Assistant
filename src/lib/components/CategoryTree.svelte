@@ -7,6 +7,8 @@
 	import {
 		Button,
 		DataTable,
+		Modal,
+		TextInput,
 		Toolbar,
 		ToolbarContent,
 		ToolbarSearch,
@@ -20,6 +22,7 @@
 
 	//export
 	let children: TreeNode[] | undefined;
+	export let supabase: SupabaseClient;
 	export let categories:
 		| {
 				id: number;
@@ -31,7 +34,9 @@
 	import { activeId } from '$lib/stores/categoryStore';
 
 	let value: any = '';
-	export let openCreateCategory: boolean = false;
+	let openCreateModal: boolean = false;
+	let openDeleteModal: boolean = false;
+	let newCategoryName: string;
 	let searchRow:
 		| {
 				id: number;
@@ -45,6 +50,8 @@
 	import { createEventDispatcher } from 'svelte';
 	import { convertToTreeStructure } from '$lib/utils/tree';
 	import { invalidate, invalidateAll } from '$app/navigation';
+	import { Equalizer, TextIndent } from 'carbon-icons-svelte';
+	import type { SupabaseClient } from '@supabase/supabase-js';
 	const dispatch = createEventDispatcher();
 	let expanded: boolean = false;
 	$: children = convertToTreeStructure(categories);
@@ -73,20 +80,22 @@
 				tooltipAlignment="start"
 				kind="ghost"
 				icon={RowInsert}
-				on:click={() => (openCreateCategory = true)}
+				on:click={() => (openCreateModal = true)}
 			/>
 			<Button
 				iconDescription="Delete"
 				kind="ghost"
 				icon={RowDelete}
-				on:click={() => dispatch('delete')}
+				on:click={() => (openDeleteModal = true)}
 			/>
 			<Button iconDescription="Edit" kind="ghost" icon={Edit} on:click={() => dispatch('edit')} />
 			<Button
-				iconDescription="Update"
+				iconDescription="Update Me"
 				kind="ghost"
 				icon={UpdateNow}
-				on:click={() => dispatch('update')}
+				on:click={() => {
+					invalidate('catalog:categories');
+				}}
 			/>
 			<Button
 				iconDescription="Collapse All"
@@ -121,3 +130,40 @@
 		{children}
 	/>
 {/if}
+
+<Modal
+	preventCloseOnClickOutside
+	bind:open={openCreateModal}
+	modalHeading="Create category"
+	primaryButtonText="Confirm"
+	secondaryButtonText="Cancel"
+	on:submit={async () => {
+		const { data } = await supabase
+			.from('m_product_category')
+			.insert({ name: newCategoryName, parent_id: $activeId });
+		console.log('New Category', data);
+		invalidate('catalog:categories');
+		openCreateModal = false;
+	}}
+	on:click:button--secondary={() => (openCreateModal = false)}
+>
+	<TextInput
+		bind:value={newCategoryName}
+		labelText="Category name"
+		placeholder="Enter category name..."
+	/>
+</Modal>
+<Modal
+	danger
+	preventCloseOnClickOutside
+	bind:open={openDeleteModal}
+	modalHeading="Delete category"
+	primaryButtonText="Delete"
+	secondaryButtonText="Cancel"
+	on:submit={async () => {
+		const { data } = await supabase.from('m_product_category').delete().eq('id', $activeId);
+		invalidate('catalog:categories');
+		openDeleteModal = false;
+	}}
+	on:click:button--secondary={() => (openDeleteModal = false)}
+/>

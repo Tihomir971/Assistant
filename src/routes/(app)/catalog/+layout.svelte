@@ -1,19 +1,12 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
-	import TreeView from '$lib/components/TreeView.svelte';
+	import CategoryTree from '$lib/components/CategoryTree.svelte';
 	import { activeId } from '$lib/stores/categoryStore';
 	import { Column, Grid, Row } from 'carbon-components-svelte';
 	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
-	const { categories } = data;
-
-	let openCreateCategory: boolean = false;
-
-	//	$: if ($activeId != 0) {
-	//		invalidate('stocks:actively-trading');
-	//		console.log('layout');
-	//	}
+	$: ({ categories, supabase } = data);
 </script>
 
 <Grid fullWidth style="height: 100%; width;: 100%; padding: 0px">
@@ -24,7 +17,7 @@
 			lg={3}
 		>
 			{#if categories}
-				<TreeView {categories} bind:openCreateCategory />
+				<CategoryTree {categories} {supabase} />
 			{/if}
 		</Column>
 		<Column noGutter style="height: 100%; width;: 100%">
