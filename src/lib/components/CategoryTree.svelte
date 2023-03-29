@@ -6,7 +6,9 @@
 	import RowCollapse from 'carbon-icons-svelte/lib/RowCollapse.svelte';
 	import {
 		Button,
+		ComboBox,
 		DataTable,
+		FormGroup,
 		Modal,
 		TextInput,
 		Toolbar,
@@ -52,6 +54,7 @@
 	import { invalidate, invalidateAll } from '$app/navigation';
 	import { Equalizer, TextIndent } from 'carbon-icons-svelte';
 	import type { SupabaseClient } from '@supabase/supabase-js';
+	import type { ComboBoxItem } from 'carbon-components-svelte/types/ComboBox/ComboBox.svelte';
 	const dispatch = createEventDispatcher();
 	let expanded: boolean = false;
 	$: children = convertToTreeStructure(categories);
@@ -69,6 +72,10 @@
 	function rerunLoadFunction() {
 		invalidate('catalog:products');
 		return;
+	}
+	function shouldFilterItem(item: ComboBoxItem, value: string) {
+		if (!value) return true;
+		return item.text.toLowerCase().includes(value.toLowerCase());
 	}
 </script>
 
@@ -141,17 +148,30 @@
 		const { data } = await supabase
 			.from('m_product_category')
 			.insert({ name: newCategoryName, parent_id: $activeId });
-		console.log('New Category', data);
+		newCategoryName = '';
 		invalidate('catalog:categories');
 		openCreateModal = false;
 	}}
 	on:click:button--secondary={() => (openCreateModal = false)}
 >
-	<TextInput
-		bind:value={newCategoryName}
-		labelText="Category name"
-		placeholder="Enter category name..."
-	/>
+	<FormGroup>
+		<TextInput
+			bind:value={newCategoryName}
+			labelText="Category name"
+			placeholder="Enter category name..."
+		/>
+	</FormGroup>
+	<FormGroup>
+		{#if categories}
+			<ComboBox
+				titleText="Parent Category"
+				placeholder="Parent product category"
+				selectedId={$activeId}
+				items={categories}
+				{shouldFilterItem}
+			/>
+		{/if}
+	</FormGroup>
 </Modal>
 <Modal
 	danger

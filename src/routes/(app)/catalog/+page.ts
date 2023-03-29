@@ -16,7 +16,6 @@ export const load = (async ({ parent, depends }) => {
 		.from('m_product')
 		.select(
 			'id,barcode,sku,name,m_storageonhand(qtyonhand),m_productprice(m_pricelist_version_id,pricestd),m_product_po(pricelist)'
-			//'id,barcode,sku,name'
 		)
 		.order('name')
 		.eq('m_product_category_id', activeCategory)

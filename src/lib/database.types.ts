@@ -213,30 +213,30 @@ export interface Database {
           avatar_url: string | null
           created: string
           id: string
-          is_enabled: boolean
-          updated_at: string
-          username: string | null
-          website: string | null
+          isactive: boolean
+          name: string | null
+          supervisor_id: string | null
+          updated: string
         }
         Insert: {
           ad_client_id?: number
           avatar_url?: string | null
           created?: string
           id: string
-          is_enabled?: boolean
-          updated_at?: string
-          username?: string | null
-          website?: string | null
+          isactive?: boolean
+          name?: string | null
+          supervisor_id?: string | null
+          updated?: string
         }
         Update: {
           ad_client_id?: number
           avatar_url?: string | null
           created?: string
           id?: string
-          is_enabled?: boolean
-          updated_at?: string
-          username?: string | null
-          website?: string | null
+          isactive?: boolean
+          name?: string | null
+          supervisor_id?: string | null
+          updated?: string
         }
       }
       ad_user_client: {
@@ -1400,6 +1400,7 @@ export interface Database {
           c_uom_id: number | null
           created: string
           discontinued: boolean | null
+          id: number
           isactive: boolean
           iscurrentvendor: boolean
           m_product_id: number
@@ -1423,6 +1424,7 @@ export interface Database {
           c_uom_id?: number | null
           created?: string
           discontinued?: boolean | null
+          id?: number
           isactive?: boolean
           iscurrentvendor?: boolean
           m_product_id: number
@@ -1446,6 +1448,7 @@ export interface Database {
           c_uom_id?: number | null
           created?: string
           discontinued?: boolean | null
+          id?: number
           isactive?: boolean
           iscurrentvendor?: boolean
           m_product_id?: number
