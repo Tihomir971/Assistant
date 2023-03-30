@@ -115,28 +115,33 @@
 		<ToolbarSearch bind:expanded bind:value />
 	</ToolbarContent>
 </Toolbar>
-{#if value && searchRow}
-	<DataTable
-		style="overflow: auto; height: 100%"
-		size="short"
-		rows={searchRow}
-		headers={[{ key: 'text', value: 'Choose Category' }]}
-		pageSize={16}
-		on:click:row={(e) => {
-			$activeId = e.detail.id;
-			rerunLoadFunction();
-		}}
-	/>
-{:else if children}
-	<TreeView
-		style="overflow: auto; height: calc(100% - 50px);"
-		hideLabel
-		bind:activeId={$activeId}
-		bind:this={treeview}
-		on:select={() => rerunLoadFunction()}
-		{children}
-	/>
-{/if}
+
+{#await children}
+	Loading
+{:then children}
+	{#if value && searchRow}
+		<DataTable
+			style="overflow: auto; height: 100%"
+			size="short"
+			rows={searchRow}
+			headers={[{ key: 'text', value: 'Choose Category' }]}
+			pageSize={16}
+			on:click:row={(e) => {
+				$activeId = e.detail.id;
+				rerunLoadFunction();
+			}}
+		/>
+	{:else if children}
+		<TreeView
+			style="overflow: auto; height: calc(100% - 50px);"
+			hideLabel
+			bind:activeId={$activeId}
+			bind:this={treeview}
+			on:select={() => rerunLoadFunction()}
+			{children}
+		/>
+	{/if}
+{/await}
 
 <Modal
 	preventCloseOnClickOutside

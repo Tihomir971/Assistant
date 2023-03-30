@@ -7,8 +7,11 @@ export const load = (async ({ params, parent }) => {
 		throw redirect(303, '/');
 	}
 	const id = Number(params.id);
-	const { data: product } = await supabase.from('m_product').select().eq('id', id).maybeSingle();
-	const { data: product_po } = await supabase.from('m_product_po').select().eq('id', id);
+	const { data: product } = await supabase
+		.from('m_product')
+		.select('id,barcode,name,condition,m_product_category_id')
+		.eq('id', id)
+		.maybeSingle();
 
-	return { product, product_po };
+	return { product };
 }) satisfies PageLoad;

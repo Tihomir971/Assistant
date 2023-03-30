@@ -30,7 +30,7 @@
 	});
 
 	export let data: PageData;
-	const { product, product_po, categories } = data;
+	const { product, categories } = data;
 
 	function shouldFilterItem(item: ComboBoxItem, value: string) {
 		if (!value) return true;
@@ -54,39 +54,40 @@
 					<Form>
 						<FormGroup>
 							<TextInput
+								readonly
 								bind:value={product.id}
-								labelText="User name"
+								labelText="Product ID"
 								placeholder="Enter user name..."
 							/>
 						</FormGroup>
 						<FormGroup>
 							<TextInput
 								bind:value={product.name}
-								labelText="User name"
+								labelText="Product name"
 								placeholder="Enter user name..."
 							/>
 						</FormGroup>
 						<FormGroup>
 							<TextInput
 								bind:value={product.barcode}
-								labelText="User name"
+								labelText="Product barcode"
 								placeholder="Enter user name..."
 							/>
 						</FormGroup>
-						<FormGroup>
+						<!-- 						<FormGroup>
 							<TextInput
-								bind:value={product.c_taxcategory_id}
-								labelText="taxcategory"
+								bind:value={product.c_tax.rate}
+								labelText="Product tax"
 								placeholder="Enter user name..."
 							/>
-						</FormGroup>
-						<FormGroup>
+						</FormGroup> -->
+						<!-- 						<FormGroup>
 							<TextInput
 								bind:value={product.c_uom_id}
-								labelText="uom"
+								labelText="Product UOM"
 								placeholder="Enter user name..."
 							/>
-						</FormGroup>
+						</FormGroup> -->
 						<FormGroup>
 							{#if categories}
 								<ComboBox
@@ -98,13 +99,13 @@
 								/>
 							{/if}
 						</FormGroup>
-						<FormGroup>
+						<!-- 						<FormGroup>
 							<TextInput
 								bind:value={product.m_product_category_id}
 								labelText="product_category"
 								placeholder="Enter user name..."
 							/>
-						</FormGroup>
+						</FormGroup> -->
 						<FormGroup>
 							<TextInput
 								bind:value={product.condition}
@@ -127,15 +128,16 @@
 						<Tab label="Tab label 3" />
 						<svelte:fragment slot="content">
 							<TabContent>
-								<!-- 	{#if product_po}
+								<!-- 								{#if product_po}
 									<DataTable
 										size="short"
 										headers={[
 											{ key: 'c_bpartner_id', value: 'Partner' },
+											{ key: 'vendorproductno', value: 'Vendor PN' },
 											{ key: 'pricelist', value: 'Price' },
 											{ key: 'url', value: 'URL' }
 										]}
-										rows={[product_po]}
+										rows={product_po}
 									/>{/if} -->
 							</TabContent>
 							<TabContent>Content 2</TabContent>
