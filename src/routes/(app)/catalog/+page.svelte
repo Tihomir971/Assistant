@@ -27,14 +27,18 @@
 			{ key: 'sku', value: 'SKU' },
 			{ key: 'barcode', value: 'Barcode' },
 			{ key: 'name', value: 'Name' },
-			{ key: 'm_storageonhand[0].qtyonhand', value: 'Qty.' },
+			{ key: 'qtyonhand', value: 'Qty.' },
 			{
-				key: 'm_product_po[0].pricelist',
-				value: 'Market Price'
+				key: 'pricePo',
+				value: 'Purchase Pr.'
 			},
 			{
-				key: 'm_productprice[0].pricestd',
-				value: 'Retail Price'
+				key: 'pricelist',
+				value: 'Market Pr.'
+			},
+			{
+				key: 'productprice',
+				value: 'Retail Pr.'
 			}
 		]}
 		rows={products}

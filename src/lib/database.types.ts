@@ -401,7 +401,7 @@ export interface Database {
           isactive: boolean
           node_id: number
           parent_id: number | null
-          product_category_id: number | null
+          product_category_id: number
           updated: string
         }
         Insert: {
@@ -414,7 +414,7 @@ export interface Database {
           isactive?: boolean
           node_id: number
           parent_id?: number | null
-          product_category_id?: number | null
+          product_category_id: number
           updated?: string
         }
         Update: {
@@ -427,7 +427,7 @@ export interface Database {
           isactive?: boolean
           node_id?: number
           parent_id?: number | null
-          product_category_id?: number | null
+          product_category_id?: number
           updated?: string
         }
       }
@@ -1262,91 +1262,79 @@ export interface Database {
       }
       m_product: {
         Row: {
+          ad_client_id: number
+          ad_org_id: number
           attributes: Json | null
           barcode: string | null
           brand: string | null
           c_taxcategory_id: number
           c_uom_id: number
-          category_id: number[] | null
-          client_id: number | null
           condition: string | null
           created: string
           discontinued: boolean
           id: number
+          imageurl: string | null
           isactive: boolean
           isselfservice: boolean
           m_attributeset_id: number | null
           m_product_category_id: number | null
           mpn: string | null
           name: string
-          price: number | null
-          pricelastpo: number | null
           producttype: string
-          qtyonhand: number | null
           sku: string | null
-          special_price: number | null
           unitsperpack: number
           unitsperpallet: number | null
           updated: string
-          web: boolean
         }
         Insert: {
+          ad_client_id?: number
+          ad_org_id?: number
           attributes?: Json | null
           barcode?: string | null
           brand?: string | null
           c_taxcategory_id?: number
           c_uom_id?: number
-          category_id?: number[] | null
-          client_id?: number | null
           condition?: string | null
           created?: string
           discontinued?: boolean
           id?: number
+          imageurl?: string | null
           isactive?: boolean
           isselfservice?: boolean
           m_attributeset_id?: number | null
           m_product_category_id?: number | null
           mpn?: string | null
           name: string
-          price?: number | null
-          pricelastpo?: number | null
           producttype?: string
-          qtyonhand?: number | null
           sku?: string | null
-          special_price?: number | null
           unitsperpack?: number
           unitsperpallet?: number | null
           updated?: string
-          web?: boolean
         }
         Update: {
+          ad_client_id?: number
+          ad_org_id?: number
           attributes?: Json | null
           barcode?: string | null
           brand?: string | null
           c_taxcategory_id?: number
           c_uom_id?: number
-          category_id?: number[] | null
-          client_id?: number | null
           condition?: string | null
           created?: string
           discontinued?: boolean
           id?: number
+          imageurl?: string | null
           isactive?: boolean
           isselfservice?: boolean
           m_attributeset_id?: number | null
           m_product_category_id?: number | null
           mpn?: string | null
           name?: string
-          price?: number | null
-          pricelastpo?: number | null
           producttype?: string
-          qtyonhand?: number | null
           sku?: string | null
-          special_price?: number | null
           unitsperpack?: number
           unitsperpallet?: number | null
           updated?: string
-          web?: boolean
         }
       }
       m_product_category: {
