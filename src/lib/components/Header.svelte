@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
-	import { invalidate } from '$app/navigation';
+	import { invalidate, invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { warehouseId } from '$lib/stores/settingStore';
 	import {
 		Header,
 		HeaderAction,
@@ -11,9 +12,13 @@
 		HeaderPanelLink,
 		HeaderPanelLinks,
 		HeaderUtilities,
+		Select,
+		SelectItem,
 		SkipToContent
 	} from 'carbon-components-svelte';
 	import { UserAvatar } from 'carbon-icons-svelte';
+
+	let selected: string | number | undefined;
 
 	let loading = false;
 	const handleLogout: SubmitFunction = () => {
@@ -27,9 +32,13 @@
 			loading = false;
 		};
 	};
+	function handleClick() {
+		const form = document.getElementById('my-form') as HTMLFormElement;
+		form.submit();
+	}
 </script>
 
-<Header company="Kalisi" platformName="Assistant">
+<Header company="Kalisi" platformName="Assistant" href="/">
 	<svelte:fragment slot="skip-to-content">
 		<SkipToContent />
 	</svelte:fragment>
@@ -44,16 +53,25 @@
 		{/if}
 	</HeaderNav>
 	<HeaderUtilities>
+		<Select
+			noLabel
+			bind:selected
+			on:change={() => {
+				warehouseId.set(Number(selected));
+				invalidateAll();
+			}}
+		>
+			<SelectItem value="5" text="Retail" />
+			<SelectItem value="2" text="Wholesale" />
+		</Select>
 		<HeaderAction icon={UserAvatar}>
 			<HeaderPanelLinks>
 				<HeaderPanelDivider>Switcher subject 1</HeaderPanelDivider>
-				<li class="bx--switcher__item">
-					{#if $page.data.session}
-						<form action="/logout" method="post">
-							<input class="bx--switcher__item-link" value="Logout" type="submit" />
-						</form>
-					{/if}
-				</li>
+				{#if $page.data.session}
+					<form id="my-form" action="/logout" method="POST">
+						<HeaderPanelLink on:click={handleClick}>Sign out</HeaderPanelLink>
+					</form>
+				{/if}
 				<HeaderPanelLink>Switcher item 1</HeaderPanelLink>
 				<HeaderPanelLink>Switcher item 2</HeaderPanelLink>
 				<HeaderPanelLink>Switcher item 3</HeaderPanelLink>

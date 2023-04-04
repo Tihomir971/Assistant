@@ -2,14 +2,13 @@
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import DataTable from '$lib/components/DataTable.svelte';
 	import { activeId } from '$lib/stores/categoryStore';
+	import { warehouseId } from '$lib/stores/settingStore';
 	import { Button, Modal } from 'carbon-components-svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 	$: ({ products } = data);
 
-	//const { products, currentDate } = data;
-	let openEdit = false;
 	function rerunLoadFunction() {
 		invalidate('catalog:products');
 		return;
@@ -31,10 +30,6 @@
 			{
 				key: 'pricePo',
 				value: 'Purchase Pr.'
-			},
-			{
-				key: 'pricelist',
-				value: 'Market Pr.'
 			},
 			{
 				key: 'productprice',

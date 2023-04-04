@@ -16,7 +16,6 @@
 		ToolbarSearch,
 		TreeView
 	} from 'carbon-components-svelte';
-	import type { DataTableRow } from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
 	import type {
 		TreeNode,
 		TreeNodeId
@@ -33,9 +32,9 @@
 		  }[]
 		| null;
 	//export let activeId: TreeNodeId = '';
-	import { activeId } from '$lib/stores/categoryStore';
+	//import { activeId } from '$lib/stores/categoryStore';
 
-	let value: any = '';
+	let searchValue: string = '';
 	let openCreateModal: boolean = false;
 	let openDeleteModal: boolean = false;
 	let newCategoryName: string;
@@ -48,20 +47,21 @@
 		| null;
 	//	let searchRow: ReadonlyArray<DataTableRow>;
 	let treeview: TreeView;
+	let activeId: TreeNodeId | undefined;
 
 	import { createEventDispatcher } from 'svelte';
 	import { convertToTreeStructure } from '$lib/utils/tree';
-	import { invalidate, invalidateAll } from '$app/navigation';
-	import { Equalizer, TextIndent } from 'carbon-icons-svelte';
+	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import type { ComboBoxItem } from 'carbon-components-svelte/types/ComboBox/ComboBox.svelte';
+	import { page } from '$app/stores';
 	const dispatch = createEventDispatcher();
 	let expanded: boolean = false;
 	$: children = convertToTreeStructure(categories);
 	$: if (categories) {
 		searchRow = categories.filter((row: { id: number; text: string; parent_id: number | null }) => {
 			let rowName = row.text.toLowerCase();
-			if (rowName.includes(value.toLowerCase())) {
+			if (rowName.includes(searchValue.toLowerCase())) {
 				return true;
 			}
 			return false;
@@ -70,7 +70,11 @@
 		searchRow = [];
 	}
 	function rerunLoadFunction() {
-		invalidate('catalog:products');
+		if (activeId) {
+			const newUrl = new URL($page.url);
+			newUrl?.searchParams?.set('cat', activeId.toString());
+			goto(newUrl);
+		}
 		return;
 	}
 	function shouldFilterItem(item: ComboBoxItem, value: string) {
@@ -112,22 +116,22 @@
 				on:click={treeview?.collapseAll}
 			/>
 		{/if}
-		<ToolbarSearch bind:expanded bind:value />
+		<ToolbarSearch bind:expanded bind:value={searchValue} />
 	</ToolbarContent>
 </Toolbar>
 
 {#await children}
 	Loading
 {:then children}
-	{#if value && searchRow}
+	{#if searchValue /* .length > 2 */ && searchRow}
 		<DataTable
-			style="overflow: auto; height: 100%"
+			style="overflow: auto; height: calc(100% - 50px);"
 			size="short"
 			rows={searchRow}
 			headers={[{ key: 'text', value: 'Choose Category' }]}
 			pageSize={16}
 			on:click:row={(e) => {
-				$activeId = e.detail.id;
+				activeId = e.detail.id;
 				rerunLoadFunction();
 			}}
 		/>
@@ -135,7 +139,7 @@
 		<TreeView
 			style="overflow: auto; height: calc(100% - 50px);"
 			hideLabel
-			bind:activeId={$activeId}
+			bind:activeId
 			bind:this={treeview}
 			on:select={() => rerunLoadFunction()}
 			{children}
@@ -152,7 +156,7 @@
 	on:submit={async () => {
 		const { data } = await supabase
 			.from('m_product_category')
-			.insert({ name: newCategoryName, parent_id: $activeId });
+			.insert({ name: newCategoryName, parent_id: activeId });
 		newCategoryName = '';
 		invalidate('catalog:categories');
 		openCreateModal = false;
@@ -171,7 +175,7 @@
 			<ComboBox
 				titleText="Parent Category"
 				placeholder="Parent product category"
-				selectedId={$activeId}
+				selectedId={activeId}
 				items={categories}
 				{shouldFilterItem}
 			/>
@@ -186,7 +190,7 @@
 	primaryButtonText="Delete"
 	secondaryButtonText="Cancel"
 	on:submit={async () => {
-		const { data } = await supabase.from('m_product_category').delete().eq('id', $activeId);
+		const { data } = await supabase.from('m_product_category').delete().eq('id', activeId);
 		invalidate('catalog:categories');
 		openDeleteModal = false;
 	}}
