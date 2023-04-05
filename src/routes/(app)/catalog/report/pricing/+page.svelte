@@ -50,20 +50,3 @@
 		on:edit={callbackFunction}
 	/>
 {/if}
-
-<style>
-	:global(.table-wrapper) {
-		overflow-x: scroll;
-	}
-	:global(.table-wrapper .bx--data-table-container) {
-		overflow: auto;
-	}
-	:global(
-			.table-wrapper .bx--data-table-header,
-			.table-wrapper .bx--table-toolbar,
-			.table-wrapper .bx--pagination
-		) {
-		position: sticky;
-		left: 0;
-	}
-</style>

@@ -1716,6 +1716,7 @@ export interface Database {
           mage_id: number
           parent_id: number
           parent_mage_id: number
+          enabled: boolean
         }[]
       }
       c_channel_store_mage_categ_link: {

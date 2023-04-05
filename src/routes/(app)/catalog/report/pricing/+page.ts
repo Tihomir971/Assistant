@@ -44,16 +44,9 @@ export const load = (async ({ parent, depends, url }) => {
 		productQuery = productQuery.eq('m_product_category_id', activeCategoryId);
 	}
 	const { data } = await productQuery;
-
-	/* 	const { data } = await supabase
-		.from('m_product')
-		.select(
-			'id,barcode,sku,name,m_storageonhand(warehouse_id,qtyonhand),m_productprice(m_pricelist_version_id,pricestd),m_product_po(pricelist),c_uom_id'
-		)
-		.order('name')
-		.eq('m_product_category_id', activeCategoryId); */
-	console.log('products', data);
+	//	console.log('products', data);
 	//console.log('error', error);
+
 	data?.forEach((product) => {
 		let qtyonhand = 0;
 		let productprice = 0;

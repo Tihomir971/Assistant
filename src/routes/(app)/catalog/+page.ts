@@ -4,6 +4,7 @@ import { warehouseId } from '$lib/stores/settingStore';
 import { get } from 'svelte/store';
 
 export const load = (async ({ parent, depends, url }) => {
+	const start = Date.now();
 	const { session, supabase } = await parent();
 	console.log('(app)/page.ts - start');
 	if (!session) {
@@ -43,14 +44,6 @@ export const load = (async ({ parent, depends, url }) => {
 	}
 	const { data } = await productQuery;
 
-	/* 	const { data } = await supabase
-		.from('m_product')
-		.select(
-			'id,barcode,sku,name,m_storageonhand(warehouse_id,qtyonhand),m_productprice(m_pricelist_version_id,pricestd),m_product_po(pricelist),c_uom_id'
-		)
-		.order('name')
-		.eq('m_product_category_id', activeCategoryId); */
-	console.log('products', data);
 	//console.log('error', error);
 	data?.forEach((product) => {
 		let qtyonhand = 0;
@@ -116,6 +109,7 @@ export const load = (async ({ parent, depends, url }) => {
 		});
 	});
 	depends('catalog:products');
-	console.log('(app)/page.ts - stop');
+	const end = Date.now();
+	console.log(`(app)/page.ts - time: ${end - start} ms`);
 	return { products };
 }) satisfies PageLoad;

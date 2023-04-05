@@ -45,12 +45,6 @@
 	<HeaderNav>
 		<HeaderNavItem href="/catalog" text="Products" />
 		<HeaderNavItem href="/catalog/report/pricing" text="Pricing" />
-		<HeaderNavItem href="/" text="Link 3" />
-		{#if $page.data.session}
-			<form action="/logout" method="post" use:enhance={handleLogout}>
-				<button disabled={loading} type="submit">Sign out</button>
-			</form>
-		{/if}
 	</HeaderNav>
 	<HeaderUtilities>
 		<Select
@@ -68,18 +62,10 @@
 			<HeaderPanelLinks>
 				<HeaderPanelDivider>Switcher subject 1</HeaderPanelDivider>
 				{#if $page.data.session}
-					<form id="my-form" action="/logout" method="POST">
+					<form id="my-form" action="/logout" method="POST" use:enhance={handleLogout}>
 						<HeaderPanelLink on:click={handleClick}>Sign out</HeaderPanelLink>
 					</form>
 				{/if}
-				<HeaderPanelLink>Switcher item 1</HeaderPanelLink>
-				<HeaderPanelLink>Switcher item 2</HeaderPanelLink>
-				<HeaderPanelLink>Switcher item 3</HeaderPanelLink>
-				<HeaderPanelLink>Switcher item 4</HeaderPanelLink>
-				<HeaderPanelDivider>Switcher subject 2</HeaderPanelDivider>
-				<HeaderPanelLink>Switcher item 1</HeaderPanelLink>
-				<HeaderPanelLink>Switcher item 2</HeaderPanelLink>
-				<HeaderPanelDivider>Switcher subject 3</HeaderPanelDivider>
 				<HeaderPanelLink>Switcher item 1</HeaderPanelLink>
 			</HeaderPanelLinks>
 		</HeaderAction>
