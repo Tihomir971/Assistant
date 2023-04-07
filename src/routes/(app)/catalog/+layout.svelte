@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { invalidate } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import CategoryTree from '$lib/components/CategoryTree.svelte';
 	import { activeId } from '$lib/stores/categoryStore';
 	import { Column, Grid, Row } from 'carbon-components-svelte';
@@ -7,6 +7,11 @@
 
 	export let data: LayoutData;
 	$: ({ categories, supabase } = data);
+
+	function callbackFunction(event: CustomEvent) {
+		console.log(`Notify fired! Detail: ${event.detail}`);
+		goto(`/catalog/category/${event.detail}`);
+	}
 </script>
 
 <Grid fullWidth style="height: 100%; width;: 100%; padding: 0px">
@@ -17,7 +22,7 @@
 			lg={3}
 		>
 			{#if categories}
-				<CategoryTree {categories} {supabase} />
+				<CategoryTree {categories} {supabase} on:edit={callbackFunction} />
 			{/if}
 		</Column>
 		<Column noGutter style="height: 100%; width;: 100%">

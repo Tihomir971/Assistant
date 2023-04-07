@@ -19,6 +19,26 @@
 		console.log(`Notify fired! Detail: ${event.detail}`);
 		goto(`/catalog/product/${event.detail}`);
 	}
+	async function updateEvent() {
+		console.log('Notify fired! Update');
+		let headersList = {
+			Accept: '*/*',
+			'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
+			Authorization: 'Bearer 2be6a370df8fee54201fd6d53d7726240de5a2756493abd19877956ec0716855'
+		};
+
+		let bodyContent = new FormData();
+		bodyContent.append('categ', '29');
+
+		let response = await fetch('http://192.168.1.10:4443/cenoteka', {
+			method: 'POST',
+			body: bodyContent,
+			headers: headersList
+		});
+
+		let data = await response.text();
+		console.log('response', data);
+	}
 </script>
 
 {#if products}
@@ -48,5 +68,6 @@
 		]}
 		rows={products}
 		on:edit={callbackFunction}
+		on:update={updateEvent}
 	/>
 {/if}

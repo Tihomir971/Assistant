@@ -99,9 +99,14 @@
 				icon={RowDelete}
 				on:click={() => (openDeleteModal = true)}
 			/>
-			<Button iconDescription="Edit" kind="ghost" icon={Edit} on:click={() => dispatch('edit')} />
 			<Button
-				iconDescription="Update Me"
+				iconDescription="Edit"
+				kind="ghost"
+				icon={Edit}
+				on:click={() => dispatch('edit', activeId)}
+			/>
+			<Button
+				iconDescription="Refresh"
 				kind="ghost"
 				icon={UpdateNow}
 				on:click={() => {

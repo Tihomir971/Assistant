@@ -1,4 +1,5 @@
 <script lang="ts">
+	import UpdateNow from 'carbon-icons-svelte/lib/UpdateNow.svelte';
 	import type {
 		DataTableHeader,
 		DataTableRow
@@ -52,6 +53,16 @@
 					const newUrl = new URL($page.url);
 					newUrl?.searchParams?.set('onStock', onStock.toString());
 					goto(newUrl);
+				}}
+			/>
+			<Button
+				iconDescription="Update"
+				tooltipPosition="left"
+				kind="ghost"
+				bind:isSelected={onStock}
+				icon={UpdateNow}
+				on:click={() => {
+					dispatch('update');
 				}}
 			/>
 		</ToolbarContent>
