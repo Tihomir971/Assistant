@@ -355,6 +355,76 @@ export interface Database {
           value?: string
         }
       }
+      c_cart: {
+        Row: {
+          ad_client_id: number
+          ad_org_id: number
+          created: string
+          id: number
+          isactive: boolean
+          processed: boolean
+          updated: string
+        }
+        Insert: {
+          ad_client_id?: number
+          ad_org_id?: number
+          created?: string
+          id?: number
+          isactive?: boolean
+          processed?: boolean
+          updated?: string
+        }
+        Update: {
+          ad_client_id?: number
+          ad_org_id?: number
+          created?: string
+          id?: number
+          isactive?: boolean
+          processed?: boolean
+          updated?: string
+        }
+      }
+      c_cartline: {
+        Row: {
+          ad_client_id: number
+          ad_org_id: number
+          c_order_id: number
+          c_uom_id: number
+          created: string
+          id: number
+          isactive: boolean
+          m_product_id: number
+          priceentered: number
+          qtyentered: number
+          updated: string
+        }
+        Insert: {
+          ad_client_id?: number
+          ad_org_id?: number
+          c_order_id: number
+          c_uom_id: number
+          created?: string
+          id?: number
+          isactive?: boolean
+          m_product_id: number
+          priceentered: number
+          qtyentered: number
+          updated?: string
+        }
+        Update: {
+          ad_client_id?: number
+          ad_org_id?: number
+          c_order_id?: number
+          c_uom_id?: number
+          created?: string
+          id?: number
+          isactive?: boolean
+          m_product_id?: number
+          priceentered?: number
+          qtyentered?: number
+          updated?: string
+        }
+      }
       c_channel: {
         Row: {
           ad_client_id: number
@@ -1490,6 +1560,47 @@ export interface Database {
           pricelimit?: number | null
           pricelist?: number | null
           pricestd?: number
+          updated?: string
+        }
+      }
+      m_replenish: {
+        Row: {
+          ad_client_id: number
+          ad_org_id: number
+          created: string
+          id: number
+          isactive: boolean
+          level_max: number
+          level_min: number
+          m_product_id: number
+          m_warehouse_id: number
+          m_warehousesource_id: number | null
+          updated: string
+        }
+        Insert: {
+          ad_client_id?: number
+          ad_org_id?: number
+          created?: string
+          id?: number
+          isactive?: boolean
+          level_max?: number
+          level_min?: number
+          m_product_id: number
+          m_warehouse_id: number
+          m_warehousesource_id?: number | null
+          updated?: string
+        }
+        Update: {
+          ad_client_id?: number
+          ad_org_id?: number
+          created?: string
+          id?: number
+          isactive?: boolean
+          level_max?: number
+          level_min?: number
+          m_product_id?: number
+          m_warehouse_id?: number
+          m_warehousesource_id?: number | null
           updated?: string
         }
       }

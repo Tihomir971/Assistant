@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { afterNavigate, goto } from '$app/navigation';
 	import { base } from '$app/paths';
-	import { activeId } from '$lib/stores/categoryStore';
 	import {
 		Button,
 		ButtonSet,
@@ -12,8 +11,6 @@
 		FormGroup,
 		Grid,
 		Row,
-		Select,
-		SelectItem,
 		Tab,
 		TabContent,
 		Tabs,
@@ -21,16 +18,19 @@
 		Tile
 	} from 'carbon-components-svelte';
 	import type { ComboBoxItem } from 'carbon-components-svelte/types/ComboBox/ComboBox.svelte';
-	import { Raw } from 'carbon-icons-svelte';
 	import type { PageData } from './$types';
+	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	let previousPage: string = base;
 
 	afterNavigate(({ from }) => {
-		previousPage = from?.url.pathname || previousPage;
+		console.log('from', from);
+		previousPage = from?.url.href || previousPage;
+		console.log('previousPage', previousPage);
 	});
 
 	export let data: PageData;
-	const { product, categories } = data;
+	const { product, categories, product_po, replenish } = data;
 
 	function shouldFilterItem(item: ComboBoxItem, value: string) {
 		if (!value) return true;
@@ -93,7 +93,7 @@
 								<ComboBox
 									titleText="Category"
 									placeholder="Select product category"
-									selectedId={$activeId}
+									selectedId={product.m_product_category_id}
 									items={categories}
 									{shouldFilterItem}
 								/>
@@ -123,24 +123,45 @@
 					style="border-color: rgb(198, 198, 198); border-top-width: 2px; border-top-style: solid;"
 				>
 					<Tabs>
-						<Tab label="PO" />
+						<Tab label="Product PO" />
 						<Tab label="Tab label 2" />
 						<Tab label="Tab label 3" />
 						<svelte:fragment slot="content">
 							<TabContent>
-								<!-- 								{#if product_po}
+								{#if product_po}
 									<DataTable
 										size="short"
 										headers={[
 											{ key: 'c_bpartner_id', value: 'Partner' },
 											{ key: 'vendorproductno', value: 'Vendor PN' },
 											{ key: 'pricelist', value: 'Price' },
+											{ key: 'updated', value: 'updated' },
 											{ key: 'url', value: 'URL' }
 										]}
 										rows={product_po}
-									/>{/if} -->
+									>
+										<svelte:fragment slot="cell" let:row let:cell>
+											{#if cell.key === 'updated' || cell.key === 'created'}
+												<span>{new Date(cell.value).toLocaleString('en-US')}</span>
+											{/if}
+										</svelte:fragment>
+									</DataTable>
+								{/if}
 							</TabContent>
-							<TabContent>Content 2</TabContent>
+							<TabContent>
+								{#if replenish}
+									<DataTable
+										size="short"
+										headers={[
+											{ key: 'm_warehouse_id', value: 'warehouse' },
+											{ key: 'level_min', value: 'level_min' },
+											{ key: 'level_max', value: 'level_max' },
+											{ key: 'm_warehousesource_id', value: 'm_warehousesource_id' }
+										]}
+										rows={replenish}
+									/>
+								{/if}</TabContent
+							>
 							<TabContent>Content 3</TabContent>
 						</svelte:fragment>
 					</Tabs>

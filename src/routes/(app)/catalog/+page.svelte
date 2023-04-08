@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { goto, invalidate, invalidateAll } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
+	import { page } from '$app/stores';
 	import DataTable from '$lib/components/DataTable.svelte';
-	import { activeId } from '$lib/stores/categoryStore';
-	import { warehouseId } from '$lib/stores/settingStore';
-	import { Button, Modal } from 'carbon-components-svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -15,7 +13,11 @@
 	}
 	function callbackFunction(event: CustomEvent) {
 		console.log(`Notify fired! Detail: ${event.detail}`);
-		goto(`/catalog/product/${event.detail}`);
+
+		console.log(`/catalog/product/${event.detail}`);
+		const searchParams = $page.url.searchParams.toString();
+		console.log(searchParams);
+		goto(`/catalog/product/${event.detail}?${searchParams}`);
 	}
 </script>
 

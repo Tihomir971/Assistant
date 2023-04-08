@@ -51,10 +51,11 @@
 
 	import { createEventDispatcher } from 'svelte';
 	import { convertToTreeStructure } from '$lib/utils/tree';
-	import { goto, invalidate, invalidateAll } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import type { ComboBoxItem } from 'carbon-components-svelte/types/ComboBox/ComboBox.svelte';
 	import { page } from '$app/stores';
+	import { activeCategoryId } from '$lib/stores/catalog';
 	const dispatch = createEventDispatcher();
 	let expanded: boolean = false;
 	$: children = convertToTreeStructure(categories);
@@ -71,6 +72,7 @@
 	}
 	function rerunLoadFunction() {
 		if (activeId) {
+			$activeCategoryId = activeId;
 			const newUrl = new URL($page.url);
 			newUrl?.searchParams?.set('cat', activeId.toString());
 			goto(newUrl);

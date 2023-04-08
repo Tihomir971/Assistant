@@ -1,16 +1,13 @@
 <script lang="ts">
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import DataTable from '$lib/components/DataTable.svelte';
-	import { activeId } from '$lib/stores/categoryStore';
-	import { warehouseId } from '$lib/stores/settingStore';
-	import { Button, Modal } from 'carbon-components-svelte';
 	import type { PageData } from './$types';
+	import { page } from '$app/stores';
 
 	export let data: PageData;
 	$: ({ products } = data);
 
 	//const { products, currentDate } = data;
-	let openEdit = false;
 	function rerunLoadFunction() {
 		invalidate('catalog:products');
 		return;
@@ -20,24 +17,27 @@
 		goto(`/catalog/product/${event.detail}`);
 	}
 	async function updateEvent() {
-		console.log('Notify fired! Update');
-		let headersList = {
-			Accept: '*/*',
-			'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
-			Authorization: 'Bearer 2be6a370df8fee54201fd6d53d7726240de5a2756493abd19877956ec0716855'
-		};
+		const activeCategoryId = $page.url.searchParams.get('cat');
+		console.log('Update Category', activeCategoryId);
+		if (typeof activeCategoryId === 'string') {
+			let headersList = {
+				Accept: '*/*',
+				'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
+				Authorization: 'Bearer 2be6a370df8fee54201fd6d53d7726240de5a2756493abd19877956ec0716855'
+			};
 
-		let bodyContent = new FormData();
-		bodyContent.append('categ', '29');
+			let bodyContent = new FormData();
+			bodyContent.append('categ', activeCategoryId);
 
-		let response = await fetch('http://192.168.1.10:4443/cenoteka', {
-			method: 'POST',
-			body: bodyContent,
-			headers: headersList
-		});
+			let response = await fetch('https://192.168.1.10:4443/cenoteka', {
+				method: 'POST',
+				body: bodyContent,
+				headers: headersList
+			});
 
-		let data = await response.text();
-		console.log('response', data);
+			let data = await response.text();
+			console.log('response', data);
+		}
 	}
 </script>
 

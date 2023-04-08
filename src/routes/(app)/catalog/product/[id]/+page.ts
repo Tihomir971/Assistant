@@ -13,5 +13,16 @@ export const load = (async ({ params, parent }) => {
 		.eq('id', id)
 		.maybeSingle();
 
-	return { product };
+	const { data: product_po } = await supabase
+		.from('m_product_po')
+		.select('id,c_bpartner_id,pricelist,vendorproductno,url,updated')
+		.eq('m_product_id', id);
+
+	const { data: replenish } = await supabase
+		.from('m_replenish')
+		.select('id,m_warehouse_id,level_min,level_max,m_warehousesource_id')
+		.eq('m_product_id', id);
+
+	console.log('replenish', replenish);
+	return { product, product_po, replenish };
 }) satisfies PageLoad;

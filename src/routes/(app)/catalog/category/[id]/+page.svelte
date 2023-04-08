@@ -1,18 +1,14 @@
 <script lang="ts">
 	import { afterNavigate, goto, invalidate } from '$app/navigation';
 	import { base } from '$app/paths';
-	import { activeId } from '$lib/stores/categoryStore';
 	import {
 		Button,
 		ButtonSet,
 		Checkbox,
-		Column,
 		ComboBox,
 		Form,
 		FormGroup,
-		Grid,
 		Modal,
-		Row,
 		TextArea,
 		TextInput,
 		Tile
@@ -20,6 +16,7 @@
 	import type { ComboBoxItem } from 'carbon-components-svelte/types/ComboBox/ComboBox.svelte';
 	import type { PageData } from './$types';
 	import type { SupabaseClient } from '@supabase/supabase-js';
+	import { page } from '$app/stores';
 	let previousPage: string = base;
 
 	afterNavigate(({ from }) => {
@@ -97,7 +94,8 @@
 	primaryButtonText="Delete"
 	secondaryButtonText="Cancel"
 	on:submit={async () => {
-		const { data } = await supabase.from('m_product_category').delete().eq('id', activeId);
+		const activeCategoryId = $page.url.searchParams.get('cat');
+		const { data } = await supabase.from('m_product_category').delete().eq('id', activeCategoryId);
 		invalidate('catalog:categories');
 		openDeleteModal = false;
 	}}

@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { goto, invalidate } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import CategoryTree from '$lib/components/CategoryTree.svelte';
-	import { activeId } from '$lib/stores/categoryStore';
 	import { Column, Grid, Row } from 'carbon-components-svelte';
 	import type { LayoutData } from './$types';
 
@@ -12,6 +11,14 @@
 		console.log(`Notify fired! Detail: ${event.detail}`);
 		goto(`/catalog/category/${event.detail}`);
 	}
+
+	/* 	onMount(() => {
+		if (!$page.url.searchParams?.get('wh')) {
+			const newUrl = new URL($page.url);
+			newUrl?.searchParams?.set('wh', '5');
+			goto(newUrl);
+		}
+	}); */
 </script>
 
 <Grid fullWidth style="height: 100%; width;: 100%; padding: 0px">

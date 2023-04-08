@@ -1,7 +1,5 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
-import { warehouseId } from '$lib/stores/settingStore';
-import { get } from 'svelte/store';
 
 export const load = (async ({ parent, depends, url }) => {
 	const start = Date.now();
@@ -12,6 +10,7 @@ export const load = (async ({ parent, depends, url }) => {
 	}
 
 	const activeCategoryId = Number(url.searchParams.get('cat'));
+	const activeWarehouseId = Number(url.searchParams.get('wh'));
 
 	const onStock = url.searchParams.get('onStock') || 'true';
 	//	const newUrl = new URL($page.url);
@@ -60,7 +59,7 @@ export const load = (async ({ parent, depends, url }) => {
 
 		if (product.m_storageonhand && Array.isArray(product.m_storageonhand)) {
 			product.m_storageonhand?.forEach((m_storageonhand) => {
-				if (m_storageonhand.warehouse_id === get(warehouseId)) {
+				if (m_storageonhand.warehouse_id === activeWarehouseId) {
 					qtyonhand = qtyonhand + m_storageonhand.qtyonhand;
 				}
 			});
