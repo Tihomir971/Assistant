@@ -8,17 +8,13 @@
 	const dispatch = createEventDispatcher();
 	import {
 		Button,
-		ButtonSet,
 		DataTable,
 		OverflowMenu,
 		OverflowMenuItem,
-		Select,
-		SelectItem,
 		Toolbar,
 		ToolbarContent,
 		ToolbarSearch
 	} from 'carbon-components-svelte';
-	import Edit from 'carbon-icons-svelte/lib/Edit.svelte';
 	import { Filter } from 'carbon-icons-svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
@@ -26,7 +22,6 @@
 	export let rows: DataTableRow[];
 
 	let onStock = true;
-	//$: console.log('onStock', onStock);
 	$: headers.push({ key: 'menu', empty: true });
 </script>
 

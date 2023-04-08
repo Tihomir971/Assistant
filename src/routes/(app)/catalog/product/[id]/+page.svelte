@@ -10,6 +10,7 @@
 		Form,
 		FormGroup,
 		Grid,
+		Link,
 		Row,
 		Tab,
 		TabContent,
@@ -21,6 +22,8 @@
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
+	import TableSkeleton from '$lib/components/TableSkeleton.svelte';
+	import { Launch } from 'carbon-icons-svelte';
 	let previousPage: string = base;
 
 	afterNavigate(({ from }) => {
@@ -57,7 +60,15 @@
 								readonly
 								bind:value={product.id}
 								labelText="Product ID"
-								placeholder="Enter user name..."
+								placeholder="Enter product ID..."
+							/>
+						</FormGroup>
+						<FormGroup>
+							<TextInput
+								readonly
+								bind:value={product.sku}
+								labelText="Product SKU"
+								placeholder="Enter product SKU..."
 							/>
 						</FormGroup>
 						<FormGroup>
@@ -108,6 +119,7 @@
 						</FormGroup> -->
 						<FormGroup>
 							<TextInput
+								inline
 								bind:value={product.condition}
 								labelText="condition"
 								placeholder="Enter user name..."
@@ -130,21 +142,31 @@
 							<TabContent>
 								{#if product_po}
 									<DataTable
+										useStaticWidth
 										size="short"
 										headers={[
-											{ key: 'c_bpartner_id', value: 'Partner' },
-											{ key: 'vendorproductno', value: 'Vendor PN' },
+											{ key: 'c_bpartner.name', value: 'Seller' },
+											{ key: 'vendorproductno', value: 'Seller PN' },
 											{ key: 'pricelist', value: 'Price' },
-											{ key: 'updated', value: 'updated' },
+											{ key: 'updated', value: 'Updated' },
 											{ key: 'url', value: 'URL' }
 										]}
 										rows={product_po}
 									>
 										<svelte:fragment slot="cell" let:row let:cell>
 											{#if cell.key === 'updated' || cell.key === 'created'}
-												<span>{new Date(cell.value).toLocaleString('en-US')}</span>
-											{:else if cell.key === 'url'}
-												<a target="_blank" href={cell.value}><code>{cell.value}</code></a>
+												<span
+													>{new Intl.DateTimeFormat('sr-Latn', {
+														dateStyle: 'medium',
+														timeStyle: 'medium'
+													}).format(new Date(cell.value))}</span
+												>
+											{:else if cell.key.includes('url')}
+												<Link
+													icon={Launch}
+													href="https://en.wikipedia.org/wiki/Round-robin_DNS"
+													target="_blank">{cell.value}</Link
+												>
 											{:else if typeof cell.value === 'number'}
 												<div style="text-align:right">
 													{new Intl.NumberFormat('sr-Latn-RS', {
@@ -161,7 +183,8 @@
 							</TabContent>
 							<TabContent>
 								{#if replenish}
-									<DataTable
+									<TableSkeleton
+										useStaticWidth
 										size="short"
 										headers={[
 											{ key: 'm_warehouse_id', value: 'warehouse' },
@@ -175,12 +198,14 @@
 							</TabContent>
 							<TabContent>
 								{#if storageonhand}
-									<DataTable
+									<TableSkeleton
+										useStaticWidth
 										size="short"
 										headers={[
-											{ key: 'qtyonhand', value: 'qtyonhand' },
-											{ key: 'updated', value: 'updated' },
-											{ key: 'warehouse_id', value: 'warehouse_id' }
+											{ key: 'm_warehouse.code', value: 'Warehouse' },
+											{ key: 'qtyonhand', value: 'Quantity' },
+											{ key: 'created', value: 'Created' },
+											{ key: 'updated', value: 'Updated' }
 										]}
 										rows={storageonhand}
 									/>

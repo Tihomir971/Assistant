@@ -9,13 +9,13 @@ export const load = (async ({ params, parent }) => {
 	const productId = Number(params.id);
 	const { data: product } = await supabase
 		.from('m_product')
-		.select('id,barcode,name,condition,m_product_category_id')
+		.select('id,sku,barcode,name,condition,m_product_category_id')
 		.eq('id', productId)
 		.maybeSingle();
 
 	const { data: product_po } = await supabase
 		.from('m_product_po')
-		.select('id,c_bpartner_id,pricelist,vendorproductno,url,updated')
+		.select('id,c_bpartner_id,pricelist,vendorproductno,url,updated,c_bpartner(name)')
 		.eq('m_product_id', productId);
 	console.log('product_po', product_po);
 
@@ -27,7 +27,7 @@ export const load = (async ({ params, parent }) => {
 
 	const { data: storageonhand } = await supabase
 		.from('m_storageonhand')
-		.select('*')
+		.select('id,qtyonhand,created,updated,m_warehouse(code)')
 		.eq('m_product_id', productId);
 	console.log('storageonhand', storageonhand);
 

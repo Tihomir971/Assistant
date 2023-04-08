@@ -60,13 +60,15 @@
 		</Select>
 		<HeaderAction icon={UserAvatar}>
 			<HeaderPanelLinks>
-				<HeaderPanelDivider>Switcher subject 1</HeaderPanelDivider>
+				<HeaderPanelDivider>Account</HeaderPanelDivider>
 				{#if $page.data.session}
 					<form id="my-form" action="/logout" method="POST" use:enhance={handleLogout}>
 						<HeaderPanelLink on:click={handleClick}>Sign out</HeaderPanelLink>
 					</form>
 				{/if}
-				<HeaderPanelLink>Switcher item 1</HeaderPanelLink>
+				<HeaderPanelDivider>Warehouse</HeaderPanelDivider>
+				<HeaderPanelLink>Retail</HeaderPanelLink>
+				<HeaderPanelLink>Wholesale</HeaderPanelLink>
 			</HeaderPanelLinks>
 		</HeaderAction>
 	</HeaderUtilities>

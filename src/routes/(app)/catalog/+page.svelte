@@ -2,6 +2,8 @@
 	import { goto, invalidate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import DataTable from '$lib/components/DataTable.svelte';
+	import TableSkeleton from '$lib/components/TableSkeleton.svelte';
+	import TableToolbarCatalog from '$lib/components/TableToolbarCatalog.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -19,14 +21,17 @@
 		console.log(searchParams);
 		goto(`/catalog/product/${event.detail}?${searchParams}`);
 	}
+	let onStock = true;
 </script>
 
 {#if products}
-	<DataTable
+	<TableSkeleton
 		size="short"
+		batchSelection
 		headers={[
 			{ key: 'sku', value: 'SKU' },
 			{ key: 'barcode', value: 'Barcode' },
+			{ key: 'mpn', value: 'MPN' },
 			{ key: 'name', value: 'Name' },
 			{ key: 'qtyonhand', value: 'Qty.' },
 			{
@@ -40,5 +45,15 @@
 		]}
 		rows={products}
 		on:edit={callbackFunction}
-	/>
+	>
+		<TableToolbarCatalog
+			{onStock}
+			on:filterStock={() => {
+				onStock = !onStock;
+				const newUrl = new URL($page.url);
+				newUrl?.searchParams?.set('onStock', onStock.toString());
+				goto(newUrl);
+			}}
+		/>
+	</TableSkeleton>
 {/if}

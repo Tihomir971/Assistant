@@ -4,14 +4,12 @@ import type { PageLoad } from './$types';
 export const load = (async ({ parent, depends, url }) => {
 	const start = Date.now();
 	const { session, supabase } = await parent();
-	console.log('(app)/page.ts - start');
 	if (!session) {
 		throw redirect(303, '/');
 	}
 
 	const activeCategoryId = Number(url.searchParams.get('cat'));
 	const activeWarehouseId = Number(url.searchParams.get('wh'));
-
 	const onStock = url.searchParams.get('onStock') || 'true';
 	//	const newUrl = new URL($page.url);
 	//	newUrl?.searchParams?.set('cat', activeId.toString());
@@ -26,12 +24,13 @@ export const load = (async ({ parent, depends, url }) => {
 				productprice: number | null;
 				pricePo: number | null;
 				taxRate: number | null;
+				mpn: string | null;
 		  }[] = [];
 
 	let productQuery = supabase
 		.from('m_product')
 		.select(
-			'id,barcode,sku,name,c_taxcategory_id,c_uom_id,m_storageonhand(warehouse_id,qtyonhand),m_productprice(m_pricelist_version_id,pricestd),m_product_po(pricelist),c_taxcategory(c_tax(rate))'
+			'id,barcode,mpn,sku,name,c_taxcategory_id,c_uom_id,m_storageonhand(warehouse_id,qtyonhand),m_productprice(m_pricelist_version_id,pricestd),m_product_po(pricelist),c_taxcategory(c_tax(rate))'
 		)
 		.order('name', { ascending: true })
 		.eq('producttype', 'I');
@@ -104,6 +103,7 @@ export const load = (async ({ parent, depends, url }) => {
 			qtyonhand: qtyonhand,
 			productprice: productprice,
 			pricePo: pricePo,
+			mpn: product.mpn,
 			taxRate: taxRate
 		});
 	});
