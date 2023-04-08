@@ -30,7 +30,7 @@
 	});
 
 	export let data: PageData;
-	const { product, categories, product_po, replenish } = data;
+	const { product, categories, product_po, replenish, storageonhand } = data;
 
 	function shouldFilterItem(item: ComboBoxItem, value: string) {
 		if (!value) return true;
@@ -124,8 +124,8 @@
 				>
 					<Tabs>
 						<Tab label="Product PO" />
-						<Tab label="Tab label 2" />
-						<Tab label="Tab label 3" />
+						<Tab label="Replenish" />
+						<Tab label="Stock" />
 						<svelte:fragment slot="content">
 							<TabContent>
 								{#if product_po}
@@ -143,6 +143,17 @@
 										<svelte:fragment slot="cell" let:row let:cell>
 											{#if cell.key === 'updated' || cell.key === 'created'}
 												<span>{new Date(cell.value).toLocaleString('en-US')}</span>
+											{:else if cell.key === 'url'}
+												<a target="_blank" href={cell.value}><code>{cell.value}</code></a>
+											{:else if typeof cell.value === 'number'}
+												<div style="text-align:right">
+													{new Intl.NumberFormat('sr-Latn-RS', {
+														minimumFractionDigits: 2,
+														maximumFractionDigits: 2
+													}).format(cell.value)}
+												</div>
+											{:else}
+												{cell.value}
 											{/if}
 										</svelte:fragment>
 									</DataTable>
@@ -160,9 +171,21 @@
 										]}
 										rows={replenish}
 									/>
-								{/if}</TabContent
-							>
-							<TabContent>Content 3</TabContent>
+								{/if}
+							</TabContent>
+							<TabContent>
+								{#if storageonhand}
+									<DataTable
+										size="short"
+										headers={[
+											{ key: 'qtyonhand', value: 'qtyonhand' },
+											{ key: 'updated', value: 'updated' },
+											{ key: 'warehouse_id', value: 'warehouse_id' }
+										]}
+										rows={storageonhand}
+									/>
+								{/if}
+							</TabContent>
 						</svelte:fragment>
 					</Tabs>
 				</Tile>

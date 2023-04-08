@@ -2,7 +2,7 @@
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 	import { invalidate, invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { warehouseId } from '$lib/stores/settingStore';
+	//import { warehouseId } from '$lib/stores/settingStore';
 	import {
 		Header,
 		HeaderAction,
@@ -51,7 +51,7 @@
 			noLabel
 			bind:selected
 			on:change={() => {
-				warehouseId.set(Number(selected));
+				//	warehouseId.set(Number(selected));
 				invalidateAll();
 			}}
 		>

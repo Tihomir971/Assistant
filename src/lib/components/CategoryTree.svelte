@@ -55,7 +55,6 @@
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import type { ComboBoxItem } from 'carbon-components-svelte/types/ComboBox/ComboBox.svelte';
 	import { page } from '$app/stores';
-	import { activeCategoryId } from '$lib/stores/catalog';
 	const dispatch = createEventDispatcher();
 	let expanded: boolean = false;
 	$: children = convertToTreeStructure(categories);
@@ -72,7 +71,6 @@
 	}
 	function rerunLoadFunction() {
 		if (activeId) {
-			$activeCategoryId = activeId;
 			const newUrl = new URL($page.url);
 			newUrl?.searchParams?.set('cat', activeId.toString());
 			goto(newUrl);

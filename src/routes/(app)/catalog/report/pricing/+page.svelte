@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_BEARER_TOKEN } from '$env/static/public';
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import DataTable from '$lib/components/DataTable.svelte';
 	import type { PageData } from './$types';
@@ -21,15 +22,13 @@
 		console.log('Update Category', activeCategoryId);
 		if (typeof activeCategoryId === 'string') {
 			let headersList = {
-				Accept: '*/*',
-				'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
-				Authorization: 'Bearer 2be6a370df8fee54201fd6d53d7726240de5a2756493abd19877956ec0716855'
+				Authorization: 'Bearer ' + PUBLIC_BEARER_TOKEN
 			};
 
 			let bodyContent = new FormData();
 			bodyContent.append('categ', activeCategoryId);
 
-			let response = await fetch('https://192.168.1.10:4443/cenoteka', {
+			let response = await fetch('http://192.168.1.10:4443/cenoteka', {
 				method: 'POST',
 				body: bodyContent,
 				headers: headersList

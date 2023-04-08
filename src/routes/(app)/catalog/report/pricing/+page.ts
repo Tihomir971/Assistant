@@ -1,7 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
-import { warehouseId } from '$lib/stores/settingStore';
-import { get } from 'svelte/store';
+//import { get } from 'svelte/store';
 
 export const load = (async ({ parent, depends, url }) => {
 	const { session, supabase } = await parent();
@@ -64,7 +63,8 @@ export const load = (async ({ parent, depends, url }) => {
 
 		if (product.m_storageonhand && Array.isArray(product.m_storageonhand)) {
 			product.m_storageonhand?.forEach((m_storageonhand) => {
-				if (m_storageonhand.warehouse_id === get(warehouseId)) {
+				if (m_storageonhand.warehouse_id === 5) {
+					//if (m_storageonhand.warehouse_id === get(warehouseId)) {
 					qtyonhand = qtyonhand + m_storageonhand.qtyonhand;
 				}
 			});
