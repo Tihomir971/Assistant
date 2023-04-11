@@ -2,7 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
 export const load = (async ({ parent, depends, url }) => {
-	const start = Date.now();
+	//	const start = Date.now();
 	const { session, supabase } = await parent();
 	if (!session) {
 		throw redirect(303, '/');
@@ -108,7 +108,7 @@ export const load = (async ({ parent, depends, url }) => {
 		});
 	});
 	depends('catalog:products');
-	const end = Date.now();
-	console.log(`(app)/page.ts - time: ${end - start} ms`);
+	//	const end = Date.now();
+	//	console.log(`(app)/page.ts - time: ${end - start} ms`);
 	return { products };
 }) satisfies PageLoad;

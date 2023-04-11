@@ -11,9 +11,7 @@ export const load = (async ({ parent, depends, url }) => {
 	const activeCategoryId = Number(url.searchParams.get('cat'));
 
 	const onStock = url.searchParams.get('onStock') || 'true';
-	//	const newUrl = new URL($page.url);
-	//	newUrl?.searchParams?.set('cat', activeId.toString());
-	//	goto(newUrl);
+
 	const products:
 		| {
 				id: number | null;
@@ -24,14 +22,15 @@ export const load = (async ({ parent, depends, url }) => {
 				productprice: number | null;
 				pricePo: number | null;
 				pricelist: number | null;
-				priceRecommended: number | null;
 				taxRate: number | null;
+				level_min: number | null;
+				unitsperpack: number | null;
 		  }[] = [];
 
 	let productQuery = supabase
 		.from('m_product')
 		.select(
-			'id,barcode,sku,name,c_taxcategory_id,c_uom_id,m_storageonhand(warehouse_id,qtyonhand),m_productprice(m_pricelist_version_id,pricestd),m_product_po(pricelist),c_taxcategory(c_tax(rate))'
+			'id,barcode,sku,name,unitsperpack,c_taxcategory_id,c_uom_id,m_storageonhand(warehouse_id,qtyonhand),m_productprice(m_pricelist_version_id,pricestd),m_product_po(pricelist),c_taxcategory(c_tax(rate)),m_replenish(m_warehouse_id,level_min)'
 		)
 		.order('name', { ascending: true })
 		.eq('producttype', 'I');
@@ -50,8 +49,8 @@ export const load = (async ({ parent, depends, url }) => {
 		let productprice = 0;
 		let pricelist = 0;
 		let pricePo = 0;
-		let priceRecommended = 0;
 		let taxRate = 0;
+		let level_min = 0;
 		//		console.log(typeof product.c_taxcategory);
 		// let taxRate = product.c_taxcategory?[0]?.c_tax?[0]?;
 		if (product.c_taxcategory_id === 2) {
@@ -65,6 +64,15 @@ export const load = (async ({ parent, depends, url }) => {
 				if (m_storageonhand.warehouse_id === 5) {
 					//if (m_storageonhand.warehouse_id === get(warehouseId)) {
 					qtyonhand = qtyonhand + m_storageonhand.qtyonhand;
+				}
+			});
+		}
+
+		if (product.m_replenish && Array.isArray(product.m_replenish)) {
+			product.m_replenish?.forEach((m_replenish) => {
+				if (m_replenish.m_warehouse_id === 5) {
+					//if (m_storageonhand.warehouse_id === get(warehouseId)) {
+					level_min = m_replenish.level_min;
 				}
 			});
 		}
@@ -105,23 +113,7 @@ export const load = (async ({ parent, depends, url }) => {
 		if (onStock === 'true' && !(qtyonhand > 0)) {
 			return;
 		}
-		if (pricelist === 0) {
-			priceRecommended = pricePo * 1.3;
-		} else if (pricelist < pricePo) {
-			priceRecommended = pricePo;
-		} else if (pricelist < pricePo * 1.3) {
-			priceRecommended = pricelist;
-		} else {
-			priceRecommended = pricePo * 1.3;
-		}
 
-		priceRecommended = Math.ceil(priceRecommended);
-		if (priceRecommended < 2000) {
-			priceRecommended = priceRecommended - 0.01;
-		}
-		if (priceRecommended === productprice) {
-			return;
-		}
 		products.push({
 			id: product.id,
 			barcode: product.barcode,
@@ -131,8 +123,9 @@ export const load = (async ({ parent, depends, url }) => {
 			productprice: productprice,
 			pricelist: pricelist,
 			pricePo: pricePo,
-			priceRecommended: priceRecommended,
-			taxRate: taxRate
+			taxRate: taxRate,
+			level_min: level_min,
+			unitsperpack: product.unitsperpack
 		});
 	});
 	depends('catalog:products');

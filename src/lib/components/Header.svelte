@@ -6,6 +6,7 @@
 	import {
 		Header,
 		HeaderAction,
+		HeaderGlobalAction,
 		HeaderNav,
 		HeaderNavItem,
 		HeaderPanelDivider,
@@ -16,7 +17,7 @@
 		SelectItem,
 		SkipToContent
 	} from 'carbon-components-svelte';
-	import { UserAvatar } from 'carbon-icons-svelte';
+	import { Email, UserAvatar } from 'carbon-icons-svelte';
 
 	let selected: string | number | undefined;
 
@@ -43,8 +44,17 @@
 		<SkipToContent />
 	</svelte:fragment>
 	<HeaderNav>
-		<HeaderNavItem href="/catalog" text="Products" />
-		<HeaderNavItem href="/catalog/report/pricing" text="Pricing" />
+		<HeaderNavItem href="/catalog" text="Products" isSelected={$page.url.pathname === '/catalog'} />
+		<HeaderNavItem
+			href="/catalog/report/pricing"
+			text="Pricing"
+			isSelected={$page.url.pathname === '/catalog/report/pricing'}
+		/>
+		<HeaderNavItem
+			href="/catalog/report/replenish"
+			text="Replenish"
+			isSelected={$page.url.pathname === '/catalog/report/replenish'}
+		/>
 	</HeaderNav>
 	<HeaderUtilities>
 		<Select
@@ -58,6 +68,7 @@
 			<SelectItem value="5" text="Retail" />
 			<SelectItem value="2" text="Wholesale" />
 		</Select>
+		<HeaderGlobalAction aria-label="Settings" icon={Email} />
 		<HeaderAction icon={UserAvatar}>
 			<HeaderPanelLinks>
 				<HeaderPanelDivider>Account</HeaderPanelDivider>

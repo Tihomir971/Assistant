@@ -17,6 +17,7 @@
 	import type { PageData } from './$types';
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import { page } from '$app/stores';
+	import { enhance } from '$app/forms';
 	let previousPage: string = base;
 
 	afterNavigate(({ from }) => {
@@ -24,8 +25,8 @@
 	});
 
 	export let data: PageData;
-	const { category, categories } = data;
-	export let supabase: SupabaseClient;
+	const { category, categories, supabase } = data;
+	//export let supabase: SupabaseClient;
 
 	function shouldFilterItem(item: ComboBoxItem, value: string) {
 		if (!value) return true;
@@ -44,13 +45,14 @@
 
 {#if category}
 	<Tile>
-		<Form>
+		<form method="POST" action="?/update" use:enhance>
 			<FormGroup>
-				<TextInput readonly bind:value={category.id} labelText="Category ID" />
+				<TextInput readonly bind:value={category.id} name="id" labelText="Category ID" />
 			</FormGroup>
 			<FormGroup>
 				<TextInput
 					bind:value={newCategory.name}
+					name="name"
 					labelText="Category name"
 					placeholder="Enter category name..."
 				/>
@@ -61,6 +63,7 @@
 						titleText="Parent category"
 						placeholder="Select parent category"
 						selectedId={newCategory.parent_id}
+						name="parent_id"
 						items={categories}
 						{shouldFilterItem}
 					/>
@@ -69,20 +72,25 @@
 			<FormGroup>
 				<TextArea
 					bind:value={newCategory.description}
+					name="description"
 					labelText="Category description"
 					placeholder="Enter category description..."
 				/>
 			</FormGroup>
 			<FormGroup>
-				<Checkbox bind:value={newCategory.isselfservice} labelText="Is self service?" />
-				<Checkbox bind:value={newCategory.isactive} labelText="Is active?" />
+				<Checkbox
+					bind:value={newCategory.isselfservice}
+					name="isselfservice"
+					labelText="Is self service?"
+				/>
+				<Checkbox bind:value={newCategory.isactive} name="isactive" labelText="Is active?" />
 			</FormGroup>
 			<ButtonSet>
 				<Button kind="secondary" on:click={() => goto(previousPage)}>Cancel</Button>
 				<Button kind="danger" on:click={() => (openDeleteModal = true)}>Delete</Button>
-				<Button>Save</Button>
+				<button type="submit">Save</button>
 			</ButtonSet>
-		</Form>
+		</form>
 	</Tile>
 {/if}
 

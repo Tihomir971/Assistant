@@ -24,6 +24,7 @@
 	import { page } from '$app/stores';
 	import TableSkeleton from '$lib/components/TableSkeleton.svelte';
 	import { Launch } from 'carbon-icons-svelte';
+	import TableToolbarCatalog from '$lib/components/TableToolbarCatalog.svelte';
 	let previousPage: string = base;
 
 	afterNavigate(({ from }) => {
@@ -162,11 +163,7 @@
 													}).format(new Date(cell.value))}</span
 												>
 											{:else if cell.key.includes('url')}
-												<Link
-													icon={Launch}
-													href="https://en.wikipedia.org/wiki/Round-robin_DNS"
-													target="_blank">{cell.value}</Link
-												>
+												<Link icon={Launch} href={cell.value} target="_blank">{cell.value}</Link>
 											{:else if typeof cell.value === 'number'}
 												<div style="text-align:right">
 													{new Intl.NumberFormat('sr-Latn-RS', {
@@ -193,7 +190,9 @@
 											{ key: 'm_warehousesource_id', value: 'm_warehousesource_id' }
 										]}
 										rows={replenish}
-									/>
+									>
+										<TableToolbarCatalog />
+									</TableSkeleton>
 								{/if}
 							</TabContent>
 							<TabContent>

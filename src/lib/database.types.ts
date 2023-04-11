@@ -119,13 +119,13 @@ export interface Database {
           updated: string
         }
         Insert: {
-          ad_client_id: number
-          ad_org_id: number
+          ad_client_id?: number
+          ad_org_id?: number
           created?: string
           id?: number
           isErrorMsg?: boolean
           msgText: string
-          updated: string
+          updated?: string
         }
         Update: {
           ad_client_id?: number

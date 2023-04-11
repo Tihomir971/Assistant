@@ -54,20 +54,24 @@
 			{ key: 'name', value: 'Name' },
 			{ key: 'qtyonhand', value: 'Qty.' },
 			{
-				key: 'pricePo',
-				value: 'Purchase Pr.'
+				key: 'level_min',
+				value: 'Minimum'
 			},
 			{
-				key: 'pricelist',
-				value: 'Market Pr.'
+				key: 'unitsperpack',
+				value: 'unitsperpack'
+			},
+			{
+				key: 'pricePo',
+				value: 'Purchase Pr.'
 			},
 			{
 				key: 'productprice',
 				value: 'Retail Pr.'
 			},
 			{
-				key: 'priceRecommended',
-				value: 'Recom. Pr.'
+				key: 'pricelist',
+				value: 'Market Pr.'
 			}
 		]}
 		rows={products}

@@ -2,7 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import type { LayoutLoad } from './$types';
 
 export const load = (async ({ parent, depends, url }) => {
-	const start = Date.now();
+	//	const start = Date.now();
 	const { session, supabase } = await parent();
 	if (!session) {
 		throw redirect(303, '/');
@@ -12,7 +12,6 @@ export const load = (async ({ parent, depends, url }) => {
 	if (activeWarehouseId === 0) {
 		const newUrl = new URL(url);
 		newUrl.searchParams.set('wh', '5');
-		console.log('newUrl', newUrl.href);
 		throw redirect(302, newUrl.href);
 	}
 
@@ -23,8 +22,8 @@ export const load = (async ({ parent, depends, url }) => {
 
 	depends('catalog:categories');
 
-	const end = Date.now();
-	console.log(`(app)/catalog/layout.ts - time: ${end - start} ms`);
+	//	const end = Date.now();
+	//	console.log(`(app)/catalog/layout.ts - time: ${end - start} ms`);
 
-	return { categories };
+	return { categories, user: session.user };
 }) satisfies LayoutLoad;
