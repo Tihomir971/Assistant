@@ -44,7 +44,6 @@ function createTree(data: Array<DataTableRow>): TreeNode[] {
 			tree.push(item);
 		} else {
 			const parent = data.find((parent) => parent.id === item.parent_id);
-			//			console.log('parent', parent);
 			if (parent && parent.children) {
 				parent.children.push(item);
 			}

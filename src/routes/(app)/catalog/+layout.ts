@@ -10,6 +10,7 @@ export const load = (async ({ parent, depends, url }) => {
 
 	const activeWarehouseId = Number(url.searchParams.get('wh'));
 	if (activeWarehouseId === 0) {
+		console.log('URL Layout', url);
 		const newUrl = new URL(url);
 		newUrl.searchParams.set('wh', '5');
 		throw redirect(302, newUrl.href);
@@ -21,9 +22,6 @@ export const load = (async ({ parent, depends, url }) => {
 		.order('name');
 
 	depends('catalog:categories');
-
-	//	const end = Date.now();
-	//	console.log(`(app)/catalog/layout.ts - time: ${end - start} ms`);
 
 	return { categories, user: session.user };
 }) satisfies LayoutLoad;

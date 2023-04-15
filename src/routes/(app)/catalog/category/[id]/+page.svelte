@@ -14,8 +14,7 @@
 		Tile
 	} from 'carbon-components-svelte';
 	import type { ComboBoxItem } from 'carbon-components-svelte/types/ComboBox/ComboBox.svelte';
-	import type { PageData } from './$types';
-	import type { SupabaseClient } from '@supabase/supabase-js';
+	import type { ActionData, PageData } from './$types';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
 	let previousPage: string = base;
@@ -26,7 +25,6 @@
 
 	export let data: PageData;
 	const { category, categories, supabase } = data;
-	//export let supabase: SupabaseClient;
 
 	function shouldFilterItem(item: ComboBoxItem, value: string) {
 		if (!value) return true;
@@ -45,7 +43,7 @@
 
 {#if category}
 	<Tile>
-		<form method="POST" action="?/update" use:enhance>
+		<form method="POST" action="?/update">
 			<FormGroup>
 				<TextInput readonly bind:value={category.id} name="id" labelText="Category ID" />
 			</FormGroup>
@@ -59,14 +57,15 @@
 			</FormGroup>
 			<FormGroup>
 				{#if categories}
+					<input hidden name="parent_id" bind:value={newCategory.parent_id} />
 					<ComboBox
 						titleText="Parent category"
 						placeholder="Select parent category"
-						selectedId={newCategory.parent_id}
-						name="parent_id"
+						bind:selectedId={newCategory.parent_id}
 						items={categories}
 						{shouldFilterItem}
 					/>
+					{newCategory.parent_id}
 				{/if}
 			</FormGroup>
 			<FormGroup>
@@ -78,17 +77,17 @@
 				/>
 			</FormGroup>
 			<FormGroup>
-				<Checkbox
-					bind:value={newCategory.isselfservice}
-					name="isselfservice"
-					labelText="Is self service?"
-				/>
-				<Checkbox bind:value={newCategory.isactive} name="isactive" labelText="Is active?" />
+				<input hidden name="isselfservice" bind:value={newCategory.isselfservice} />
+				<Checkbox bind:checked={newCategory.isselfservice} labelText="Is self service?" />
+				{newCategory.isselfservice}
+				<input hidden name="isactive" bind:value={newCategory.isactive} />
+				<Checkbox bind:checked={newCategory.isactive} labelText="Is active?" />
+				{newCategory.isactive}
 			</FormGroup>
 			<ButtonSet>
 				<Button kind="secondary" on:click={() => goto(previousPage)}>Cancel</Button>
 				<Button kind="danger" on:click={() => (openDeleteModal = true)}>Delete</Button>
-				<button type="submit">Save</button>
+				<Button type="submit">Save</Button>
 			</ButtonSet>
 		</form>
 	</Tile>

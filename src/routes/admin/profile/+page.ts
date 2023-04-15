@@ -1,16 +1,17 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
-export const load = (async ({ params, parent }) => {
+export const load = (async ({ parent }) => {
 	const { session, supabase } = await parent();
 	if (!session) {
 		throw redirect(303, '/');
 	}
-	const id = Number(params.id);
-	const { data: category } = await supabase
-		.from('m_product_category')
+
+	const { data: profile } = await supabase
+		.from('ad_user')
 		.select()
-		.eq('id', id)
-		.maybeSingle();
-	return { category };
+		.eq('id', session.user.id)
+		.single();
+
+	return { profile };
 }) satisfies PageLoad;

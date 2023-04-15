@@ -14,11 +14,7 @@
 		return;
 	}
 	function callbackFunction(event: CustomEvent) {
-		console.log(`Notify fired! Detail: ${event.detail}`);
-
-		console.log(`/catalog/product/${event.detail}`);
 		const searchParams = $page.url.searchParams.toString();
-		console.log(searchParams);
 		goto(`/catalog/product/${event.detail}?${searchParams}`);
 	}
 	let onStock = true;

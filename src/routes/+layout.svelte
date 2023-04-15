@@ -4,6 +4,8 @@
 	import { onMount } from 'svelte';
 	import type { LayoutData } from './$types';
 	import 'carbon-components-svelte/css/g90.css';
+	import { Content } from 'carbon-components-svelte';
+	import Header from '$lib/components/Header.svelte';
 
 	export let data: LayoutData;
 
@@ -25,5 +27,17 @@
 <svelte:head>
 	<title>Kalisi Assistant</title>
 </svelte:head>
+<Header />
+<Content style="padding: 0px; height: calc(100vh - 3rem);">
+	<slot />
+</Content>
 
-<slot />
+<style>
+	:global(.bx--content) {
+		/* background-image: url('/sun-tornado.svg'); */
+		/* background-size: cover; */
+		min-height: calc(100vh - 3rem);
+		/* margin-left: 3rem; */
+		/* padding: 0rem; */
+	}
+</style>

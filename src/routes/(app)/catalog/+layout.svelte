@@ -1,14 +1,21 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import CategoryTree from '$lib/components/CategoryTree.svelte';
-	import { Column, Grid, Row } from 'carbon-components-svelte';
+	import {
+		Button,
+		Column,
+		Dropdown,
+		Grid,
+		HeaderNavItem,
+		HeaderNavMenu,
+		Row
+	} from 'carbon-components-svelte';
 	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
 	$: ({ categories, supabase } = data);
 
 	function callbackFunction(event: CustomEvent) {
-		console.log(`Notify fired! Detail: ${event.detail}`);
 		goto(`/catalog/category/${event.detail}`);
 	}
 
@@ -21,7 +28,7 @@
 	}); */
 </script>
 
-<Grid fullWidth style="height: 100%; width;: 100%; padding: 0px">
+<Grid fullWidth style="height: 100%; padding: 0px">
 	<Row style="margin: 0rem; height: 100%; width: 100%">
 		<Column
 			noGutter

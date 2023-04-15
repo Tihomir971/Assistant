@@ -3,10 +3,11 @@ import { fail, redirect, type ActionFailure } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
 export const actions: Actions = {
-	async default({
+	signin: async ({
 		request,
 		locals: { supabase }
-	}): Promise<ActionFailure<{ error: string; values?: { email: string } }>> {
+	}): Promise<ActionFailure<{ error: string; values?: { email: string } }>> => {
+		console.log('Auth signin');
 		const formData = await request.formData();
 
 		const email = formData.get('email') as string;
@@ -27,7 +28,7 @@ export const actions: Actions = {
 		}
 
 		const { error } = await supabase.auth.signInWithPassword({ email, password });
-
+		console.log('error', error);
 		if (error) {
 			if (error instanceof AuthApiError && error.status === 400) {
 				return fail(400, {
@@ -46,5 +47,10 @@ export const actions: Actions = {
 		}
 
 		throw redirect(303, '/dashboard');
+	},
+
+	signout: async ({ locals: { supabase } }) => {
+		await supabase.auth.signOut();
+		throw redirect(303, '/');
 	}
 };

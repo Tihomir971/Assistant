@@ -42,8 +42,6 @@ export const load = (async ({ parent, depends, url }) => {
 		productQuery = productQuery.eq('m_product_category_id', activeCategoryId);
 	}
 	const { data } = await productQuery;
-	//	console.log('products', data);
-	//console.log('error', error);
 
 	data?.forEach((product) => {
 		let qtyonhand = 0;
@@ -52,8 +50,6 @@ export const load = (async ({ parent, depends, url }) => {
 		let pricePo = 0;
 		let priceRecommended = 0;
 		let taxRate = 0;
-		//		console.log(typeof product.c_taxcategory);
-		// let taxRate = product.c_taxcategory?[0]?.c_tax?[0]?;
 		if (product.c_taxcategory_id === 2) {
 			taxRate = 0.1;
 		} else {
@@ -90,17 +86,6 @@ export const load = (async ({ parent, depends, url }) => {
 				}
 			});
 		}
-		//const qtyonhand = Object.values(product.m_productprice).find(obj => obj.m_pricelist_version_id === 13))
-		/* 		console.log(
-			product.id,
-			product.barcode,
-			product.sku,
-			product.name,
-			qtyonhand,
-			productprice,
-			pricelist
-		); */
-		//		console.log(onStock === 'true', !(qtyonhand > 0), onStock === 'true' && !(qtyonhand > 0));
 
 		if (onStock === 'true' && !(qtyonhand > 0)) {
 			return;
@@ -119,9 +104,9 @@ export const load = (async ({ parent, depends, url }) => {
 		if (priceRecommended < 2000) {
 			priceRecommended = priceRecommended - 0.01;
 		}
-		if (priceRecommended === productprice) {
+		/* 		if (priceRecommended === productprice) {
 			return;
-		}
+		} */
 		products.push({
 			id: product.id,
 			barcode: product.barcode,

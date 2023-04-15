@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
-	import { invalidate, invalidateAll } from '$app/navigation';
+	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
 	//import { warehouseId } from '$lib/stores/settingStore';
 	import {
+		Dropdown,
 		Header,
 		HeaderAction,
 		HeaderGlobalAction,
 		HeaderNav,
 		HeaderNavItem,
+		HeaderNavMenu,
 		HeaderPanelDivider,
 		HeaderPanelLink,
 		HeaderPanelLinks,
@@ -17,9 +19,12 @@
 		SelectItem,
 		SkipToContent
 	} from 'carbon-components-svelte';
-	import { Email, UserAvatar } from 'carbon-icons-svelte';
+	import { Email, Login, UserAvatar } from 'carbon-icons-svelte';
+
+	//export let warehouseItems
 
 	let selected: string | number | undefined;
+	let selectedWarehouseId = $page.url.searchParams.get('wh');
 
 	let loading = false;
 	const handleLogout: SubmitFunction = () => {
@@ -44,43 +49,65 @@
 		<SkipToContent />
 	</svelte:fragment>
 	<HeaderNav>
-		<HeaderNavItem href="/catalog" text="Products" isSelected={$page.url.pathname === '/catalog'} />
-		<HeaderNavItem
-			href="/catalog/report/pricing"
-			text="Pricing"
-			isSelected={$page.url.pathname === '/catalog/report/pricing'}
-		/>
-		<HeaderNavItem
-			href="/catalog/report/replenish"
-			text="Replenish"
-			isSelected={$page.url.pathname === '/catalog/report/replenish'}
-		/>
+		{#if $page.data.session}
+			<HeaderNavItem
+				href="/catalog"
+				text="Products"
+				isSelected={$page.url.pathname === '/catalog'}
+			/>
+			<HeaderNavItem
+				href="/catalog/report/pricing"
+				text="Pricing"
+				isSelected={$page.url.pathname === '/catalog/report/pricing'}
+			/>
+			<HeaderNavItem
+				href="/catalog/report/replenish"
+				text="Replenish"
+				isSelected={$page.url.pathname === '/catalog/report/replenish'}
+			/>
+			<HeaderNavMenu text="Admin">
+				<HeaderNavItem
+					text="Users"
+					href="/admin/profile"
+					isSelected={$page.url.pathname === '/admin/profile'}
+				/>
+			</HeaderNavMenu>
+		{/if}
 	</HeaderNav>
 	<HeaderUtilities>
-		<Select
-			noLabel
-			bind:selected
-			on:change={() => {
-				//	warehouseId.set(Number(selected));
-				invalidateAll();
-			}}
-		>
-			<SelectItem value="5" text="Retail" />
-			<SelectItem value="2" text="Wholesale" />
-		</Select>
-		<HeaderGlobalAction aria-label="Settings" icon={Email} />
-		<HeaderAction icon={UserAvatar}>
-			<HeaderPanelLinks>
-				<HeaderPanelDivider>Account</HeaderPanelDivider>
-				{#if $page.data.session}
-					<form id="my-form" action="/logout" method="POST" use:enhance={handleLogout}>
+		{#if $page.data.session}
+			<Dropdown
+				style="column-gap: 0rem"
+				type="inline"
+				bind:selectedId={selectedWarehouseId}
+				label="Select Warehouse"
+				titleText="Warehouse:"
+				items={[
+					{ id: '5', text: 'Retail' },
+					{ id: '2', text: 'Wholesale' },
+					{ id: '6', text: 'Service' }
+				]}
+				on:select={() => {
+					if (selectedWarehouseId) {
+						const newUrl = new URL($page.url);
+						newUrl.searchParams.set('wh', selectedWarehouseId);
+						goto(newUrl.href);
+					}
+				}}
+			/>
+			<HeaderGlobalAction aria-label="Settings" icon={Email} />
+			<HeaderAction icon={UserAvatar}>
+				<HeaderPanelLinks>
+					<HeaderPanelDivider>Account</HeaderPanelDivider>
+					<HeaderPanelLink href="/admin/profile">My Account</HeaderPanelLink>
+					<HeaderPanelDivider />
+					<form id="my-form" action="/auth?/signout" method="POST" use:enhance={handleLogout}>
 						<HeaderPanelLink on:click={handleClick}>Sign out</HeaderPanelLink>
 					</form>
-				{/if}
-				<HeaderPanelDivider>Warehouse</HeaderPanelDivider>
-				<HeaderPanelLink>Retail</HeaderPanelLink>
-				<HeaderPanelLink>Wholesale</HeaderPanelLink>
-			</HeaderPanelLinks>
-		</HeaderAction>
+				</HeaderPanelLinks>
+			</HeaderAction>
+		{:else}
+			<HeaderGlobalAction icon={Login} on:click={() => goto('/auth')} />
+		{/if}
 	</HeaderUtilities>
 </Header>

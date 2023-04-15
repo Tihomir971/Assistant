@@ -35,7 +35,7 @@
 	{#if form?.error}
 		<div class="block notification is-danger">{form.error}</div>
 	{/if}
-	<form method="post" use:enhance={handleSubmit}>
+	<form method="post" action="?/signin" use:enhance={handleSubmit}>
 		<FormGroup>
 			<TextInput
 				labelText="Email"
@@ -67,6 +67,6 @@
 	</form>
 
 	<p>
-		Don't have an account? <a href="/signup">Sign up</a>
+		Don't have an account? <a href="/">Sign up</a>
 	</p>
 </Tile>

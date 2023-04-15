@@ -28,9 +28,7 @@
 	let previousPage: string = base;
 
 	afterNavigate(({ from }) => {
-		console.log('from', from);
 		previousPage = from?.url.href || previousPage;
-		console.log('previousPage', previousPage);
 	});
 
 	export let data: PageData;

@@ -14,12 +14,16 @@
 		return;
 	}
 	function callbackFunction(event: CustomEvent) {
-		console.log(`Notify fired! Detail: ${event.detail}`);
 		goto(`/catalog/product/${event.detail}`);
 	}
 	async function updateEvent() {
 		const activeCategoryId = $page.url.searchParams.get('cat');
-		console.log('Update Category', activeCategoryId);
+		const { data } = await supabase
+			.from('m_product_category')
+			.select('name')
+			.eq('id', Number(activeCategoryId))
+			.maybeSingle();
+		const activeCategoryName = data?.name ? data.name : null;
 		if (typeof activeCategoryId === 'string') {
 			let headersList = {
 				Authorization: 'Bearer ' + PUBLIC_BEARER_TOKEN
@@ -27,6 +31,12 @@
 
 			let bodyContent = new FormData();
 			bodyContent.append('categ', activeCategoryId);
+
+			await supabase
+				.from('ad_note')
+				.insert([
+					{ textMsg: `Start: market research for ${activeCategoryName}`, ad_user_id: user.id }
+				]);
 
 			let response = await fetch('http://192.168.1.10:4443/cenoteka', {
 				method: 'POST',
@@ -38,9 +48,10 @@
 			if (data) {
 				await supabase
 					.from('ad_note')
-					.insert([{ textMsg: `Category ${activeCategoryId} updated`, ad_user_id: user.id }]);
+					.insert([
+						{ textMsg: `End: market research for ${activeCategoryName}`, ad_user_id: user.id }
+					]);
 			}
-			console.log('response', data);
 		}
 	}
 </script>

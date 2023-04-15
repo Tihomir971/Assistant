@@ -6,7 +6,7 @@
 	} from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
-	import { DataTable, OverflowMenu, OverflowMenuItem } from 'carbon-components-svelte';
+	import { DataTable, OverflowMenu, OverflowMenuItem, Truncate } from 'carbon-components-svelte';
 	export let headers: DataTableHeader[];
 	export let rows: DataTableRow[];
 
@@ -26,7 +26,8 @@
 	<svelte:fragment slot="cell" let:cell let:row>
 		{#if row[cell.key] === null}
 			<span />
-		{:else if cell.key.includes('price') || cell.key.includes('qty')}
+			<!-- {:else if cell.key.includes('price') || cell.key.includes('qty')} -->
+		{:else if typeof cell.value === 'number'}
 			<div style="text-align:right">
 				{new Intl.NumberFormat('sr-Latn-RS', {
 					minimumFractionDigits: 2,
