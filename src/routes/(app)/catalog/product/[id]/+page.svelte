@@ -20,11 +20,10 @@
 	} from 'carbon-components-svelte';
 	import type { ComboBoxItem } from 'carbon-components-svelte/types/ComboBox/ComboBox.svelte';
 	import type { PageData } from './$types';
-	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
 	import TableSkeleton from '$lib/components/TableSkeleton.svelte';
 	import { Launch } from 'carbon-icons-svelte';
 	import TableToolbarCatalog from '$lib/components/TableToolbarCatalog.svelte';
+	import ProductGallery from '$lib/components/ProductGallery.svelte';
 	let previousPage: string = base;
 
 	afterNavigate(({ from }) => {
@@ -32,8 +31,9 @@
 	});
 
 	export let data: PageData;
-	const { product, categories, product_po, replenish, storageonhand } = data;
+	const { supabase, product, categories, product_po, replenish, storageonhand } = data;
 
+	let url: string[] | undefined = product?.imageurl?.split(';');
 	function shouldFilterItem(item: ComboBoxItem, value: string) {
 		if (!value) return true;
 		return item.text.toLowerCase().includes(value.toLowerCase());
@@ -126,6 +126,16 @@
 						</FormGroup>
 					</Form>
 				</Tile>
+			</Column>
+			<Column>
+				<ProductGallery
+					{supabase}
+					bind:url
+					size={10}
+					on:upload={() => {
+						//profileForm.requestSubmit();
+					}}
+				/>
 			</Column>
 		</Row>
 		<Row padding>

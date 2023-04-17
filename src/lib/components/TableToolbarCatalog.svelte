@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 
-	import { Button, Toolbar, ToolbarContent, ToolbarSearch } from 'carbon-components-svelte';
+	import {
+		Button,
+		Dropdown,
+		Toolbar,
+		ToolbarContent,
+		ToolbarSearch
+	} from 'carbon-components-svelte';
 	import { Filter, UpdateNow } from 'carbon-icons-svelte';
 
 	import { createEventDispatcher } from 'svelte';
@@ -12,6 +18,20 @@
 
 <Toolbar>
 	<ToolbarContent>
+		<Dropdown
+			style="column-gap: 0rem"
+			type="inline"
+			selectedId
+			label="Select View"
+			titleText="View:"
+			items={[
+				{ id: '5', text: 'Retail' },
+				{ id: '2', text: 'Wholesale' },
+				{ id: '6', text: 'Service' }
+			]}
+			on:select
+		/>
+
 		<ToolbarSearch shouldFilterRows />
 		<Button
 			iconDescription="Hide out of Stock"

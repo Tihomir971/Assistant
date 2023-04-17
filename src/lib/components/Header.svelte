@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
-	import { goto, invalidate, invalidateAll } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { page } from '$app/stores';
-	//import { warehouseId } from '$lib/stores/settingStore';
 	import {
 		Dropdown,
 		Header,
@@ -15,15 +14,10 @@
 		HeaderPanelLink,
 		HeaderPanelLinks,
 		HeaderUtilities,
-		Select,
-		SelectItem,
 		SkipToContent
 	} from 'carbon-components-svelte';
 	import { Email, Login, UserAvatar } from 'carbon-icons-svelte';
 
-	//export let warehouseItems
-
-	let selected: string | number | undefined;
 	let selectedWarehouseId = $page.url.searchParams.get('wh');
 
 	let loading = false;
@@ -38,10 +32,16 @@
 			loading = false;
 		};
 	};
-	function handleClick() {
-		const form = document.getElementById('my-form') as HTMLFormElement;
+	function submitForm() {
+		const form = document.getElementById('SignOut-Form') as HTMLFormElement;
 		form.submit();
 	}
+
+	const updateSearchParams = (key: string, value: string) => {
+		const searchParams = new URLSearchParams($page.url.searchParams);
+		searchParams.set(key, value);
+		goto(`?${searchParams.toString()}`);
+	};
 </script>
 
 <Header company="Kalisi" platformName="Assistant" href="/">
@@ -89,9 +89,7 @@
 				]}
 				on:select={() => {
 					if (selectedWarehouseId) {
-						const newUrl = new URL($page.url);
-						newUrl.searchParams.set('wh', selectedWarehouseId);
-						goto(newUrl.href);
+						updateSearchParams('wh', selectedWarehouseId);
 					}
 				}}
 			/>
@@ -101,8 +99,8 @@
 					<HeaderPanelDivider>Account</HeaderPanelDivider>
 					<HeaderPanelLink href="/admin/profile">My Account</HeaderPanelLink>
 					<HeaderPanelDivider />
-					<form id="my-form" action="/auth?/signout" method="POST" use:enhance={handleLogout}>
-						<HeaderPanelLink on:click={handleClick}>Sign out</HeaderPanelLink>
+					<form id="SignOut-Form" action="/auth?/signout" method="POST" use:enhance={handleLogout}>
+						<HeaderPanelLink on:click={submitForm}>Sign out</HeaderPanelLink>
 					</form>
 				</HeaderPanelLinks>
 			</HeaderAction>

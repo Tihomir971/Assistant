@@ -4,16 +4,13 @@
 	import DataTable from '$lib/components/DataTable.svelte';
 	import TableSkeleton from '$lib/components/TableSkeleton.svelte';
 	import TableToolbarCatalog from '$lib/components/TableToolbarCatalog.svelte';
+	import { updateSearchParams } from '$lib/utils/searchParams';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 	$: ({ products } = data);
 
-	function rerunLoadFunction() {
-		invalidate('catalog:products');
-		return;
-	}
-	function callbackFunction(event: CustomEvent) {
+	function editProduct(event: CustomEvent) {
 		const searchParams = $page.url.searchParams.toString();
 		goto(`/catalog/product/${event.detail}?${searchParams}`);
 	}
@@ -40,15 +37,16 @@
 			}
 		]}
 		rows={products}
-		on:edit={callbackFunction}
+		on:edit={editProduct}
 	>
 		<TableToolbarCatalog
 			{onStock}
 			on:filterStock={() => {
 				onStock = !onStock;
-				const newUrl = new URL($page.url);
-				newUrl?.searchParams?.set('onStock', onStock.toString());
-				goto(newUrl);
+				updateSearchParams('onStock', onStock.toString());
+				//				const newUrl = new URL($page.url);
+				//				newUrl?.searchParams?.set('onStock', onStock.toString());
+				//				goto(newUrl);
 			}}
 		/>
 	</TableSkeleton>

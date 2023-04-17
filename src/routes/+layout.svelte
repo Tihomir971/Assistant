@@ -33,11 +33,18 @@
 </Content>
 
 <style>
-	:global(.bx--content) {
-		/* background-image: url('/sun-tornado.svg'); */
-		/* background-size: cover; */
-		min-height: calc(100vh - 3rem);
-		/* margin-left: 3rem; */
-		/* padding: 0rem; */
+	/* :global(.bx--content) { */
+	/* background-image: url('/sun-tornado.svg'); */
+	/* background-size: cover; */
+	/* margin-left: 3rem; */
+	/* padding: 0rem; */
+
+	/* min-height: calc(100vh - 3rem); */
+	/* } */
+	:global(.bx--label) {
+		font-size: 0.875rem;
+	}
+	:global(.bx--fieldset) {
+		margin-bottom: 1rem;
 	}
 </style>
