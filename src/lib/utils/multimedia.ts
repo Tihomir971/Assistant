@@ -4,11 +4,12 @@ export let supabase: SupabaseClient;
 
 const downloadImage = async (path: string, supabase: SupabaseClient) => {
 	try {
+		console.log('path', path);
 		const { data, error } = await supabase.storage.from('products').download(path);
+		console.log('error', error);
 		if (error) {
 			throw error;
 		}
-
 		const url = URL.createObjectURL(data);
 		return url;
 		//console.log(url, typeof url);

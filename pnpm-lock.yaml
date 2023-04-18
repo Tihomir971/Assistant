@@ -3,7 +3,7 @@ lockfileVersion: '6.0'
 dependencies:
   '@supabase/auth-helpers-sveltekit':
     specifier: ^0.9.3
-    version: 0.9.3(@supabase/supabase-js@2.20.0)(@sveltejs/kit@1.15.6)
+    version: 0.9.3(@supabase/supabase-js@2.20.0)(@sveltejs/kit@1.15.7)
   '@supabase/supabase-js':
     specifier: ^2.20.0
     version: 2.20.0
@@ -11,13 +11,13 @@ dependencies:
 devDependencies:
   '@sveltejs/adapter-auto':
     specifier: ^2.0.0
-    version: 2.0.0(@sveltejs/kit@1.15.6)
+    version: 2.0.0(@sveltejs/kit@1.15.7)
   '@sveltejs/adapter-node':
     specifier: ^1.2.3
-    version: 1.2.3(@sveltejs/kit@1.15.6)
+    version: 1.2.3(@sveltejs/kit@1.15.7)
   '@sveltejs/kit':
-    specifier: ^1.15.6
-    version: 1.15.6(svelte@3.58.0)(vite@4.2.1)
+    specifier: ^1.15.7
+    version: 1.15.7(svelte@3.58.0)(vite@4.2.2)
   '@typescript-eslint/eslint-plugin':
     specifier: ^5.59.0
     version: 5.59.0(@typescript-eslint/parser@5.59.0)(eslint@8.38.0)(typescript@5.0.4)
@@ -61,8 +61,8 @@ devDependencies:
     specifier: ^5.0.4
     version: 5.0.4
   vite:
-    specifier: ^4.2.1
-    version: 4.2.1
+    specifier: ^4.2.2
+    version: 4.2.2
 
 packages:
 
@@ -342,7 +342,7 @@ packages:
   /@polka/url@1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
 
-  /@rollup/plugin-commonjs@24.1.0(rollup@3.20.4):
+  /@rollup/plugin-commonjs@24.1.0(rollup@3.20.5):
     resolution: {integrity: sha512-eSL45hjhCWI0jCCXcNtLVqM5N1JlBGvlFfY0m6oOYnLCJ6N0qEXoZql4sY2MOUArzhH4SA/qBpTxvvZp2Sc+DQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -351,16 +351,16 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.20.4)
+      '@rollup/pluginutils': 5.0.2(rollup@3.20.5)
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 8.1.0
       is-reference: 1.2.1
       magic-string: 0.27.0
-      rollup: 3.20.4
+      rollup: 3.20.5
     dev: true
 
-  /@rollup/plugin-json@6.0.0(rollup@3.20.4):
+  /@rollup/plugin-json@6.0.0(rollup@3.20.5):
     resolution: {integrity: sha512-i/4C5Jrdr1XUarRhVu27EEwjt4GObltD7c+MkCIpO2QIbojw8MUs+CCTqOphQi3Qtg1FLmYt+l+6YeoIf51J7w==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -369,11 +369,11 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.20.4)
-      rollup: 3.20.4
+      '@rollup/pluginutils': 5.0.2(rollup@3.20.5)
+      rollup: 3.20.5
     dev: true
 
-  /@rollup/plugin-node-resolve@15.0.2(rollup@3.20.4):
+  /@rollup/plugin-node-resolve@15.0.2(rollup@3.20.5):
     resolution: {integrity: sha512-Y35fRGUjC3FaurG722uhUuG8YHOJRJQbI6/CkbRkdPotSpDj9NtIN85z1zrcyDcCQIW4qp5mgG72U+gJ0TAFEg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -382,16 +382,16 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2(rollup@3.20.4)
+      '@rollup/pluginutils': 5.0.2(rollup@3.20.5)
       '@types/resolve': 1.20.2
       deepmerge: 4.3.1
       is-builtin-module: 3.2.1
       is-module: 1.0.0
       resolve: 1.22.2
-      rollup: 3.20.4
+      rollup: 3.20.5
     dev: true
 
-  /@rollup/pluginutils@5.0.2(rollup@3.20.4):
+  /@rollup/pluginutils@5.0.2(rollup@3.20.5):
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -403,7 +403,7 @@ packages:
       '@types/estree': 1.0.0
       estree-walker: 2.0.2
       picomatch: 2.3.1
-      rollup: 3.20.4
+      rollup: 3.20.5
     dev: true
 
   /@supabase/auth-helpers-shared@0.3.3(@supabase/supabase-js@2.20.0):
@@ -415,7 +415,7 @@ packages:
       js-base64: 3.7.5
     dev: false
 
-  /@supabase/auth-helpers-sveltekit@0.9.3(@supabase/supabase-js@2.20.0)(@sveltejs/kit@1.15.6):
+  /@supabase/auth-helpers-sveltekit@0.9.3(@supabase/supabase-js@2.20.0)(@sveltejs/kit@1.15.7):
     resolution: {integrity: sha512-F9ePQK6hi/4P9OKLUVfaCZ0ZLaGkyx4AZG2S/tyBmrEHEIDssbOaX3QDcOB6QFqsVx0MsWWbAkl2DOQNVJTK7g==}
     peerDependencies:
       '@supabase/supabase-js': ^2.7.1
@@ -423,7 +423,7 @@ packages:
     dependencies:
       '@supabase/auth-helpers-shared': 0.3.3(@supabase/supabase-js@2.20.0)
       '@supabase/supabase-js': 2.20.0
-      '@sveltejs/kit': 1.15.6(svelte@3.58.0)(vite@4.2.1)
+      '@sveltejs/kit': 1.15.7(svelte@3.58.0)(vite@4.2.2)
     dev: false
 
   /@supabase/functions-js@2.1.1:
@@ -442,8 +442,8 @@ packages:
       - encoding
     dev: false
 
-  /@supabase/postgrest-js@1.5.0:
-    resolution: {integrity: sha512-YaU1HBE43Ba+FGmnXuvK+xYeHylkDKd04PYeKDUCoE2bUHoxSDqnjHbOwmLjnusGZi3X1MrFeUH1Wwb4bHYyIg==}
+  /@supabase/postgrest-js@1.6.0:
+    resolution: {integrity: sha512-HCphMC6KjtoaGcowSlkKRVKBOlNpmKWE2CwoumMwwsfhnRxplIy1zBiIYIL3zIYo/Bm20H/1C6enqjBeTvSwXg==}
     dependencies:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
@@ -473,7 +473,7 @@ packages:
     dependencies:
       '@supabase/functions-js': 2.1.1
       '@supabase/gotrue-js': 2.22.3
-      '@supabase/postgrest-js': 1.5.0
+      '@supabase/postgrest-js': 1.6.0
       '@supabase/realtime-js': 2.7.2
       '@supabase/storage-js': 2.5.1
       cross-fetch: 3.1.5
@@ -482,29 +482,29 @@ packages:
       - supports-color
     dev: false
 
-  /@sveltejs/adapter-auto@2.0.0(@sveltejs/kit@1.15.6):
+  /@sveltejs/adapter-auto@2.0.0(@sveltejs/kit@1.15.7):
     resolution: {integrity: sha512-b+gkHFZgD771kgV3aO4avHFd7y1zhmMYy9i6xOK7m/rwmwaRO8gnF5zBc0Rgca80B2PMU1bKNxyBTHA14OzUAQ==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
     dependencies:
-      '@sveltejs/kit': 1.15.6(svelte@3.58.0)(vite@4.2.1)
+      '@sveltejs/kit': 1.15.7(svelte@3.58.0)(vite@4.2.2)
       import-meta-resolve: 2.2.2
     dev: true
 
-  /@sveltejs/adapter-node@1.2.3(@sveltejs/kit@1.15.6):
+  /@sveltejs/adapter-node@1.2.3(@sveltejs/kit@1.15.7):
     resolution: {integrity: sha512-Fv6NyVpVWYA63KRaV6dDjcU8ytcWFiUr0siJOoHl+oWy5WHNEuRiJOUdiZzYbZo8MmvFaCoxHkTgPrVQhpqaRA==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
     dependencies:
-      '@rollup/plugin-commonjs': 24.1.0(rollup@3.20.4)
-      '@rollup/plugin-json': 6.0.0(rollup@3.20.4)
-      '@rollup/plugin-node-resolve': 15.0.2(rollup@3.20.4)
-      '@sveltejs/kit': 1.15.6(svelte@3.58.0)(vite@4.2.1)
-      rollup: 3.20.4
+      '@rollup/plugin-commonjs': 24.1.0(rollup@3.20.5)
+      '@rollup/plugin-json': 6.0.0(rollup@3.20.5)
+      '@rollup/plugin-node-resolve': 15.0.2(rollup@3.20.5)
+      '@sveltejs/kit': 1.15.7(svelte@3.58.0)(vite@4.2.2)
+      rollup: 3.20.5
     dev: true
 
-  /@sveltejs/kit@1.15.6(svelte@3.58.0)(vite@4.2.1):
-    resolution: {integrity: sha512-nXAVKq4veZqztZbPRDMpZszerSuZk3dMZmIoYc/6YvctYYkZS0cdQy5qfeGQ404wXRonCpaCQb0lUrdJZ81f9A==}
+  /@sveltejs/kit@1.15.7(svelte@3.58.0)(vite@4.2.2):
+    resolution: {integrity: sha512-dgdKExsMJ16X3q8tEcuDlv+QIWAlJcf7IqCU2HWV13nmtTzwSA2n4VtEx9Gy5OGhH0SUAGNIupmlf0TdFSMXbw==}
     engines: {node: ^16.14 || >=18}
     hasBin: true
     requiresBuild: true
@@ -512,7 +512,7 @@ packages:
       svelte: ^3.54.0
       vite: ^4.0.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 2.0.4(svelte@3.58.0)(vite@4.2.1)
+      '@sveltejs/vite-plugin-svelte': 2.0.4(svelte@3.58.0)(vite@4.2.2)
       '@types/cookie': 0.5.1
       cookie: 0.5.0
       devalue: 4.3.0
@@ -526,11 +526,11 @@ packages:
       svelte: 3.58.0
       tiny-glob: 0.2.9
       undici: 5.20.0
-      vite: 4.2.1
+      vite: 4.2.2
     transitivePeerDependencies:
       - supports-color
 
-  /@sveltejs/vite-plugin-svelte@2.0.4(svelte@3.58.0)(vite@4.2.1):
+  /@sveltejs/vite-plugin-svelte@2.0.4(svelte@3.58.0)(vite@4.2.2):
     resolution: {integrity: sha512-pjqhW00KwK2uzDGEr+yJBwut+D+4XfJO/+bHHdHzPRXn9+1Jeq5JcFHyrUiYaXgHtyhX0RsllCTm4ssAx4ZY7Q==}
     engines: {node: ^14.18.0 || >= 16}
     peerDependencies:
@@ -543,8 +543,8 @@ packages:
       magic-string: 0.30.0
       svelte: 3.58.0
       svelte-hmr: 0.15.1(svelte@3.58.0)
-      vite: 4.2.1
-      vitefu: 0.2.4(vite@4.2.1)
+      vite: 4.2.2
+      vitefu: 0.2.4(vite@4.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -1823,8 +1823,8 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /rollup@3.20.4:
-    resolution: {integrity: sha512-n7J4tuctZXUErM9Uc916httwqmTc63zzCr2+TLCiSCpfO/Xuk3g/marGN1IlRJZi+QF3XMYx75PxXRfZDVgaRw==}
+  /rollup@3.20.5:
+    resolution: {integrity: sha512-Mx6NE3nLPIP6a9ReV4dTPOYYmDiyarJNtSbc37Jx0jvh8SHySoFPgyZAp9aDP3LnYvaJOrz+fclcwq3oZDzlnA==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -2142,8 +2142,8 @@ packages:
       node-gyp-build: 4.6.0
     dev: false
 
-  /vite@4.2.1:
-    resolution: {integrity: sha512-7MKhqdy0ISo4wnvwtqZkjke6XN4taqQ2TBaTccLIpOKv7Vp2h4Y+NpmWCnGDeSvvn45KxvWgGyb0MkHvY1vgbg==}
+  /vite@4.2.2:
+    resolution: {integrity: sha512-PcNtT5HeDxb3QaSqFYkEum8f5sCVe0R3WK20qxgIvNBZPXU/Obxs/+ubBMeE7nLWeCo2LDzv+8hRYSlcaSehig==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -2170,11 +2170,11 @@ packages:
       esbuild: 0.17.17
       postcss: 8.4.22
       resolve: 1.22.2
-      rollup: 3.20.4
+      rollup: 3.20.5
     optionalDependencies:
       fsevents: 2.3.2
 
-  /vitefu@0.2.4(vite@4.2.1):
+  /vitefu@0.2.4(vite@4.2.2):
     resolution: {integrity: sha512-fanAXjSaf9xXtOOeno8wZXIhgia+CZury481LsDaV++lSvcU2R9Ch2bPh3PYFyoHW+w9LqAeYRISVQjUIew14g==}
     peerDependencies:
       vite: ^3.0.0 || ^4.0.0
@@ -2182,7 +2182,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 4.2.1
+      vite: 4.2.2
 
   /web-streams-polyfill@3.2.1:
     resolution: {integrity: sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==}

@@ -1,24 +1,16 @@
 <!-- src/routes/account/Avatar.svelte -->
 <script lang="ts">
 	import type { SupabaseClient } from '@supabase/supabase-js';
-	import {
-		AspectRatio,
-		Column,
-		FileUploaderButton,
-		ImageLoader,
-		PaginationNav
-	} from 'carbon-components-svelte';
+	import { AspectRatio, FileUploaderButton, PaginationNav } from 'carbon-components-svelte';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import Slide from './SlideshowGallery/Slide.svelte';
+	import { downloadImage } from '$lib/utils/multimedia';
 
 	export let size = 100;
 	export let url: string[] | undefined;
 	export let supabase: SupabaseClient;
-
 	let avatar_url: string[] = [];
 	let page = 1;
-	let src: string | undefined = undefined;
-	let imageLoader: any;
 	let total = 0;
 	let currentImageIndex = 0;
 	$: console.log('currentImageIndex', currentImageIndex);
@@ -29,7 +21,7 @@
 
 	const dispatch = createEventDispatcher();
 
-	const downloadImage = async (path: string) => {
+	/* 	const downloadImage = async (path: string) => {
 		try {
 			const { data, error } = await supabase.storage.from('products').download(path);
 			if (error) {
@@ -46,7 +38,7 @@
 				console.log('Error downloading image: ', error.message);
 			}
 		}
-	};
+	}; */
 
 	const uploadAvatar = async () => {
 		try {
@@ -77,7 +69,7 @@
 	};
 	onMount(() => {
 		url?.forEach((element) => {
-			downloadImage(element).then((image) => {
+			downloadImage(element, supabase).then((image) => {
 				if (image !== undefined) avatar_url.push(image);
 				total = avatar_url.length;
 			});
@@ -88,15 +80,21 @@
 
 {#if total > 0}
 	<AspectRatio ratio="1x1">
-		<img src={avatar_url[currentImageIndex]} height="100%" width="100%" alt="Hello" />
-		<PaginationNav
-			bind:page
-			bind:total
-			on:change={() => {
-				currentImageIndex = page - 1;
-			}}
-		/>
-		<FileUploaderButton labelText="Add files" />
+		{avatar_url[currentImageIndex]}
+		<div class="main">
+			<div class="container">
+				<Slide slideNo={page} totalSlides={total} slideImageURL={avatar_url[currentImageIndex]} />
+				<img src={avatar_url[currentImageIndex]} height="100%" width="100%" alt="Hello" />
+				<PaginationNav
+					bind:page
+					bind:total
+					on:change={() => {
+						currentImageIndex = page - 1;
+					}}
+				/>
+				<FileUploaderButton labelText="Add files" />
+			</div>
+		</div>
 	</AspectRatio>
 	<!-- <ImageLoader bind:src={avatar_url[currentImageIndex]} alt="Hello" /> -->
 {/if}
@@ -119,3 +117,32 @@
 		/>
 	</div>
 </div>
+
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@500&display=swap');
+
+	* {
+		box-sizing: border-box;
+		font-family: 'Josefin Sans', sans-serif;
+	}
+
+	.main {
+		/* 	width: 70vw; */
+		display: flex;
+		flex-direction: column;
+		/* 	margin: 10% auto; */
+		background-color: #222;
+		box-shadow: 0 0 10px black;
+	}
+
+	/* Position the image container (needed to position the left and right arrows) */
+	.container {
+		position: relative;
+	}
+
+	/* 	.thumbnails-row {
+		width: 100%;
+		display: flex;
+		align-self: flex-end;
+	} */
+</style>

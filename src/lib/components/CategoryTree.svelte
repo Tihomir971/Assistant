@@ -31,8 +31,6 @@
 				parent_id: number | null;
 		  }[]
 		| null;
-	//export let activeId: TreeNodeId = '';
-	//import { activeId } from '$lib/stores/categoryStore';
 
 	let searchValue: string = '';
 	let openCreateModal: boolean = false;

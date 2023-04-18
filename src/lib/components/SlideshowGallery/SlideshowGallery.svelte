@@ -14,6 +14,7 @@
 	$: totalSlides = images.length;
 	$: image = images[imageShowingIndex];
 
+	$: console.log('url', url);
 	const nextSlide = () => {
 		if (imageShowingIndex === images.length - 1) {
 			imageShowingIndex = 0;
@@ -41,15 +42,16 @@
 
 <AspectRatio ratio="1x1">
 	<div class="main">
-		{totalSlides}
 		<div class="container">
-			<Slide
-				bind:image
-				altTag="image.name"
-				attr="image.attribution"
-				slideNo={imageShowingIndex + 1}
-				bind:totalSlides
-			/>
+			{#if url}
+				<Slide
+					bind:slideImageURL={images[imageShowingIndex]}
+					altTag="image.name"
+					attr="image.attribution"
+					slideNo={imageShowingIndex + 1}
+					bind:totalSlides
+				/>
+			{/if}
 		</div>
 		<!-- Image text -->
 		<Caption caption="Naziv Slike" on:prevClick={prevSlide} on:nextClick={nextSlide} />
@@ -78,9 +80,9 @@
 		position: relative;
 	}
 
-	.thumbnails-row {
+	/* 	.thumbnails-row {
 		width: 100%;
 		display: flex;
 		align-self: flex-end;
-	}
+	} */
 </style>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let slideNo: number;
 	export let totalSlides: number;
-	export let image: string;
+	export let slideImageURL: string;
 	export let altTag: string = 'altTag';
 	export let attr: string = 'attr';
 </script>
@@ -9,7 +9,7 @@
 <!-- Full-width images with number text -->
 <div class="mySlides">
 	<div class="numbertext">{slideNo} / {totalSlides}</div>
-	<img src={image} alt={altTag} title={attr} />
+	<img src={slideImageURL} alt={altTag} title={attr} />
 </div>
 
 <style>
