@@ -2,8 +2,8 @@
 	export let slideNo: number;
 	export let totalSlides: number;
 	export let image: string;
-	export let altTag: string;
-	export let attr: string;
+	export let altTag: string = 'altTag';
+	export let attr: string = 'attr';
 </script>
 
 <!-- Full-width images with number text -->

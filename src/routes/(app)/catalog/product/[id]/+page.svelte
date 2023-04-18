@@ -24,6 +24,7 @@
 	import { Launch } from 'carbon-icons-svelte';
 	import TableToolbarCatalog from '$lib/components/TableToolbarCatalog.svelte';
 	import ProductGallery from '$lib/components/ProductGallery.svelte';
+	import SlideshowGallery from '$lib/components/SlideshowGallery/SlideshowGallery.svelte';
 	let previousPage: string = base;
 
 	afterNavigate(({ from }) => {
@@ -32,7 +33,8 @@
 
 	export let data: PageData;
 	const { supabase, product, categories, product_po, replenish, storageonhand } = data;
-
+	//$: ({ images } = data);
+	let images = product?.imageurl?.split(';');
 	let url: string[] | undefined = product?.imageurl?.split(';');
 	function shouldFilterItem(item: ComboBoxItem, value: string) {
 		if (!value) return true;
@@ -128,6 +130,7 @@
 				</Tile>
 			</Column>
 			<Column>
+				<SlideshowGallery {supabase} bind:url />
 				<ProductGallery
 					{supabase}
 					bind:url

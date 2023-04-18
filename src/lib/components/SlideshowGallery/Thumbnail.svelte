@@ -2,15 +2,16 @@
 	export let thumbImg: string;
 	export let altTag: string;
 	export let titleLink: string;
-	export let id: string | null | undefined;
+	export let id: number | null | undefined;
 	export let selected: any;
+	$: imageId = id?.toString();
 </script>
 
 <div class="thumbnail-cont">
 	<img
 		class="sample cursor"
 		class:active={selected}
-		{id}
+		id={imageId}
 		src={thumbImg}
 		alt={altTag}
 		title="Image from {titleLink}"

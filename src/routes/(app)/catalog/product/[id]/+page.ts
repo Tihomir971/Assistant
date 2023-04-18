@@ -43,11 +43,29 @@ export const load = (async ({ params, parent }) => {
 		return data;
 	};
 
+	const getImages = async (id: number) => {
+		const images: string[] = [];
+		const { data } = await supabase
+			.from('m_product')
+			.select('id,sku,barcode,name,condition,m_product_category_id,imageurl')
+			.eq('id', id)
+			.maybeSingle();
+		if (data?.imageurl) {
+			const imagesurl = data?.imageurl.split(';');
+			imagesurl.forEach(async (url) => {
+				const { data } = await supabase.storage.from('products').download(url);
+				if (data) images.push(URL.createObjectURL(data));
+			});
+		}
+		return images;
+	};
+
 	//	console.log('imageUrl SSR', imageUrl, typeof imageUrl);
 	return {
 		product: getProduct(productId),
 		product_po: getProduct_po(productId),
 		replenish: getReplenish(productId),
-		storageonhand: getStorageonhand(productId)
+		storageonhand: getStorageonhand(productId),
+		images: getImages(productId)
 	};
 }) satisfies PageLoad;

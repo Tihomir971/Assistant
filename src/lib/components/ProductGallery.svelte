@@ -9,6 +9,7 @@
 		PaginationNav
 	} from 'carbon-components-svelte';
 	import { createEventDispatcher, onMount } from 'svelte';
+	import Slide from './SlideshowGallery/Slide.svelte';
 
 	export let size = 100;
 	export let url: string[] | undefined;

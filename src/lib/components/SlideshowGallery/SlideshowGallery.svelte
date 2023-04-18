@@ -1,13 +1,17 @@
 <script lang="ts">
-	import { images } from './imageData';
-	import Slide from './Slide.svelte';
-	import Thumbnail from './Thumbnail.svelte';
+	import { AspectRatio } from 'carbon-components-svelte';
 	import Caption from './Caption.svelte';
+	import Slide from './Slide.svelte';
+	import { onMount } from 'svelte';
+	import { downloadImage } from '$lib/utils/multimedia';
+	import type { SupabaseClient } from '@supabase/supabase-js';
 
-	//export let images
-	/* IMAGE TO SHOW */
+	export let url: string[] | undefined;
+	export let supabase: SupabaseClient;
+
+	let images: string[] = [];
 	let imageShowingIndex = 0;
-	$: console.log(imageShowingIndex);
+	$: totalSlides = images.length;
 	$: image = images[imageShowingIndex];
 
 	const nextSlide = () => {
@@ -25,43 +29,32 @@
 			imageShowingIndex -= 1;
 		}
 	};
-
-	const goToSlide = (number: number) => (imageShowingIndex = number);
+	onMount(() => {
+		url?.forEach((element) => {
+			downloadImage(element, supabase).then((image) => {
+				if (image !== undefined) images.push(image);
+				totalSlides = images.length;
+			});
+		});
+	});
 </script>
 
-<main>
-	<!-- image gallery -->
-	<div class="container">
-		<Slide
-			image={image.imgurl}
-			altTag={image.name}
-			attr={image.attribution}
-			slideNo={image.id + 1}
-			totalSlides={images.length}
-		/>
-	</div>
-
-	<!-- Image text -->
-	<Caption
-		caption={images[imageShowingIndex].name}
-		on:prevClick={prevSlide}
-		on:nextClick={nextSlide}
-	/>
-
-	<!-- Thumbnail images -->
-	<div class="thumbnails-row">
-		{#each images as { id, imgurl, name, attribution }}
-			<Thumbnail
-				thumbImg={imgurl}
-				altTag={name}
-				titleLink={attribution}
-				{id}
-				selected={imageShowingIndex === id}
-				on:click={() => goToSlide(id)}
+<AspectRatio ratio="1x1">
+	<div class="main">
+		{totalSlides}
+		<div class="container">
+			<Slide
+				bind:image
+				altTag="image.name"
+				attr="image.attribution"
+				slideNo={imageShowingIndex + 1}
+				bind:totalSlides
 			/>
-		{/each}
+		</div>
+		<!-- Image text -->
+		<Caption caption="Naziv Slike" on:prevClick={prevSlide} on:nextClick={nextSlide} />
 	</div>
-</main>
+</AspectRatio>
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@500&display=swap');
@@ -71,11 +64,11 @@
 		font-family: 'Josefin Sans', sans-serif;
 	}
 
-	main {
-		width: 70vw;
+	.main {
+		/* 	width: 70vw; */
 		display: flex;
 		flex-direction: column;
-		margin: 10% auto;
+		/* 	margin: 10% auto; */
 		background-color: #222;
 		box-shadow: 0 0 10px black;
 	}
