@@ -11,11 +11,7 @@ export const load = (async ({ params, parent }) => {
 	const productId = Number(params.id);
 
 	const getProduct = async (id: number) => {
-		const { data } = await supabase
-			.from('m_product')
-			.select('id,sku,barcode,name,condition,m_product_category_id,imageurl')
-			.eq('id', id)
-			.maybeSingle();
+		const { data } = await supabase.from('m_product').select().eq('id', id).maybeSingle();
 
 		return data;
 	};

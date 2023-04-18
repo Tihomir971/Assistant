@@ -1,8 +1,9 @@
 <!-- src/routes/account/Avatar.svelte -->
 <script lang="ts">
+	import { downloadImage } from '$lib/utils/multimedia';
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import { FileUploaderButton, ImageLoader } from 'carbon-components-svelte';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 
 	export let size = 10;
 	export let url: string | null;
@@ -14,7 +15,7 @@
 
 	const dispatch = createEventDispatcher();
 
-	const downloadImage = async (path: string) => {
+	/* 	const downloadImage = async (path: string) => {
 		console.log('path', path);
 		try {
 			const { data, error } = await supabase.storage.from('avatars').download(path);
@@ -29,7 +30,7 @@
 				console.log('Error downloading image: ', error.message);
 			}
 		}
-	};
+	}; */
 
 	const uploadAvatar = async () => {
 		try {
@@ -58,13 +59,8 @@
 			uploading = false;
 		}
 	};
-
-	$: if (url) downloadImage(url);
 </script>
 
-<div style="width: {size}em;">
-	<ImageLoader fadeIn ratio="1x1" src={avatar_url === null ? undefined : avatar_url} />
-</div>
 <FileUploaderButton labelText="Add files" />q
 <div>
 	<input type="hidden" name="avatarUrl" value={url} />

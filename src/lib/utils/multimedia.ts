@@ -2,10 +2,10 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 
 export let supabase: SupabaseClient;
 
-const downloadImage = async (path: string, supabase: SupabaseClient) => {
+const downloadImage = async (path: string, bucket: string, supabase: SupabaseClient) => {
 	try {
 		console.log('path', path);
-		const { data, error } = await supabase.storage.from('products').download(path);
+		const { data, error } = await supabase.storage.from(bucket).download(path);
 		console.log('error', error);
 		if (error) {
 			throw error;

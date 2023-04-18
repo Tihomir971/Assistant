@@ -9,6 +9,7 @@
 	export let size = 100;
 	export let url: string[] | undefined;
 	export let supabase: SupabaseClient;
+	export let bucket: string;
 	let avatar_url: string[] = [];
 	let page = 1;
 	let total = 0;
@@ -17,28 +18,8 @@
 
 	let uploading = false;
 	let files: FileList;
-	let key: number;
 
 	const dispatch = createEventDispatcher();
-
-	/* 	const downloadImage = async (path: string) => {
-		try {
-			const { data, error } = await supabase.storage.from('products').download(path);
-			if (error) {
-				throw error;
-			}
-
-			const url = URL.createObjectURL(data);
-			return url;
-			//console.log(url, typeof url);
-			//			avatar_url.push(url);
-			//			console.log('avatar_url in downloadImage', avatar_url, avatar_url.length);
-		} catch (error) {
-			if (error instanceof Error) {
-				console.log('Error downloading image: ', error.message);
-			}
-		}
-	}; */
 
 	const uploadAvatar = async () => {
 		try {
@@ -69,7 +50,7 @@
 	};
 	onMount(() => {
 		url?.forEach((element) => {
-			downloadImage(element, supabase).then((image) => {
+			downloadImage(element, bucket, supabase).then((image) => {
 				if (image !== undefined) avatar_url.push(image);
 				total = avatar_url.length;
 			});
@@ -80,11 +61,10 @@
 
 {#if total > 0}
 	<AspectRatio ratio="1x1">
-		{avatar_url[currentImageIndex]}
 		<div class="main">
 			<div class="container">
 				<Slide slideNo={page} totalSlides={total} slideImageURL={avatar_url[currentImageIndex]} />
-				<img src={avatar_url[currentImageIndex]} height="100%" width="100%" alt="Hello" />
+				<!-- 	<img src={avatar_url[currentImageIndex]} height="100%" width="100%" alt="Hello" /> -->
 				<PaginationNav
 					bind:page
 					bind:total

@@ -4,6 +4,7 @@
 	import {
 		Button,
 		ButtonSet,
+		Checkbox,
 		Column,
 		ComboBox,
 		DataTable,
@@ -32,8 +33,7 @@
 
 	export let data: PageData;
 	const { supabase, product, categories, product_po, replenish, storageonhand } = data;
-	//$: ({ images } = data);
-	let images = product?.imageurl?.split(';');
+
 	let url: string[] | undefined = product?.imageurl?.split(';');
 
 	function shouldFilterItem(item: ComboBoxItem, value: string) {
@@ -120,11 +120,16 @@
 						</FormGroup> -->
 						<FormGroup>
 							<TextInput
-								inline
 								bind:value={product.condition}
-								labelText="condition"
+								labelText="Condition"
 								placeholder="Enter user name..."
 							/>
+						</FormGroup>
+						<FormGroup>
+							<input hidden name="isselfservice" bind:value={product.isselfservice} />
+							<Checkbox bind:checked={product.isselfservice} labelText="Is self service?" />
+							<input hidden name="isactive" bind:value={product.isactive} />
+							<Checkbox bind:checked={product.isactive} labelText="Is active?" />
 						</FormGroup>
 					</Form>
 				</Tile>
@@ -133,6 +138,7 @@
 				<!-- <SlideshowGallery {supabase} bind:url /> -->
 				<ProductGallery
 					{supabase}
+					bucket="products"
 					bind:url
 					size={10}
 					on:upload={() => {
