@@ -6,7 +6,6 @@
 		ButtonSet,
 		Checkbox,
 		ComboBox,
-		Form,
 		FormGroup,
 		Modal,
 		TextArea,
@@ -14,7 +13,7 @@
 		Tile
 	} from 'carbon-components-svelte';
 	import type { ComboBoxItem } from 'carbon-components-svelte/types/ComboBox/ComboBox.svelte';
-	import type { ActionData, PageData } from './$types';
+	import type { PageData } from './$types';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
 	let previousPage: string = base;

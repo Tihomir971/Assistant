@@ -1,0 +1,19 @@
+{
+	"mpn": { "<all_channels>": { "<all_locales>": "BE1-200HLLC" } },
+	"sku": { "<all_channels>": { "<all_locales>": "8606019605568" } },
+	"gtin": { "<all_channels>": { "<all_locales>": "8606019605568" } },
+	"name": { "<all_channels>": { "<all_locales>": "Vox BE1-200HLLC: 198L Horizontalni zamrzivač" } },
+	"brand": { "<all_channels>": { "<all_locales>": "Vox" } },
+	"picture": {
+		"<all_channels>": {
+			"<all_locales>": "d/2/6/a/d26a2d3b1e6cc2c6ac5c45a34fca5b5239fe5328_BE1_200HLLC.jpg"
+		}
+	},
+	"condition": { "<all_channels>": { "<all_locales>": "new" } },
+	"description": {
+		"<all_channels>": {
+			"<all_locales>": "<table>\n<tbody>\n<tr>\n<td>Kategorija</td>\n<td> Horizontalni zamrzivači </td>\n</tr>\n<tr>\n<td>Tip</td>\n<td>Horizontalni zamrzivač</td>\n</tr>\n<tr>\n<td>Tip kontrole</td>\n<td>Elektronska</td>\n</tr>\n<tr>\n<td>Neto zapremina zamrzivača</td>\n<td>198 l</td>\n</tr>\n<tr>\n<td>Kapacitet zamrzavanja (kg/24h)</td>\n<td>10 kg</td>\n</tr>\n<tr>\n<td>Unutrašnjost zamrzivača</td>\n<td>1 korpa</td>\n</tr>\n<tr>\n<td>Najniža ambijentalna temperatura pri kojoj je uređaj operativan</td>\n<td>-15°C</td>\n</tr>\n<tr>\n<td>Klasa energetske efikasnosti</td>\n<td>F</td>\n</tr>\n<tr>\n<td>Klasa nivoa buke</td>\n<td>C</td>\n</tr>\n<tr>\n<td>Konvertibilni zamrzivač</td>\n<td>Da</td>\n</tr>\n<tr>\n<td>Lako čišćenje unutrašnjosti</td>\n<td>Da</td>\n</tr>\n<tr>\n<td>Sistem odmrzavanja</td>\n<td>Manuelno</td>\n</tr>\n<tr>\n<td>Klimatska klasa</td>\n<td>SN /N/ ST</td>\n</tr>\n<tr>\n<td>Nivo buke</td>\n<td>40 dB</td>\n</tr>\n<tr>\n<td>Tehnologije</td>\n<td>Unutrašnje Led osvetljenje</td>\n</tr>\n<tr>\n<td>Gas</td>\n<td>R600a</td>\n</tr>\n<tr>\n<td>Podesivi termostat</td>\n<td>Da</td>\n</tr>\n<tr>\n<td>Vreme čuvanja hrane u smrznutom stanju u slučaju nestanka struje</td>\n<td>22 h</td>\n</tr>\n<tr>\n<td>Amortizovana vrata</td>\n<td>Da</td>\n</tr>\n<tr>\n<td>Potrošnja energije (kWh/godina)</td>\n<td>250 kWh</td>\n</tr>\n<tr>\n<td>Režim brzog zamrzavanja (TURBO režim)</td>\n<td>Da</td>\n</tr>\n<tr>\n<td>Tip ručke na vratima</td>\n<td>Ručka sa bravicom za zaključavanje</td>\n</tr>\n<tr>\n<td>Točkići</td>\n<td>Da</td>\n</tr>\n<tr>\n<td>Visina</td>\n<td>847 mm</td>\n</tr>\n<tr>\n<td>Širina</td>\n<td>910 mm</td>\n</tr>\n<tr>\n<td>Dubina</td>\n<td>555 mm</td>\n</tr>\n<tr>\n<td>Garancija</td>\n<td>5 godina</td>\n</tr>\n<tr>\n<td>Boja</td>\n<td>Bela</td>\n</tr>\n<tr>\n<td>Dimenzije spakovanog uređaja (ŠxVxD)</td>\n<td>934 x 886 x 570 mm</td>\n</tr>\n<tr>\n<td>Neto težina</td>\n<td>31 kg</td>\n</tr>\n<tr>\n<td>Bruto težina</td>\n<td>35 kg</td>\n</tr>\n<tr>\n<td>Količina utovara (40ft HC kontejner)</td>\n<td>149 kom</td>\n</tr>\n</tbody>\n</table>"
+		}
+	},
+	"short_description": { "<all_channels>": { "<all_locales>": "Horizontalni zamrzivač od 198L" } }
+}

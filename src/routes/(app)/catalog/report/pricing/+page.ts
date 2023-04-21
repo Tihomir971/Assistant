@@ -9,7 +9,7 @@ export const load = (async ({ parent, depends, url }) => {
 	}
 
 	const activeCategoryId = Number(url.searchParams.get('cat'));
-
+	const activeWarehouseId = Number(url.searchParams.get('wh'));
 	const onStock = url.searchParams.get('onStock') || 'true';
 	//	const newUrl = new URL($page.url);
 	//	newUrl?.searchParams?.set('cat', activeId.toString());
@@ -58,7 +58,7 @@ export const load = (async ({ parent, depends, url }) => {
 
 		if (product.m_storageonhand && Array.isArray(product.m_storageonhand)) {
 			product.m_storageonhand?.forEach((m_storageonhand) => {
-				if (m_storageonhand.warehouse_id === 5) {
+				if (m_storageonhand.warehouse_id === activeWarehouseId) {
 					//if (m_storageonhand.warehouse_id === get(warehouseId)) {
 					qtyonhand = qtyonhand + m_storageonhand.qtyonhand;
 				}

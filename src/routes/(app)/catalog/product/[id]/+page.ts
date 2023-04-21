@@ -56,12 +56,19 @@ export const load = (async ({ params, parent }) => {
 		return images;
 	};
 
+	const getAttributeSet = async () => {
+		const { data } = await supabase.from('m_attributeset').select('id, text: name');
+
+		return data;
+	};
+
 	//	console.log('imageUrl SSR', imageUrl, typeof imageUrl);
 	return {
 		product: getProduct(productId),
 		product_po: getProduct_po(productId),
 		replenish: getReplenish(productId),
 		storageonhand: getStorageonhand(productId),
-		images: getImages(productId)
+		images: getImages(productId),
+		attributeset: getAttributeSet()
 	};
 }) satisfies PageLoad;

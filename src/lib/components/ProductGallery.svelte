@@ -60,22 +60,22 @@
 </script>
 
 {#if total > 0}
-	<AspectRatio ratio="1x1">
-		<div class="main">
-			<div class="container">
+	<div class="main">
+		<div class="container">
+			<AspectRatio ratio="1x1">
 				<Slide slideNo={page} totalSlides={total} slideImageURL={avatar_url[currentImageIndex]} />
 				<!-- 	<img src={avatar_url[currentImageIndex]} height="100%" width="100%" alt="Hello" /> -->
-				<PaginationNav
-					bind:page
-					bind:total
-					on:change={() => {
-						currentImageIndex = page - 1;
-					}}
-				/>
-				<FileUploaderButton labelText="Add files" />
-			</div>
+			</AspectRatio>
+			<PaginationNav
+				bind:page
+				bind:total
+				on:change={() => {
+					currentImageIndex = page - 1;
+				}}
+			/>
+			<FileUploaderButton labelText="Add files" />
 		</div>
-	</AspectRatio>
+	</div>
 	<!-- <ImageLoader bind:src={avatar_url[currentImageIndex]} alt="Hello" /> -->
 {/if}
 
