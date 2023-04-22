@@ -1,49 +1,60 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
+type Product = {
+	id: number | null;
+	barcode: string | null;
+	sku: string | null;
+	name: string | null;
+	qtyonhand: number | null;
+	productprice: number | null;
+	pricePo: number | null;
+	taxRate: number | null;
+	mpn?: string | null;
+	pricelist?: number | null;
+	priceRecommended?: number | null;
+};
+
+function findPropertyValueByProperty<T>(
+	data: T[] | T,
+	searchProperty: keyof T,
+	searchValue: number,
+	returnProperty: keyof T
+): T[typeof returnProperty] | undefined {
+	const array = Array.isArray(data) ? data : [data];
+	const foundObject = array.find((obj) => obj[searchProperty] === searchValue);
+	return foundObject ? foundObject[returnProperty] : undefined;
+}
 
 export const load = (async ({ parent, depends, url }) => {
-	//	const start = Date.now();
 	const { session, supabase } = await parent();
 	if (!session) {
 		throw redirect(303, '/');
 	}
 
-	const activeCategoryId = Number(url.searchParams.get('cat'));
+	//Get searchParams
 	const activeWarehouseId = Number(url.searchParams.get('wh'));
 	const onStock = url.searchParams.get('onStock') || 'true';
-	//	const newUrl = new URL($page.url);
-	//	newUrl?.searchParams?.set('cat', activeId.toString());
-	//	goto(newUrl);
-	const products:
-		| {
-				id: number | null;
-				barcode: string | null;
-				sku: string | null;
-				name: string | null;
-				qtyonhand: number | null;
-				productprice: number | null;
-				pricePo: number | null;
-				taxRate: number | null;
-				mpn: string | null;
-		  }[] = [];
+	const activeCategoryId: number | null = url.searchParams.get('cat')
+		? Number(url.searchParams.get('cat'))
+		: null;
 
-	let productQuery = supabase
+	//change filter depending of activeCategoryId
+	const filter = {
+		column: 'm_product_category_id',
+		operator: activeCategoryId ? 'eq' : 'is',
+		value: activeCategoryId || null
+	};
+	const { data } = await supabase
 		.from('m_product')
 		.select(
 			'id,barcode,mpn,sku,name,c_taxcategory_id,c_uom_id,m_storageonhand(warehouse_id,qtyonhand),m_productprice(m_pricelist_version_id,pricestd),m_product_po(pricelist),c_taxcategory(c_tax(rate))'
 		)
 		.order('name', { ascending: true })
-		.eq('producttype', 'I');
+		.eq('producttype', 'I')
+		.filter(filter.column, filter.operator, filter.value);
 
-	if (activeCategoryId === 0) {
-		productQuery = productQuery.is('m_product_category_id', null);
-	} else {
-		productQuery = productQuery.eq('m_product_category_id', activeCategoryId);
-	}
-	const { data } = await productQuery;
+	const products: Product[] = [];
 	data?.forEach((product) => {
-		let qtyonhand = 0;
-		let productprice = 0;
 		let pricePo = 0;
 		let taxRate = 0;
 		if (product.c_taxcategory_id === 2) {
@@ -52,32 +63,60 @@ export const load = (async ({ parent, depends, url }) => {
 			taxRate = 0.2;
 		}
 
-		if (product.m_storageonhand && Array.isArray(product.m_storageonhand)) {
-			product.m_storageonhand?.forEach((m_storageonhand) => {
-				if (m_storageonhand.warehouse_id === activeWarehouseId) {
-					qtyonhand = qtyonhand + m_storageonhand.qtyonhand;
-				}
-			});
+		// Find qtyonhand for product for selected warehouse
+		let qtyonhand = 0;
+		if (Array.isArray(product.m_storageonhand)) {
+			// If warehouseData is an array, find the object with the matching warehouse_id and get its qtyonhand
+			const warehouse = product.m_storageonhand.find(
+				(data) => data.warehouse_id === activeWarehouseId
+			);
+			qtyonhand = warehouse?.qtyonhand ?? 0;
+		} else {
+			// If warehouseData is not an array, check if it has the matching warehouse_id and get its qtyonhand
+			if (product?.m_storageonhand?.warehouse_id === activeWarehouseId) {
+				qtyonhand = product.m_storageonhand.qtyonhand;
+			}
 		}
-
-		if (product.m_productprice && Array.isArray(product.m_productprice)) {
-			product.m_productprice?.forEach((m_productprice) => {
-				if (m_productprice.m_pricelist_version_id === 13) {
-					productprice = m_productprice.pricestd;
-				}
-			});
-		}
-		if (product.m_productprice && Array.isArray(product.m_productprice)) {
-			product.m_productprice?.forEach((m_productprice) => {
-				if (m_productprice.m_pricelist_version_id === 5) {
-					pricePo = m_productprice.pricestd * (1 + taxRate);
-				}
-			});
-		}
-
 		if (onStock === 'true' && !(qtyonhand > 0)) {
 			return;
 		}
+
+		// Find pricestd for product in pricelist "13"
+		let productprice = 0;
+		if (Array.isArray(product.m_productprice)) {
+			// If warehouseData is an array, find the object with the matching warehouse_id and get its qtyonhand
+			const m_productprice = product.m_productprice.find(
+				(data) => data.m_pricelist_version_id === 13
+			);
+			productprice = m_productprice?.pricestd ?? 0;
+		} else {
+			// If warehouseData is not an array, check if it has the matching warehouse_id and get its qtyonhand
+			if (product?.m_productprice?.m_pricelist_version_id === 13) {
+				productprice = product.m_productprice.pricestd;
+			}
+		}
+
+		// Find pricestd for product in pricelist "5" and add taxRate
+		pricePo = product.m_productprice
+			? (findPropertyValueByProperty(
+					product.m_productprice,
+					'm_pricelist_version_id',
+					5,
+					'pricestd'
+			  ) ?? 0) *
+			  (1 + taxRate)
+			: 0;
+
+		/* 		if (product.m_productprice) {
+			const result =
+				findPropertyValueByProperty(
+					product.m_productprice,
+					'm_pricelist_version_id',
+					5,
+					'pricestd'
+				) ?? 0;
+			pricePo = result * (1 + taxRate);
+		} */
 
 		products.push({
 			id: product.id,

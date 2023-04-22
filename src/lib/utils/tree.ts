@@ -1,4 +1,4 @@
-interface TreeNode {
+/* interface TreeNode {
 	id: string | number;
 	text: string;
 	icon?: typeof import('svelte').SvelteComponent;
@@ -6,65 +6,59 @@ interface TreeNode {
 	expanded?: boolean;
 	parent_id?: number | null;
 	children?: TreeNode[];
-}
+} */
 
-interface DataTableRow {
+import type { DataTableRow } from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
+import type { TreeNode } from 'carbon-components-svelte/types/TreeView/TreeView.svelte';
+
+/* interface DataTableRow {
 	id: number;
 	text: string;
 	parent_id: number | null;
 	children?: TreeNode[];
-}
-//array: T[], property: keyof T
-function removeProperty(items: TreeNode[], property: keyof TreeNode) {
-	//for (const item of items) {
-	//	delete item.parentId;
-	//	if (item.children) {
-	//		removeProperty(item.children);
-	//	}
-	//}
+} */
+
+function arrayToTree(items: Array<DataTableRow>) {
+	const itemMap = new Map();
+
+	// Initialize the map with all items
 	items.forEach((item) => {
-		delete item[property];
-		if (item.children) {
-			removeProperty(item.children, property);
-		}
-	});
-}
-
-function createTree(data: Array<DataTableRow>): TreeNode[] {
-	//Add empty children
-	data.forEach((item) => {
-		item.children = [];
+		itemMap.set(item.id, { ...item });
 	});
 
-	//Create tree structure
-	const tree: Array<TreeNode> = [];
-
-	data.forEach((item) => {
-		if (!item.parent_id) {
-			tree.push(item);
+	// Create the tree structure
+	const result: Array<TreeNode> = [];
+	items.forEach((item) => {
+		if (item.parent_id === null) {
+			const newItem = itemMap.get(item.id);
+			if (itemMap.get(item.id).children) {
+				newItem.children = itemMap.get(item.id).children;
+			}
+			result.push(newItem);
 		} else {
-			const parent = data.find((parent) => parent.id === item.parent_id);
-			if (parent && parent.children) {
-				parent.children.push(item);
+			const parent = itemMap.get(item.parent_id);
+			if (parent) {
+				parent.children = parent.children || [];
+				parent.children.push(itemMap.get(item.id));
 			}
 		}
 	});
-	const removeEmptyChildren = (tree: Array<TreeNode>) => {
-		tree.forEach((obj) => {
-			if (obj.children && obj.children.length === 0) {
-				delete obj.children;
-			}
-			if (obj.children) {
-				removeEmptyChildren(obj.children);
-			}
-		});
-	};
-	removeEmptyChildren(tree);
-	removeProperty(tree, 'parent_id');
-	return tree;
-}
 
+	// Remove parent_id from all items
+	items.forEach((item) => {
+		const mappedItem = itemMap.get(item.id);
+		if ('parent_id' in mappedItem) {
+			delete mappedItem.parent_id;
+		}
+	});
+
+	// Add "Unclassified" node at the end
+	result.push({ id: 0, text: 'Unclassified' });
+
+	return result;
+}
 export function convertToTreeStructure(data: Array<DataTableRow> | null): TreeNode[] | undefined {
 	if (!data) return;
-	return createTree(data);
+	//return createTree(data);
+	return arrayToTree(data);
 }

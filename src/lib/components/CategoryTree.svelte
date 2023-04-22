@@ -68,9 +68,10 @@
 		searchRow = [];
 	}
 	function rerunLoadFunction() {
-		if (activeId) {
+		if (typeof activeId !== 'undefined') {
 			const newUrl = new URL($page.url);
 			newUrl?.searchParams?.set('cat', activeId.toString());
+
 			goto(newUrl);
 		}
 		return;
