@@ -17,7 +17,7 @@ type Product = {
 function findPropertyValueByProperty<T>(
 	data: T[] | T,
 	searchProperty: keyof T,
-	searchValue: number,
+	searchValue: number | null,
 	returnProperty: keyof T
 ): T[typeof returnProperty] | undefined {
 	const array = Array.isArray(data) ? data : [data];
@@ -32,11 +32,13 @@ export const load = (async ({ parent, depends, url }) => {
 	}
 
 	//Get searchParams
-	const activeWarehouseId = Number(url.searchParams.get('wh'));
+	//	const activeWarehouseId = Number(url.searchParams.get('wh'));
+	const activeWarehouseId = url.searchParams.get('wh') ? Number(url.searchParams.get('wh')) : null;
 	const onStock = url.searchParams.get('onStock') || 'true';
-	const activeCategoryId: number | null = url.searchParams.get('cat')
-		? Number(url.searchParams.get('cat'))
-		: null;
+	//const activeCategoryId: number | null = url.searchParams.get('cat');
+	const activeCategoryId = url.searchParams.get('cat') ? Number(url.searchParams.get('cat')) : null;
+	activeWarehouseId;
+	const view: string | null = url.searchParams.get('vw');
 
 	//change filter depending of activeCategoryId
 	const filter = {
@@ -55,49 +57,34 @@ export const load = (async ({ parent, depends, url }) => {
 
 	const products: Product[] = [];
 	data?.forEach((product) => {
-		let pricePo = 0;
-		let taxRate = 0;
-		if (product.c_taxcategory_id === 2) {
-			taxRate = 0.1;
-		} else {
-			taxRate = 0.2;
-		}
+		const taxRate = product.c_taxcategory_id === 2 ? 0.1 : 0.2;
 
 		// Find qtyonhand for product for selected warehouse
-		let qtyonhand = 0;
-		if (Array.isArray(product.m_storageonhand)) {
-			// If warehouseData is an array, find the object with the matching warehouse_id and get its qtyonhand
-			const warehouse = product.m_storageonhand.find(
-				(data) => data.warehouse_id === activeWarehouseId
-			);
-			qtyonhand = warehouse?.qtyonhand ?? 0;
-		} else {
-			// If warehouseData is not an array, check if it has the matching warehouse_id and get its qtyonhand
-			if (product?.m_storageonhand?.warehouse_id === activeWarehouseId) {
-				qtyonhand = product.m_storageonhand.qtyonhand;
-			}
-		}
+		const qtyonhand = product.m_storageonhand
+			? findPropertyValueByProperty(
+					product.m_storageonhand,
+					'warehouse_id',
+					activeWarehouseId,
+					'qtyonhand'
+			  ) ?? 0
+			: 0;
+
 		if (onStock === 'true' && !(qtyonhand > 0)) {
 			return;
 		}
 
 		// Find pricestd for product in pricelist "13"
-		let productprice = 0;
-		if (Array.isArray(product.m_productprice)) {
-			// If warehouseData is an array, find the object with the matching warehouse_id and get its qtyonhand
-			const m_productprice = product.m_productprice.find(
-				(data) => data.m_pricelist_version_id === 13
-			);
-			productprice = m_productprice?.pricestd ?? 0;
-		} else {
-			// If warehouseData is not an array, check if it has the matching warehouse_id and get its qtyonhand
-			if (product?.m_productprice?.m_pricelist_version_id === 13) {
-				productprice = product.m_productprice.pricestd;
-			}
-		}
+		const productprice = product.m_productprice
+			? findPropertyValueByProperty(
+					product.m_productprice,
+					'm_pricelist_version_id',
+					13,
+					'pricestd'
+			  ) ?? 0
+			: 0;
 
 		// Find pricestd for product in pricelist "5" and add taxRate
-		pricePo = product.m_productprice
+		const pricePo = product.m_productprice
 			? (findPropertyValueByProperty(
 					product.m_productprice,
 					'm_pricelist_version_id',
@@ -107,16 +94,30 @@ export const load = (async ({ parent, depends, url }) => {
 			  (1 + taxRate)
 			: 0;
 
-		/* 		if (product.m_productprice) {
-			const result =
-				findPropertyValueByProperty(
-					product.m_productprice,
-					'm_pricelist_version_id',
-					5,
-					'pricestd'
-				) ?? 0;
-			pricePo = result * (1 + taxRate);
-		} */
+		let pricelist = 0;
+		if (product.m_product_po && Array.isArray(product.m_product_po)) {
+			product.m_product_po?.forEach((m_product_po) => {
+				if (m_product_po.pricelist && m_product_po.pricelist > 0) {
+					pricelist = m_product_po.pricelist;
+				}
+			});
+		}
+
+		let priceRecommended = 0;
+		if (pricelist === 0) {
+			priceRecommended = pricePo * 1.3;
+		} else if (pricelist < pricePo) {
+			priceRecommended = pricePo;
+		} else if (pricelist < pricePo * 1.3) {
+			priceRecommended = pricelist;
+		} else {
+			priceRecommended = pricePo * 1.3;
+		}
+
+		priceRecommended = Math.ceil(priceRecommended);
+		if (priceRecommended < 2000) {
+			priceRecommended = priceRecommended - 0.01;
+		}
 
 		products.push({
 			id: product.id,
@@ -126,6 +127,8 @@ export const load = (async ({ parent, depends, url }) => {
 			qtyonhand: qtyonhand,
 			productprice: productprice,
 			pricePo: pricePo,
+			pricelist: pricelist,
+			priceRecommended: priceRecommended,
 			mpn: product.mpn,
 			taxRate: taxRate
 		});

@@ -52,9 +52,6 @@ function arrayToTree(items: Array<DataTableRow>) {
 		}
 	});
 
-	// Add "Unclassified" node at the end
-	result.push({ id: 0, text: 'Unclassified' });
-
 	return result;
 }
 export function convertToTreeStructure(data: Array<DataTableRow> | null): TreeNode[] | undefined {

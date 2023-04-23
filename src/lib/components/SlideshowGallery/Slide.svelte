@@ -24,6 +24,11 @@
 	}
 
 	img {
+		max-width: 100%;
+		max-height: 100%;
+	}
+	.mySlides {
 		width: 100%;
+		height: 100%;
 	}
 </style>

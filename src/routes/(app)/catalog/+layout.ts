@@ -2,16 +2,25 @@ import { redirect } from '@sveltejs/kit';
 import type { LayoutLoad } from './$types';
 
 export const load = (async ({ parent, depends, url }) => {
-	//	const start = Date.now();
 	const { session, supabase } = await parent();
 	if (!session) {
 		throw redirect(303, '/');
 	}
 
-	const activeWarehouseId = Number(url.searchParams.get('wh'));
-	if (activeWarehouseId === 0) {
+	const wh = url.searchParams.get('wh');
+	const vw = url.searchParams.get('vw');
+
+	if (!wh || !vw) {
 		const newUrl = new URL(url);
-		newUrl.searchParams.set('wh', '5');
+
+		if (!wh) {
+			newUrl.searchParams.set('wh', '5');
+		}
+
+		if (!vw) {
+			newUrl.searchParams.set('vw', 'stock');
+		}
+
 		throw redirect(302, newUrl.href);
 	}
 

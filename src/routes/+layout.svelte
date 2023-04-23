@@ -1,5 +1,6 @@
 <!-- src/routes/+layout.svelte -->
 <script lang="ts">
+	import Toast from '../lib/components/toast/Toast.svelte';
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import type { LayoutData } from './$types';
@@ -27,7 +28,9 @@
 <svelte:head>
 	<title>Kalisi Assistant</title>
 </svelte:head>
+
 <Header />
+<Toast />
 <Content style="padding: 0px; height: calc(100vh - 3rem);">
 	<slot />
 </Content>

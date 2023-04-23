@@ -1,23 +1,35 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-
 	import {
 		Button,
 		Dropdown,
+		MultiSelect,
 		Toolbar,
 		ToolbarContent,
 		ToolbarSearch
 	} from 'carbon-components-svelte';
-	import { Filter, UpdateNow } from 'carbon-icons-svelte';
+	import type { MultiSelectItemId } from 'carbon-components-svelte/types/MultiSelect/MultiSelect.svelte';
+	import { Filter, UpdateNow, WatsonHealthZoomPan } from 'carbon-icons-svelte';
 
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
 	export let onStock = true;
+	let multiselectSelectedIds: MultiSelectItemId[] = [];
 </script>
 
 <Toolbar>
 	<ToolbarContent>
+		<MultiSelect
+			useTitleInItem
+			type="inline"
+			bind:selectedIds={multiselectSelectedIds}
+			label="Select Prices..."
+			items={[
+				{ id: '1', text: 'Purchase' },
+				{ id: '0', text: 'Market' },
+				{ id: '4', text: 'Retail' }
+			]}
+		/>
 		<Dropdown
 			style="column-gap: 0rem"
 			type="inline"
@@ -25,9 +37,9 @@
 			label="Select View"
 			titleText="View:"
 			items={[
-				{ id: '5', text: 'Retail' },
-				{ id: '2', text: 'Wholesale' },
-				{ id: '6', text: 'Service' }
+				{ id: 'stock', text: 'Stock' },
+				{ id: 'pricing', text: 'Pricing' },
+				{ id: 'replenish', text: 'Replenish' }
 			]}
 			on:select
 		/>
@@ -44,13 +56,28 @@
 			}}
 		/>
 		<Button
-			iconDescription="Update"
+			iconDescription="Market research"
+			tooltipPosition="left"
+			kind="ghost"
+			icon={WatsonHealthZoomPan}
+			on:click={() => {
+				dispatch('research');
+			}}
+		/>
+		<Button
+			iconDescription="Refresh products"
 			tooltipPosition="left"
 			kind="ghost"
 			icon={UpdateNow}
 			on:click={() => {
-				dispatch('update');
+				dispatch('refresh');
 			}}
 		/>
 	</ToolbarContent>
 </Toolbar>
+
+<style>
+	:global(.bx--list-box) {
+		border-bottom: none;
+	}
+</style>

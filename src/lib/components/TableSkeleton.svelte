@@ -49,6 +49,24 @@
 			<OverflowMenu flipped>
 				<OverflowMenuItem
 					on:click={() => {
+						dispatch('stock', row.id);
+					}}
+					>Stock
+				</OverflowMenuItem>
+				<OverflowMenuItem
+					on:click={() => {
+						dispatch('price', row.id);
+					}}
+					>Prices
+				</OverflowMenuItem>
+				<OverflowMenuItem
+					on:click={() => {
+						dispatch('replenish', row.id);
+					}}
+					>Replenish
+				</OverflowMenuItem>
+				<OverflowMenuItem
+					on:click={() => {
 						dispatch('edit', row.id);
 					}}
 					>Edit

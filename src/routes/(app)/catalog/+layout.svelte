@@ -1,15 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import CategoryTree from '$lib/components/CategoryTree.svelte';
-	import {
-		Button,
-		Column,
-		Dropdown,
-		Grid,
-		HeaderNavItem,
-		HeaderNavMenu,
-		Row
-	} from 'carbon-components-svelte';
+	import { Column, Grid, Row } from 'carbon-components-svelte';
 	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
