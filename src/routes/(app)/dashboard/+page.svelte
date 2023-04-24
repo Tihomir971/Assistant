@@ -15,7 +15,25 @@
 <Button
 	type="button"
 	on:click={() => addToast('Welcome!', 'Let’s make something great!', 'default')}
-	class="mx-auto block rounded-md bg-neutral-600 py-2.5 px-3.5 text-sm font-normal text-white shadow-sm hover:bg-neutral-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-600"
 >
 	Trigger default
+</Button>
+
+<Button type="button" on:click={() => addToast('Welcome!', 'Let’s make something great!', 'brand')}>
+	Trigger brand
+</Button>
+<Button
+	type="button"
+	on:click={() => addToast('Welcome!', 'Let’s make something great!', 'success')}
+>
+	Trigger success
+</Button>
+<Button
+	type="button"
+	on:click={() => addToast('Welcome!', 'Let’s make something great!', 'warning')}
+>
+	Trigger warning
+</Button>
+<Button type="button" on:click={() => addToast('Welcome!', 'Let’s make something great!', 'error')}>
+	Trigger error
 </Button>

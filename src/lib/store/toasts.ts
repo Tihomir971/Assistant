@@ -18,7 +18,7 @@ export const addToast = (title: string, message: string, type: string) => {
 		return [...currentToasts, { id, title, message, type }];
 	});
 
-	setTimeout(() => removeToast(id), 5000);
+	setTimeout(() => removeToast(id), 50000);
 };
 
 export const removeToast = (id: string) => {

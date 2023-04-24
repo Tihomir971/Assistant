@@ -30,8 +30,8 @@
 </svelte:head>
 
 <Header />
-<Toast />
 <Content style="padding: 0px; height: calc(100vh - 3rem);">
+	<Toast />
 	<slot />
 </Content>
 
