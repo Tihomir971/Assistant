@@ -9,7 +9,7 @@
 
 {#if $toasts}
 	<div class="toast-container">
-		{#each $toasts as { id, title, message, type } (id)}
+		{#each $toasts as { id, title, message, type, timeout } (id)}
 			<div in:fade animate:flip={{ duration: 300 }} role="alert" class="alert">
 				<div class="alert-content">
 					<div style="display: flex; align-items: center;">
@@ -25,7 +25,7 @@
 						<Cancel /><span class="sr-only">Remove notification</span>
 					</button>
 				</div>
-				<ToastProgress toastType={type} />
+				<ToastProgress toastType={type} {timeout} />
 			</div>
 		{/each}
 	</div>

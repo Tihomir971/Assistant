@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+	import { invalidate } from '$app/navigation';
 	import {
 		Button,
 		Dropdown,
@@ -15,6 +17,11 @@
 
 	export let onStock = true;
 	let multiselectSelectedIds: MultiSelectItemId[] = [];
+
+	function submitForm(formName: string) {
+		const form = document.getElementById(formName) as HTMLFormElement;
+		form.submit();
+	}
 </script>
 
 <Toolbar>
@@ -55,29 +62,26 @@
 				dispatch('filterStock');
 			}}
 		/>
-		<Button
-			iconDescription="Market research"
-			tooltipPosition="left"
-			kind="ghost"
-			icon={WatsonHealthZoomPan}
-			on:click={() => {
-				dispatch('research');
-			}}
-		/>
+		<form id="marketResearchForm" action="/catalog?/marketResearch" method="POST">
+			<Button
+				iconDescription="Market research"
+				tooltipPosition="left"
+				kind="ghost"
+				icon={WatsonHealthZoomPan}
+				on:click={() => {
+					/* submitForm('marketResearchForm'); */
+					dispatch('research');
+				}}
+			/>
+		</form>
 		<Button
 			iconDescription="Refresh products"
 			tooltipPosition="left"
 			kind="ghost"
 			icon={UpdateNow}
 			on:click={() => {
-				dispatch('refresh');
+				invalidate('catalog:products');
 			}}
 		/>
 	</ToolbarContent>
 </Toolbar>
-
-<style>
-	:global(.bx--list-box) {
-		border-bottom: none;
-	}
-</style>

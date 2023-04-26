@@ -30,12 +30,16 @@
 </svelte:head>
 
 <Header />
-<Content style="padding: 0px; height: calc(100vh - 3rem);">
-	<Toast />
-	<slot />
-</Content>
+<!-- <Content style="padding: 0px; height: calc(100vh - 3rem);"> -->
+<Toast />
+<slot />
+
+<!-- </Content> -->
 
 <style>
+	:global(.bx--list-box) {
+		border-bottom: none;
+	}
 	/* :global(.bx--content) { */
 	/* background-image: url('/sun-tornado.svg'); */
 	/* background-size: cover; */

@@ -41,7 +41,6 @@ export const load = (async ({ parent, depends, url }) => {
 		productQuery = productQuery.eq('m_product_category_id', activeCategoryId);
 	}
 	const { data } = await productQuery;
-	console.log('data', data);
 
 	data?.forEach((product) => {
 		let qtyonhand = 0;

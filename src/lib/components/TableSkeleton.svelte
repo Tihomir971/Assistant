@@ -37,8 +37,11 @@
 		{:else if cell.key === 'updated' || cell.key === 'created'}
 			<span
 				>{new Intl.DateTimeFormat('sr-Latn', {
-					dateStyle: 'medium',
-					timeStyle: 'medium'
+					day: '2-digit',
+					month: '2-digit',
+					year: '2-digit',
+					hour: '2-digit',
+					minute: '2-digit'
 				}).format(new Date(cell.value))}</span
 			>
 		{:else if cell.key === 'name'}
@@ -81,9 +84,7 @@
 				</OverflowMenuItem>
 			</OverflowMenu>
 		{:else}
-			<div style="text-align:right">
-				{cell.value}
-			</div>
+			{cell.value}
 		{/if}
 	</svelte:fragment>
 </DataTable>

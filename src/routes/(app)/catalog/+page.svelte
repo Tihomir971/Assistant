@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { PUBLIC_BEARER_TOKEN } from '$env/static/public';
-	import { goto, invalidate } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import TableSkeleton from '$lib/components/TableSkeleton.svelte';
 	import TableToolbarCatalog from '$lib/components/TableToolbarCatalog.svelte';
 	import { updateSearchParams } from '$lib/utils/searchParams';
 	import type { PageData } from './$types';
+	import { addToast } from '$lib/store/toasts';
 
 	export let data: PageData;
 	$: ({ products, supabase, user } = data);
@@ -16,48 +17,106 @@
 		goto(`/catalog/product/${event.detail}?${searchParams}`);
 	}
 
-	async function researchEvent() {
+	async function callExternalApi() {
 		const activeCategoryId = $page.url.searchParams.get('cat');
-		const { data } = await supabase
+		const title = 'Market research';
+
+		const { data: activeCategory } = await supabase
 			.from('m_product_category')
 			.select('name')
 			.eq('id', Number(activeCategoryId))
 			.maybeSingle();
-		const activeCategoryName = data?.name ? data.name : null;
-		if (typeof activeCategoryId === 'string') {
-			let headersList = {
-				Authorization: 'Bearer ' + PUBLIC_BEARER_TOKEN
-			};
 
-			let bodyContent = new FormData();
-			bodyContent.append('categ', activeCategoryId);
+		// Send notifcation
+		addToast(title, `Start: ${activeCategory?.name}`, 'brand', 10);
+		await supabase
+			.from('ad_note')
+			.insert([{ textMsg: `Start: ${activeCategory?.name}`, ad_user_id: user.id }]);
 
+		//Prepare fetch property
+		const apiUrl = 'http://192.168.1.10:4443/cenoteka';
+		const myHeaders = new Headers({ Authorization: 'Bearer ' + PUBLIC_BEARER_TOKEN });
+		const formData = new FormData();
+		formData.append('categ', activeCategoryId ?? '');
+
+		try {
+			const response = await fetch(apiUrl, {
+				method: 'POST',
+				body: formData,
+				headers: myHeaders
+			});
+			if (!response.ok) {
+				throw new Error(`Network response was not OK: ${response.statusText}`);
+			}
+
+			const data = await response.text();
+
+			// Send notifcation
+			addToast(title, `Finish: ${activeCategory?.name}`, 'success');
 			await supabase
 				.from('ad_note')
-				.insert([
-					{ textMsg: `Start: market research for ${activeCategoryName}`, ad_user_id: user.id }
-				]);
+				.insert([{ textMsg: `Finish: ${activeCategory?.name}`, ad_user_id: user.id }]);
 
-			let response = await fetch('http://192.168.1.10:4443/cenoteka', {
-				method: 'POST',
-				body: bodyContent,
-				headers: headersList
-			});
-
-			let data = await response.text();
-			if (data) {
-				await supabase
-					.from('ad_note')
-					.insert([
-						{ textMsg: `End: market research for ${activeCategoryName}`, ad_user_id: user.id }
-					]);
+			console.log('Success:', data);
+			return;
+		} catch (error) {
+			if (error instanceof TypeError && error.message === 'Failed to fetch') {
+				console.error('Failed to fetch:', error.message);
+			} else {
+				console.error('There has been a problem with your fetch operation:', error);
 			}
 		}
 	}
+	async function marketResearch() {
+		const activeCategoryId = $page.url.searchParams.get('cat');
+		const { data: activeCategory } = await supabase
+			.from('m_product_category')
+			.select('name')
+			.eq('id', Number(activeCategoryId))
+			.maybeSingle();
+		if (data) {
+			//const activeCategoryName = data?.name ?? null;
+			if (activeCategoryId) {
+				let headersList = {
+					Authorization: 'Bearer ' + PUBLIC_BEARER_TOKEN
+				};
 
-	function refreshEvent() {
-		invalidate('catalog:products');
-		return;
+				let bodyContent = new FormData();
+				bodyContent.append('categ', activeCategoryId);
+
+				try {
+					const response = await fetch('http://192.168.1.10:4443/cenoteka', {
+						method: 'POST',
+						body: bodyContent,
+						headers: headersList
+					});
+					if (response.ok) {
+						addToast('Market research', `Finish researching: ${activeCategory?.name}`, 'success');
+						await supabase
+							.from('ad_note')
+							.insert([
+								{ textMsg: `Finish researching: ${activeCategory?.name}`, ad_user_id: user.id }
+							]);
+						console.log('response', response);
+						console.log('response.text()', await response.text());
+
+						return true;
+					} else {
+						addToast(
+							'Market research',
+							`API endpoint not active. -  Status: ${response.status}`,
+							'error'
+						);
+						console.error(
+							`API endpoint not active: 'http://192.168.1.10:4443/cenoteka' - Status: ${response.status}`
+						);
+						return false;
+					}
+				} catch (error) {
+					console.error(`Error checking API endpoint: 'http://192.168.1.10:4443/cenoteka'`, error);
+				}
+			}
+		}
 	}
 </script>
 
@@ -93,8 +152,7 @@
 	>
 		<TableToolbarCatalog
 			{onStock}
-			on:refresh={refreshEvent}
-			on:research={researchEvent}
+			on:research={callExternalApi}
 			on:filterStock={() => {
 				onStock = !onStock;
 				updateSearchParams('onStock', onStock.toString());

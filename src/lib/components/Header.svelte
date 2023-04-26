@@ -55,11 +55,7 @@
 				text="Products"
 				isSelected={$page.url.pathname === '/catalog'}
 			/>
-			<HeaderNavItem
-				href="/catalog/report/pricing"
-				text="Pricing"
-				isSelected={$page.url.pathname === '/catalog/report/pricing'}
-			/>
+
 			<HeaderNavItem
 				href="/catalog/report/replenish"
 				text="Replenish"

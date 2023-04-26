@@ -21,8 +21,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 		} = await event.locals.supabase.auth.getSession();
 		return session;
 	};
+	const route = event.url;
+	const start = performance.now();
 
-	return resolve(event, {
+	const response = await resolve(event, {
 		/**
 		 * There´s an issue with `filterSerializedResponseHeaders` not working when using `sequence`
 		 *
@@ -32,4 +34,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 			return name === 'content-range';
 		}
 	});
+	const end = performance.now();
+	const responseTime = end - start;
+	if (responseTime > 1000) {
+		console.log(`${route} took ${responseTime} ms`);
+	}
+	return response;
 };

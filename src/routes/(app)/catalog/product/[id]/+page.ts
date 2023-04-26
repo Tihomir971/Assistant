@@ -1,7 +1,9 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
-export const load = (async ({ params, parent }) => {
+export const load = (async ({ params, parent, depends }) => {
+	console.log('product id +page.ts');
+
 	console.log('Load function');
 	const { session, supabase } = await parent();
 	if (!session) {
@@ -62,6 +64,7 @@ export const load = (async ({ params, parent }) => {
 		return data;
 	};
 
+	depends('catalog:product:id');
 	//	console.log('imageUrl SSR', imageUrl, typeof imageUrl);
 	return {
 		product: getProduct(productId),

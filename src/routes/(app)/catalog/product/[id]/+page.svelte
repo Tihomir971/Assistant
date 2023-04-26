@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { afterNavigate, goto } from '$app/navigation';
+	import { afterNavigate, goto, invalidate } from '$app/navigation';
 	import { base } from '$app/paths';
 	import {
 		Button,
@@ -12,6 +12,7 @@
 		FormGroup,
 		Grid,
 		Link,
+		Modal,
 		NumberInput,
 		Row,
 		Tab,
@@ -36,6 +37,10 @@
 	export let data: PageData;
 	const { supabase, product, categories, product_po, replenish, storageonhand, attributeset } =
 		data;
+	let openProduct_po = false;
+	let newC_bpartner_id: number;
+	let newVendorProductNo: string;
+	let newUrl: string;
 
 	let url: string[] | undefined = product?.imageurl?.split(';');
 
@@ -45,244 +50,255 @@
 	}
 </script>
 
-{#if product}
-	<form method="post" action="?/update" use:enhance>
-		<Grid>
-			<Row padding>
-				<Column>
-					<ButtonSet>
-						<Button kind="secondary" on:click={() => goto(previousPage)}>Cancel</Button>
-						<Button type="submit">Save</Button>
-					</ButtonSet>
-				</Column>
-			</Row>
-			<Row>
-				<Column lg={10}>
-					<Tile>
-						<FormGroup>
-							<TextInput
-								readonly
-								name="id"
-								bind:value={product.id}
-								labelText="Product ID"
-								placeholder="Enter product ID..."
-							/>
-						</FormGroup>
-						<FormGroup>
-							<TextInput
-								readonly
-								name="sku"
-								bind:value={product.sku}
-								labelText="Product SKU"
-								placeholder="Enter product SKU..."
-							/>
-						</FormGroup>
-						<FormGroup>
-							<TextInput
-								name="name"
-								bind:value={product.name}
-								labelText="Product name"
-								placeholder="Enter user name..."
-							/>
-						</FormGroup>
-						<FormGroup>
-							<TextInput
-								name="barcode"
-								bind:value={product.barcode}
-								labelText="Product barcode"
-								placeholder="Enter user name..."
-							/>
-						</FormGroup>
-						<!-- 						<FormGroup>
-							<TextInput
-								bind:value={product.c_tax.rate}
-								labelText="Product tax"
-								placeholder="Enter user name..."
-							/>
-						</FormGroup> -->
-						<!-- 						<FormGroup>
-							<TextInput
-								bind:value={product.c_uom_id}
-								labelText="Product UOM"
-								placeholder="Enter user name..."
-							/>
-						</FormGroup> -->
-						<FormGroup>
-							{#if categories}
-								<input
-									hidden
-									name="m_product_category_id"
-									bind:value={product.m_product_category_id}
-								/>
-								<ComboBox
-									titleText="Category"
-									placeholder="Select product category"
-									bind:selectedId={product.m_product_category_id}
-									items={categories}
-									{shouldFilterItem}
-								/>
-							{/if}
-						</FormGroup>
-						{#if attributeset}
-							<FormGroup>
-								<input hidden name="m_attributeset_id" bind:value={product.m_attributeset_id} />
-								<ComboBox
-									titleText="Attribute Set"
-									placeholder="Select Attribute Set"
-									bind:selectedId={product.m_attributeset_id}
-									items={attributeset}
-									{shouldFilterItem}
-								/>
-							</FormGroup>
-						{/if}
+<Grid padding>
+	<Row>
+		<Column>
+			{#if product}
+				<Tabs>
+					<Tab label="Product" />
+					<Tab label="product_po" />
+					<Tab label="replenish" />
+					<Tab label="Storage" />
+					<svelte:fragment slot="content">
+						<!-- Product details -->
+						<form method="post" action="?/update" use:enhance>
+							<TabContent>
+								<Row>
+									<ButtonSet>
+										<Button kind="secondary" on:click={() => goto(previousPage)}>Cancel</Button>
+										<Button type="submit">Save</Button>
+									</ButtonSet>
+								</Row>
+								<Row>
+									<Column noGutterLeft lg={10}>
+										<Tile>
+											<FormGroup>
+												<TextInput
+													inline
+													readonly
+													name="id"
+													bind:value={product.id}
+													labelText="Product ID"
+													placeholder="Enter product ID..."
+												/>
+											</FormGroup>
+											<FormGroup>
+												<TextInput
+													inline
+													readonly
+													name="sku"
+													bind:value={product.sku}
+													labelText="Product SKU"
+													placeholder="Enter product SKU..."
+												/>
+											</FormGroup>
+											<FormGroup>
+												<TextInput
+													inline
+													name="name"
+													bind:value={product.name}
+													labelText="Product name"
+													placeholder="Enter user name..."
+												/>
+											</FormGroup>
+											<FormGroup>
+												<TextInput
+													inline
+													name="barcode"
+													bind:value={product.barcode}
+													labelText="Product barcode"
+													placeholder="Enter user name..."
+												/>
+											</FormGroup>
 
-						<!-- 						<FormGroup>
-							<TextInput
-								bind:value={product.m_product_category_id}
-								labelText="product_category"
-								placeholder="Enter user name..."
-							/>
-						</FormGroup> -->
-						<FormGroup>
-							<TextInput
-								name="condition"
-								bind:value={product.condition}
-								labelText="Condition"
-								placeholder="Enter user name..."
-							/>
-						</FormGroup>
-						<FormGroup>
-							<NumberInput
-								name="unitsperpack"
-								bind:value={product.unitsperpack}
-								label="The Units Per Pack indicates the no of units of a product packed together"
-								placeholder="Enter unitsperpack..."
-							/>
-						</FormGroup>
-						<FormGroup>
-							<NumberInput
-								name="unitsperpallet"
-								bind:value={product.unitsperpallet}
-								label="Units Per Pallet"
-							/>
-						</FormGroup>
-						<FormGroup>
-							<input hidden name="isselfservice" bind:value={product.isselfservice} />
-							<Checkbox
-								bind:checked={product.isselfservice}
-								labelText="This is a Self-Service entry or this entry can be changed via Self-Service"
-							/>
-							<input hidden name="isactive" bind:value={product.isactive} />
-							<Checkbox
-								bind:checked={product.isactive}
-								labelText="The record is active in the system"
-							/>
-							<input hidden name="discontinued" bind:value={product.discontinued} />
-							<Checkbox
-								bind:checked={product.discontinued}
-								labelText="This product is no longer available"
-							/>
-						</FormGroup>
-					</Tile>
-				</Column>
-				<Column>
-					<!-- <SlideshowGallery {supabase} bind:url /> -->
-					<ProductGallery
-						{supabase}
-						bucket="products"
-						bind:url
-						size={10}
-						on:upload={() => {
-							//profileForm.requestSubmit();
-						}}
-					/>
-				</Column>
-			</Row>
-			<Row padding>
-				<Column>
-					<Tile
-						style="border-color: rgb(198, 198, 198); border-top-width: 2px; border-top-style: solid;"
-					>
-						<Tabs>
-							<Tab label="Product PO" />
-							<Tab label="Replenish" />
-							<Tab label="Stock" />
-							<svelte:fragment slot="content">
-								<TabContent>
-									{#if product_po}
-										<DataTable
-											useStaticWidth
-											size="short"
-											headers={[
-												{ key: 'c_bpartner.name', value: 'Seller' },
-												{ key: 'vendorproductno', value: 'Seller PN' },
-												{ key: 'pricelist', value: 'Price' },
-												{ key: 'updated', value: 'Updated' },
-												{ key: 'url', value: 'URL' }
-											]}
-											rows={product_po}
-										>
-											<svelte:fragment slot="cell" let:row let:cell>
-												{#if cell.key === 'updated' || cell.key === 'created'}
-													<span
-														>{new Intl.DateTimeFormat('sr-Latn', {
-															dateStyle: 'medium',
-															timeStyle: 'medium'
-														}).format(new Date(cell.value))}</span
-													>
-												{:else if cell.key.includes('url')}
-													<Link icon={Launch} href={cell.value} target="_blank">{cell.value}</Link>
-												{:else if typeof cell.value === 'number'}
-													<div style="text-align:right">
-														{new Intl.NumberFormat('sr-Latn-RS', {
-															minimumFractionDigits: 2,
-															maximumFractionDigits: 2
-														}).format(cell.value)}
-													</div>
-												{:else}
-													{cell.value}
+											<FormGroup>
+												{#if categories}
+													<input
+														hidden
+														name="m_product_category_id"
+														bind:value={product.m_product_category_id}
+													/>
+													<ComboBox
+														titleText="Category"
+														placeholder="Select product category"
+														bind:selectedId={product.m_product_category_id}
+														items={categories}
+														{shouldFilterItem}
+													/>
 												{/if}
-											</svelte:fragment>
-										</DataTable>
-									{/if}
-								</TabContent>
-								<TabContent>
-									{#if replenish}
-										<TableSkeleton
-											useStaticWidth
-											size="short"
-											headers={[
-												{ key: 'm_warehouse_id', value: 'warehouse' },
-												{ key: 'level_min', value: 'level_min' },
-												{ key: 'level_max', value: 'level_max' },
-												{ key: 'm_warehousesource_id', value: 'm_warehousesource_id' }
-											]}
-											rows={replenish}
-										>
-											<TableToolbarCatalog />
-										</TableSkeleton>
-									{/if}
-								</TabContent>
-								<TabContent>
-									{#if storageonhand}
-										<TableSkeleton
-											useStaticWidth
-											size="short"
-											headers={[
-												{ key: 'm_warehouse.code', value: 'Warehouse' },
-												{ key: 'qtyonhand', value: 'Quantity' },
-												{ key: 'created', value: 'Created' },
-												{ key: 'updated', value: 'Updated' }
-											]}
-											rows={storageonhand}
+											</FormGroup>
+											{#if attributeset}
+												<FormGroup>
+													<input
+														hidden
+														name="m_attributeset_id"
+														bind:value={product.m_attributeset_id}
+													/>
+													<ComboBox
+														titleText="Attribute Set"
+														placeholder="Select Attribute Set"
+														bind:selectedId={product.m_attributeset_id}
+														items={attributeset}
+														{shouldFilterItem}
+													/>
+												</FormGroup>
+											{/if}
+
+											<FormGroup>
+												<NumberInput
+													name="unitsperpack"
+													bind:value={product.unitsperpack}
+													label="Units Per Pack"
+													placeholder="Enter unitsperpack..."
+												/>
+											</FormGroup>
+											<FormGroup>
+												<NumberInput
+													name="unitsperpallet"
+													bind:value={product.unitsperpallet}
+													label="Units Per Pallet"
+												/>
+											</FormGroup>
+											<FormGroup>
+												<input hidden name="isselfservice" bind:value={product.isselfservice} />
+												<Checkbox
+													bind:checked={product.isselfservice}
+													labelText="This is a Self-Service entry or this entry can be changed via Self-Service"
+												/>
+												<input hidden name="isactive" bind:value={product.isactive} />
+												<Checkbox
+													bind:checked={product.isactive}
+													labelText="The record is active in the system"
+												/>
+												<input hidden name="discontinued" bind:value={product.discontinued} />
+												<Checkbox
+													bind:checked={product.discontinued}
+													labelText="This product is no longer available"
+												/>
+											</FormGroup>
+										</Tile>
+									</Column>
+									<Column noGutterRight>
+										<!-- <SlideshowGallery {supabase} bind:url /> -->
+										<ProductGallery
+											{supabase}
+											bucket="products"
+											bind:url
+											size={10}
+											on:upload={() => {
+												//profileForm.requestSubmit();
+											}}
 										/>
-									{/if}
-								</TabContent>
-							</svelte:fragment>
-						</Tabs>
-					</Tile>
-				</Column>
-			</Row>
-		</Grid>
-	</form>
-{/if}
+									</Column>
+								</Row>
+							</TabContent>
+						</form>
+						<TabContent>
+							<Row>
+								<ButtonSet>
+									<Button on:click={() => (openProduct_po = true)}>Add product</Button>
+								</ButtonSet>
+							</Row>
+							<Row>
+								{#if product_po}
+									<TableSkeleton
+										useStaticWidth
+										size="short"
+										headers={[
+											{ key: 'c_bpartner.name', value: 'Seller' },
+											{ key: 'vendorproductno', value: 'Seller PN' },
+											{ key: 'pricelist', value: 'Price' },
+											{ key: 'updated', value: 'Updated' },
+											{ key: 'url', value: 'URL' }
+										]}
+										rows={product_po}
+									/>
+								{/if}
+							</Row>
+						</TabContent>
+						<TabContent>
+							<Row>
+								{#if replenish}
+									<TableSkeleton
+										useStaticWidth
+										size="short"
+										headers={[
+											{ key: 'm_warehouse_id', value: 'warehouse' },
+											{ key: 'level_min', value: 'level_min' },
+											{ key: 'level_max', value: 'level_max' },
+											{ key: 'm_warehousesource_id', value: 'm_warehousesource_id' }
+										]}
+										rows={replenish}
+									/>
+								{/if}
+							</Row>
+						</TabContent>
+						<TabContent>
+							<Row>
+								{#if storageonhand}
+									<TableSkeleton
+										useStaticWidth
+										size="short"
+										headers={[
+											{ key: 'm_warehouse.code', value: 'Warehouse' },
+											{ key: 'qtyonhand', value: 'Quantity' },
+											{ key: 'created', value: 'Created' },
+											{ key: 'updated', value: 'Updated' }
+										]}
+										rows={storageonhand}
+									/>
+								{/if}
+							</Row>
+						</TabContent>
+					</svelte:fragment>
+				</Tabs>
+			{/if}
+		</Column>
+	</Row>
+</Grid>
+<Modal
+	bind:open={openProduct_po}
+	modalHeading="Add vendor product"
+	primaryButtonText="Confirm"
+	secondaryButtonText="Cancel"
+	selectorPrimaryFocus="#vendor-id"
+	on:click:button--secondary={() => (openProduct_po = false)}
+	on:open
+	on:close
+	on:submit={async () => {
+		if (product?.id) {
+			const { error } = await supabase.from('m_product_po').insert({
+				c_bpartner_id: newC_bpartner_id,
+				m_product_id: product.id,
+				vendorproductno: newVendorProductNo,
+				url: newUrl
+			});
+			if (error) {
+				console.log('error inserting Product_po', error);
+			}
+		}
+		invalidate('catalog:product:id');
+		openProduct_po = false;
+	}}
+>
+	<TextInput
+		id="vendor-id"
+		labelText="Vendor ID"
+		placeholder="Enter vendor ID..."
+		bind:value={newC_bpartner_id}
+	/>
+	<br />
+	<TextInput
+		id="vendor-sku"
+		labelText="Vendor SKU"
+		placeholder="Enter vendor SKU..."
+		bind:value={newVendorProductNo}
+	/>
+	<br />
+	<TextInput
+		id="vendor-url"
+		labelText="Product URL"
+		placeholder="Enter product url..."
+		bind:value={newUrl}
+	/>
+</Modal>
