@@ -1,11 +1,10 @@
 <!-- src/routes/+layout.svelte -->
 <script lang="ts">
-	import Toast from '../lib/components/toast/Toast.svelte';
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import type { LayoutData } from './$types';
+	import Toast from '$lib/components/toast/Toast.svelte';
 	import 'carbon-components-svelte/css/g90.css';
-	import { Content } from 'carbon-components-svelte';
 	import Header from '$lib/components/Header.svelte';
 
 	export let data: LayoutData;
@@ -33,8 +32,6 @@
 <!-- <Content style="padding: 0px; height: calc(100vh - 3rem);"> -->
 <Toast />
 <slot />
-
-<!-- </Content> -->
 
 <style>
 	:global(.bx--list-box) {

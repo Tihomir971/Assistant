@@ -38,7 +38,7 @@ export const load = (async ({ parent, depends, url }) => {
 	//const activeCategoryId: number | null = url.searchParams.get('cat');
 	const activeCategoryId = url.searchParams.get('cat') ? Number(url.searchParams.get('cat')) : null;
 	activeWarehouseId;
-	const view: string | null = url.searchParams.get('vw');
+	//const view: string | null = url.searchParams.get('vw');
 
 	//change filter depending of activeCategoryId
 	const filter = {
