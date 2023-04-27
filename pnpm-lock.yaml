@@ -46,8 +46,8 @@ devDependencies:
     specifier: ^2.10.0
     version: 2.10.0(prettier@2.8.8)(svelte@3.58.0)
   supabase:
-    specifier: ^1.50.14
-    version: 1.50.14
+    specifier: ^1.51.0
+    version: 1.51.0
   svelte:
     specifier: ^3.58.0
     version: 3.58.0
@@ -412,7 +412,7 @@ packages:
       '@supabase/supabase-js': ^2.0.4
     dependencies:
       '@supabase/supabase-js': 2.21.0
-      jose: 4.14.2
+      jose: 4.14.3
     dev: false
 
   /@supabase/auth-helpers-sveltekit@0.9.4(@supabase/supabase-js@2.21.0)(@sveltejs/kit@1.15.9):
@@ -1462,8 +1462,8 @@ packages:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
 
-  /jose@4.14.2:
-    resolution: {integrity: sha512-Fcbi5lskAiSvs8qhdQBusANZWwyATdp7IxgHJTXiaU74sbVjX9uAw+myDPvI8pNo2wXKHECXCR63hqhRkN/SSQ==}
+  /jose@4.14.3:
+    resolution: {integrity: sha512-YPM9Q+dmsna4CGWNn5+oHFsuXJdxvKAOVoNjpe2nje3odSoX5Xz4s71rP50vM8uUKJyQtMnEGPmbVCVR+G4W5g==}
     dev: false
 
   /js-sdsl@4.4.0:
@@ -1934,8 +1934,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /supabase@1.50.14:
-    resolution: {integrity: sha512-a40FpgEROKXgmb0/kpdtkGTTvjQlKTv7DJVGawJia+tIp3r1ma7PLbnyuuy/EmguZ89dGRqiX0hSqykDihqaeg==}
+  /supabase@1.51.0:
+    resolution: {integrity: sha512-0UAlMFyJ/+8mVkD+p7W9IGUOc61/ZSgldJqJnoFh+4VUaf7BMDZTOr2Y/QIsO/wUoj+xfpAHsDONjLQMcpePWg==}
     hasBin: true
     requiresBuild: true
     dependencies:

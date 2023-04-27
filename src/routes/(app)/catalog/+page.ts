@@ -39,14 +39,28 @@ export const load = (async ({ parent, depends, url }) => {
 	const activeCategoryId = url.searchParams.get('cat') ? Number(url.searchParams.get('cat')) : null;
 	activeWarehouseId;
 	//const view: string | null = url.searchParams.get('vw');
+	const columns =
+		'id,barcode,mpn,sku,name,c_taxcategory_id,c_uom_id,m_storageonhand(qtyonhand),priceRetail:m_productprice(pricestd),m_productprice(m_pricelist_version_id,pricestd),m_product_po(pricelist),c_taxcategory(c_tax(rate))';
 
-	//change filter depending of activeCategoryId
-	const filter = {
-		column: 'm_product_category_id',
-		operator: activeCategoryId ? 'eq' : 'is',
-		value: activeCategoryId || null
-	};
-	const { data } = await supabase
+	let query = supabase
+		.from('m_product')
+		.select(columns)
+		.order('name', { ascending: true })
+		.eq('producttype', 'I')
+		.eq('m_storageonhand.warehouse_id', activeWarehouseId)
+		.eq('priceRetail.m_pricelist_version_id', 13);
+	//		.neq('m_storageonhand.qtyonhand', null);
+	query =
+		typeof activeCategoryId === 'number'
+			? query.eq('m_product_category_id', activeCategoryId)
+			: query.is('m_product_category_id', null);
+	if (onStock === 'true') {
+		query = query.gt('m_storageonhand.qtyonhand', 0);
+	}
+	const { data } = await query;
+	console.log('data', data);
+
+	/* const { data } = await supabase
 		.from('m_product')
 		.select(
 			'id,barcode,mpn,sku,name,c_taxcategory_id,c_uom_id,m_storageonhand(warehouse_id,qtyonhand),m_productprice(m_pricelist_version_id,pricestd),m_product_po(pricelist),c_taxcategory(c_tax(rate))'
@@ -54,37 +68,29 @@ export const load = (async ({ parent, depends, url }) => {
 		.order('name', { ascending: true })
 		.eq('producttype', 'I')
 		.filter(filter.column, filter.operator, filter.value);
+ */
+	if (!Array.isArray(data)) {
+		return;
+	}
 
 	const products: Product[] = [];
 	data?.forEach((product) => {
 		const taxRate = product.c_taxcategory_id === 2 ? 0.1 : 0.2;
 
-		// Find qtyonhand for product for selected warehouse
-		const qtyonhand = product.m_storageonhand
-			? findPropertyValueByProperty(
-					product.m_storageonhand,
-					'warehouse_id',
-					activeWarehouseId,
-					'qtyonhand'
-			  ) ?? 0
-			: 0;
-
-		if (onStock === 'true' && !(qtyonhand > 0)) {
-			return;
+		// Assign quantity  for product if exist
+		let qtyonhand = 0;
+		if (Array.isArray(product.m_storageonhand) && product.m_storageonhand?.length !== 0) {
+			qtyonhand = product.m_storageonhand[0].qtyonhand;
 		}
 
-		// Find pricestd for product in pricelist "13"
-		const productprice = product.m_productprice
-			? findPropertyValueByProperty(
-					product.m_productprice,
-					'm_pricelist_version_id',
-					13,
-					'pricestd'
-			  ) ?? 0
-			: 0;
+		// Assign retail price for product if exist
+		let priceRetail = 0;
+		if (Array.isArray(product.priceRetail) && product.priceRetail?.length !== 0) {
+			priceRetail = product.priceRetail[0].pricestd;
+		}
 
 		// Find pricestd for product in pricelist "5" and add taxRate
-		const pricePo = product.m_productprice
+		const pricePurchase = product.m_productprice
 			? (findPropertyValueByProperty(
 					product.m_productprice,
 					'm_pricelist_version_id',
@@ -105,13 +111,13 @@ export const load = (async ({ parent, depends, url }) => {
 
 		let priceRecommended = 0;
 		if (pricelist === 0) {
-			priceRecommended = pricePo * 1.3;
-		} else if (pricelist < pricePo) {
-			priceRecommended = pricePo;
-		} else if (pricelist < pricePo * 1.3) {
+			priceRecommended = pricePurchase * 1.3;
+		} else if (pricelist < pricePurchase) {
+			priceRecommended = pricePurchase;
+		} else if (pricelist < pricePurchase * 1.3) {
 			priceRecommended = pricelist;
 		} else {
-			priceRecommended = pricePo * 1.3;
+			priceRecommended = pricePurchase * 1.3;
 		}
 
 		priceRecommended = Math.ceil(priceRecommended);
@@ -125,14 +131,15 @@ export const load = (async ({ parent, depends, url }) => {
 			sku: product.sku,
 			name: product.name,
 			qtyonhand: qtyonhand,
-			productprice: productprice,
-			pricePo: pricePo,
+			productprice: priceRetail,
+			pricePo: pricePurchase,
 			pricelist: pricelist,
 			priceRecommended: priceRecommended,
 			mpn: product.mpn,
 			taxRate: taxRate
 		});
 	});
+
 	depends('catalog:products');
 	return { products };
 }) satisfies PageLoad;

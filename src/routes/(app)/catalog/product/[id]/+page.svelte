@@ -7,11 +7,8 @@
 		Checkbox,
 		Column,
 		ComboBox,
-		DataTable,
-		Form,
 		FormGroup,
 		Grid,
-		Link,
 		Modal,
 		NumberInput,
 		Row,
@@ -24,7 +21,6 @@
 	import type { ComboBoxItem } from 'carbon-components-svelte/types/ComboBox/ComboBox.svelte';
 	import type { PageData } from './$types';
 	import TableSkeleton from '$lib/components/TableSkeleton.svelte';
-	import { Launch } from 'carbon-icons-svelte';
 	import TableToolbarCatalog from '$lib/components/TableToolbarCatalog.svelte';
 	import ProductGallery from '$lib/components/ProductGallery.svelte';
 	import { enhance } from '$app/forms';
@@ -37,16 +33,39 @@
 	export let data: PageData;
 	const { supabase, product, categories, product_po, replenish, storageonhand, attributeset } =
 		data;
+
+		/* 	: {
+			id: number;
+			m_product_id: string;
+			c_bpartner_id: number;
+			vendorproductno: string;
+			url: string;
+		}; */
+		let new;
+		let partners = data.partners;
 	let openProduct_po = false;
 	let newC_bpartner_id: number;
 	let newVendorProductNo: string;
 	let newUrl: string;
-
+	let partnerName: string | null = null;
 	let url: string[] | undefined = product?.imageurl?.split(';');
 
 	function shouldFilterItem(item: ComboBoxItem, value: string) {
 		if (!value) return true;
 		return item.text.toLowerCase().includes(value.toLowerCase());
+	}
+	async function searchPartner() {
+		console.log('newUrl', newUrl);
+		const urlObj = new URL(newUrl);
+		const hostnameArray = urlObj.hostname.split('.');
+		const secondLevelDomain = hostnameArray.slice(-2, -1)[0];
+
+		const { data } = await supabase
+			.from('c_bpartner')
+			.select('id, name')
+			.ilike('name', `%${secondLevelDomain}%`)
+			.single();
+		partnerName = data?.name ?? null;
 	}
 </script>
 
@@ -281,6 +300,10 @@
 		openProduct_po = false;
 	}}
 >
+	{#if partnerName}
+		<h3>Izabrani parner: {partnerName}</h3>
+		<br />
+	{/if}
 	<TextInput
 		id="vendor-id"
 		labelText="Vendor ID"
@@ -288,6 +311,14 @@
 		bind:value={newC_bpartner_id}
 	/>
 	<br />
+	{#if partners}
+		<ComboBox
+			titleText="Partner"
+			placeholder="Select bussines partner"
+			bind:items={partners}
+			{shouldFilterItem}
+		/>
+	{/if}
 	<TextInput
 		id="vendor-sku"
 		labelText="Vendor SKU"
@@ -300,5 +331,6 @@
 		labelText="Product URL"
 		placeholder="Enter product url..."
 		bind:value={newUrl}
+		on:blur={searchPartner}
 	/>
 </Modal>

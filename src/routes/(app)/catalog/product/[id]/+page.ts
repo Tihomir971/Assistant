@@ -9,9 +9,12 @@ export const load = (async ({ params, parent, depends }) => {
 	if (!session) {
 		throw redirect(303, '/');
 	}
+	const getParners = async () => {
+		const { data } = await supabase.from('c_bpartner').select('id, text: name');
+		return data;
+	};
 
 	const productId = Number(params.id);
-
 	const getProduct = async (id: number) => {
 		const { data } = await supabase.from('m_product').select().eq('id', id).maybeSingle();
 
@@ -72,6 +75,7 @@ export const load = (async ({ params, parent, depends }) => {
 		replenish: getReplenish(productId),
 		storageonhand: getStorageonhand(productId),
 		images: getImages(productId),
-		attributeset: getAttributeSet()
+		attributeset: getAttributeSet(),
+		partners: getParners()
 	};
 }) satisfies PageLoad;

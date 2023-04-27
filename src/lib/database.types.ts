@@ -145,7 +145,7 @@ export interface Database {
           created: string
           description: string | null
           id: number
-          isActive: boolean
+          isactive: boolean
           processed: boolean
           textMsg: string | null
           updated: string
@@ -157,7 +157,7 @@ export interface Database {
           created?: string
           description?: string | null
           id?: number
-          isActive?: boolean
+          isactive?: boolean
           processed?: boolean
           textMsg?: string | null
           updated?: string
@@ -169,7 +169,7 @@ export interface Database {
           created?: string
           description?: string | null
           id?: number
-          isActive?: boolean
+          isactive?: boolean
           processed?: boolean
           textMsg?: string | null
           updated?: string
@@ -178,33 +178,36 @@ export interface Database {
       ad_org: {
         Row: {
           ad_client_id: number
-          code: string
+          code: string | null
           created: string
           description: string | null
           id: number
           isactive: boolean
           name: string
           updated: string
+          value: string
         }
         Insert: {
           ad_client_id?: number
-          code: string
+          code?: string | null
           created?: string
           description?: string | null
           id?: number
           isactive?: boolean
           name: string
           updated?: string
+          value: string
         }
         Update: {
           ad_client_id?: number
-          code?: string
+          code?: string | null
           created?: string
           description?: string | null
           id?: number
           isactive?: boolean
           name?: string
           updated?: string
+          value?: string
         }
       }
       ad_user: {
@@ -259,6 +262,32 @@ export interface Database {
           auth_user_id?: string
           created?: string
           id?: number
+          updated?: string
+        }
+      }
+      ad_user_orgaccess: {
+        Row: {
+          ad_client_id: number
+          ad_org_id: number
+          ad_user_id: string
+          created: string
+          isactive: boolean
+          updated: string
+        }
+        Insert: {
+          ad_client_id: number
+          ad_org_id: number
+          ad_user_id: string
+          created?: string
+          isactive?: boolean
+          updated?: string
+        }
+        Update: {
+          ad_client_id?: number
+          ad_org_id?: number
+          ad_user_id?: string
+          created?: string
+          isactive?: boolean
           updated?: string
         }
       }
