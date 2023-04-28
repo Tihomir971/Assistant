@@ -131,15 +131,15 @@
 			{ key: 'name', value: 'Name' },
 			{ key: 'qtyonhand', value: 'Qty.' },
 			{
-				key: 'pricePo',
+				key: 'pricePurchase',
 				value: 'Purchase'
 			},
 			{
-				key: 'pricelist',
+				key: 'priceMarket',
 				value: 'Market Pr.'
 			},
 			{
-				key: 'productprice',
+				key: 'priceRetail',
 				value: 'Retail'
 			},
 			{

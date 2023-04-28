@@ -34,15 +34,15 @@
 	const { supabase, product, categories, product_po, replenish, storageonhand, attributeset } =
 		data;
 
-		/* 	: {
+	/* 	: {
 			id: number;
 			m_product_id: string;
 			c_bpartner_id: number;
 			vendorproductno: string;
 			url: string;
 		}; */
-		let new;
-		let partners = data.partners;
+	let neew;
+	let partners = data.partners;
 	let openProduct_po = false;
 	let newC_bpartner_id: number;
 	let newVendorProductNo: string;

@@ -1495,7 +1495,7 @@ export interface Database {
           priceeffective: string | null
           pricelastinv: number | null
           pricelastpo: number | null
-          pricelist: number | null
+          pricelist: number
           pricepo: number | null
           updated: string
           url: string | null
@@ -1519,7 +1519,7 @@ export interface Database {
           priceeffective?: string | null
           pricelastinv?: number | null
           pricelastpo?: number | null
-          pricelist?: number | null
+          pricelist?: number
           pricepo?: number | null
           updated?: string
           url?: string | null
@@ -1543,7 +1543,7 @@ export interface Database {
           priceeffective?: string | null
           pricelastinv?: number | null
           pricelastpo?: number | null
-          pricelist?: number | null
+          pricelist?: number
           pricepo?: number | null
           updated?: string
           url?: string | null
