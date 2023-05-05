@@ -21,8 +21,7 @@
 	import type { ComboBoxItem } from 'carbon-components-svelte/types/ComboBox/ComboBox.svelte';
 	import type { PageData } from './$types';
 	import TableSkeleton from '$lib/components/TableSkeleton.svelte';
-	import TableToolbarCatalog from '$lib/components/TableToolbarCatalog.svelte';
-	import ProductGallery from '$lib/components/ProductGallery.svelte';
+	import Gallery from '$lib/components/Gallery/Gallery.svelte';
 	import { enhance } from '$app/forms';
 	let previousPage: string = base;
 
@@ -31,31 +30,20 @@
 	});
 
 	export let data: PageData;
-	const { supabase, product, categories, product_po, replenish, storageonhand, attributeset } =
-		data;
+	const { supabase, product, categories, attributeset, streamed } = data;
 
-	/* 	: {
-			id: number;
-			m_product_id: string;
-			c_bpartner_id: number;
-			vendorproductno: string;
-			url: string;
-		}; */
-	let neew;
 	let partners = data.partners;
 	let openProduct_po = false;
-	let newC_bpartner_id: number;
+	let newPartnerId: number;
 	let newVendorProductNo: string;
 	let newUrl: string;
 	let partnerName: string | null = null;
-	let url: string[] | undefined = product?.imageurl?.split(';');
 
 	function shouldFilterItem(item: ComboBoxItem, value: string) {
 		if (!value) return true;
 		return item.text.toLowerCase().includes(value.toLowerCase());
 	}
 	async function searchPartner() {
-		console.log('newUrl', newUrl);
 		const urlObj = new URL(newUrl);
 		const hostnameArray = urlObj.hostname.split('.');
 		const secondLevelDomain = hostnameArray.slice(-2, -1)[0];
@@ -199,15 +187,9 @@
 									</Column>
 									<Column noGutterRight>
 										<!-- <SlideshowGallery {supabase} bind:url /> -->
-										<ProductGallery
-											{supabase}
-											bucket="products"
-											bind:url
-											size={10}
-											on:upload={() => {
-												//profileForm.requestSubmit();
-											}}
-										/>
+										{#await streamed.images then images}
+											<Gallery {images} />
+										{/await}
 									</Column>
 								</Row>
 							</TabContent>
@@ -219,54 +201,60 @@
 								</ButtonSet>
 							</Row>
 							<Row>
-								{#if product_po}
-									<TableSkeleton
-										useStaticWidth
-										size="short"
-										headers={[
-											{ key: 'c_bpartner.name', value: 'Seller' },
-											{ key: 'vendorproductno', value: 'Seller PN' },
-											{ key: 'pricelist', value: 'Price' },
-											{ key: 'updated', value: 'Updated' },
-											{ key: 'url', value: 'URL' }
-										]}
-										rows={product_po}
-									/>
-								{/if}
+								{#await streamed.product_po then product_po}
+									{#if product_po}
+										<TableSkeleton
+											useStaticWidth
+											size="short"
+											headers={[
+												{ key: 'c_bpartner.name', value: 'Seller' },
+												{ key: 'vendorproductno', value: 'Seller PN' },
+												{ key: 'pricelist', value: 'Price' },
+												{ key: 'updated', value: 'Updated' },
+												{ key: 'url', value: 'URL' }
+											]}
+											rows={product_po}
+										/>
+									{/if}
+								{/await}
 							</Row>
 						</TabContent>
 						<TabContent>
 							<Row>
-								{#if replenish}
-									<TableSkeleton
-										useStaticWidth
-										size="short"
-										headers={[
-											{ key: 'm_warehouse_id', value: 'warehouse' },
-											{ key: 'level_min', value: 'level_min' },
-											{ key: 'level_max', value: 'level_max' },
-											{ key: 'm_warehousesource_id', value: 'm_warehousesource_id' }
-										]}
-										rows={replenish}
-									/>
-								{/if}
+								{#await streamed.replenish then replenish}
+									{#if replenish}
+										<TableSkeleton
+											useStaticWidth
+											size="short"
+											headers={[
+												{ key: 'm_warehouse_id', value: 'warehouse' },
+												{ key: 'level_min', value: 'level_min' },
+												{ key: 'level_max', value: 'level_max' },
+												{ key: 'm_warehousesource_id', value: 'm_warehousesource_id' }
+											]}
+											rows={replenish}
+										/>
+									{/if}
+								{/await}
 							</Row>
 						</TabContent>
 						<TabContent>
 							<Row>
-								{#if storageonhand}
-									<TableSkeleton
-										useStaticWidth
-										size="short"
-										headers={[
-											{ key: 'm_warehouse.code', value: 'Warehouse' },
-											{ key: 'qtyonhand', value: 'Quantity' },
-											{ key: 'created', value: 'Created' },
-											{ key: 'updated', value: 'Updated' }
-										]}
-										rows={storageonhand}
-									/>
-								{/if}
+								{#await streamed.storageonhand then storageonhand}
+									{#if storageonhand}
+										<TableSkeleton
+											useStaticWidth
+											size="short"
+											headers={[
+												{ key: 'm_warehouse.code', value: 'Warehouse' },
+												{ key: 'qtyonhand', value: 'Quantity' },
+												{ key: 'created', value: 'Created' },
+												{ key: 'updated', value: 'Updated' }
+											]}
+											rows={storageonhand}
+										/>
+									{/if}
+								{/await}
 							</Row>
 						</TabContent>
 					</svelte:fragment>
@@ -286,8 +274,10 @@
 	on:close
 	on:submit={async () => {
 		if (product?.id) {
+			console.log('new PO', newPartnerId, product.id, newVendorProductNo, newUrl);
+
 			const { error } = await supabase.from('m_product_po').insert({
-				c_bpartner_id: newC_bpartner_id,
+				c_bpartner_id: newPartnerId,
 				m_product_id: product.id,
 				vendorproductno: newVendorProductNo,
 				url: newUrl
@@ -304,19 +294,13 @@
 		<h3>Izabrani parner: {partnerName}</h3>
 		<br />
 	{/if}
-	<TextInput
-		id="vendor-id"
-		labelText="Vendor ID"
-		placeholder="Enter vendor ID..."
-		bind:value={newC_bpartner_id}
-	/>
-	<br />
 	{#if partners}
 		<ComboBox
-			titleText="Partner"
+			titleText="Vendor"
 			placeholder="Select bussines partner"
 			bind:items={partners}
 			{shouldFilterItem}
+			bind:selectedId={newPartnerId}
 		/>
 	{/if}
 	<TextInput

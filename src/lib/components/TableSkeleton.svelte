@@ -7,6 +7,7 @@
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 	import { DataTable, OverflowMenu, OverflowMenuItem, Truncate } from 'carbon-components-svelte';
+	import { formatDate, formatNumber } from '$lib/utils/format';
 	export let headers: DataTableHeader[];
 	export let rows: DataTableRow[];
 
@@ -29,21 +30,19 @@
 			<!-- {:else if cell.key.includes('price') || cell.key.includes('qty')} -->
 		{:else if typeof cell.value === 'number'}
 			<div style="text-align:right">
-				{new Intl.NumberFormat('sr-Latn-RS', {
-					minimumFractionDigits: 2,
-					maximumFractionDigits: 2
-				}).format(cell.value)}
+				{formatNumber(cell.value)}
 			</div>
 		{:else if cell.key === 'updated' || cell.key === 'created'}
-			<span
-				>{new Intl.DateTimeFormat('sr-Latn', {
+			<span>
+				{formatDate(cell.value, 'medium')}
+				<!-- 				{new Intl.DateTimeFormat('sr-Latn', {
 					day: '2-digit',
 					month: '2-digit',
 					year: '2-digit',
 					hour: '2-digit',
 					minute: '2-digit'
-				}).format(new Date(cell.value))}</span
-			>
+				}).format(new Date(cell.value))} -->
+			</span>
 		{:else if cell.key === 'name'}
 			<span>{cell.value}</span>
 		{:else if cell.key.includes('url')}
@@ -52,35 +51,9 @@
 			<OverflowMenu flipped>
 				<OverflowMenuItem
 					on:click={() => {
-						dispatch('stock', row.id);
-					}}
-					>Stock
-				</OverflowMenuItem>
-				<OverflowMenuItem
-					on:click={() => {
-						dispatch('price', row.id);
-					}}
-					>Prices
-				</OverflowMenuItem>
-				<OverflowMenuItem
-					on:click={() => {
-						dispatch('replenish', row.id);
-					}}
-					>Replenish
-				</OverflowMenuItem>
-				<OverflowMenuItem
-					on:click={() => {
 						dispatch('edit', row.id);
 					}}
 					>Edit
-				</OverflowMenuItem>
-				<OverflowMenuItem
-					danger
-					on:click={() => {
-						dispatch('delete', row.id);
-					}}
-				>
-					Delete
 				</OverflowMenuItem>
 			</OverflowMenu>
 		{:else}

@@ -2,8 +2,6 @@ import { error, type Actions, fail } from '@sveltejs/kit';
 
 export const actions = {
 	update: async ({ request, locals: { supabase, getSession } }) => {
-		const start = Date.now();
-
 		const session = await getSession();
 		if (!session) {
 			throw error(401, { message: 'Unauthorized' });
@@ -27,8 +25,6 @@ export const actions = {
 				supabaseErrorMessage: createPostError.message
 			});
 		}
-
-		console.log('Total time taken : ', Date.now() - start + ' ms');
 
 		return {
 			newPost

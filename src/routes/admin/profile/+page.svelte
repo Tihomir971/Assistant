@@ -2,15 +2,14 @@
 	import { enhance } from '$app/forms';
 	import { FormGroup, TextInput, Tile } from 'carbon-components-svelte';
 	import type { PageData } from './$types';
-	import ProductGallery from '$lib/components/ProductGallery.svelte';
+	import { Gallery } from '$lib/components/Gallery';
 
 	export let data: PageData;
-	let { session, supabase, profile } = data;
+	let { session, user, images } = data;
 
 	let profileForm: any;
 	let loading = false;
-	let name: string | null | undefined = profile?.name;
-	let url: string[] | undefined = profile?.avatar_url?.split(';');
+	let name: string | null | undefined = user?.name;
 	function handleSubmit() {
 		loading = true;
 		return async () => {
@@ -27,6 +26,7 @@
 		use:enhance={handleSubmit}
 		bind:this={profileForm}
 	>
+		{user}
 		<FormGroup>
 			<TextInput labelText="Email" type="text" value={session?.user.email} inline readonly />
 		</FormGroup>
@@ -47,15 +47,9 @@
 			<button class="button block" disabled={loading}>Sign Out</button>
 		</div>
 	</form>
-	<ProductGallery
-		{supabase}
-		bind:url
-		bucket="avatars"
-		size={10}
-		on:upload={() => {
-			//profileForm.requestSubmit();
-		}}
-	/>
+	{#if images}
+		<Gallery {images} />
+	{/if}
 	<!-- 	<Avatar
 		{supabase}
 		bind:url={avatar_url}

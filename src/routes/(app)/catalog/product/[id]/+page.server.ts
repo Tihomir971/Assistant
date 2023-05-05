@@ -2,9 +2,6 @@ import { error, type Actions, fail } from '@sveltejs/kit';
 
 export const actions = {
 	update: async ({ request, locals: { supabase, getSession } }) => {
-		console.log('update');
-		const start = Date.now();
-
 		const session = await getSession();
 		if (!session) {
 			throw error(401, { message: 'Unauthorized' });
@@ -28,22 +25,6 @@ export const actions = {
 		const isactive = formData.get('isactive') === 'true' ? true : false;
 		const discontinued = formData.get('discontinued') === 'true' ? true : false;
 
-		console.log(
-			'formdata',
-			id,
-			name,
-			sku,
-			barcode,
-			m_product_category_id,
-			m_attributeset_id,
-			condition,
-			unitsperpack,
-			unitsperpallet,
-			isselfservice,
-			isactive,
-			discontinued
-		);
-
 		const { error: createProductError } = await supabase
 			.from('m_product')
 			.update({
@@ -66,8 +47,6 @@ export const actions = {
 				supabaseErrorMessage: createProductError.message
 			});
 		}
-
-		console.log('Total time taken : ', Date.now() - start + ' ms');
 
 		return {};
 	}

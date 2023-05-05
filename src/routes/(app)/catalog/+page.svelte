@@ -57,7 +57,6 @@
 				.from('ad_note')
 				.insert([{ textMsg: `Finish: ${activeCategory?.name}`, ad_user_id: user.id }]);
 
-			console.log('Success:', data);
 			return;
 		} catch (error) {
 			if (error instanceof TypeError && error.message === 'Failed to fetch') {
@@ -97,8 +96,6 @@
 							.insert([
 								{ textMsg: `Finish researching: ${activeCategory?.name}`, ad_user_id: user.id }
 							]);
-						console.log('response', response);
-						console.log('response.text()', await response.text());
 
 						return true;
 					} else {

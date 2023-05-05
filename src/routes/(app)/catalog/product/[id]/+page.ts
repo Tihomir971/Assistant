@@ -2,9 +2,6 @@ import { redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
 export const load = (async ({ params, parent, depends }) => {
-	console.log('product id +page.ts');
-
-	console.log('Load function');
 	const { session, supabase } = await parent();
 	if (!session) {
 		throw redirect(303, '/');
@@ -45,20 +42,22 @@ export const load = (async ({ params, parent, depends }) => {
 	};
 
 	const getImages = async (id: number) => {
-		const images: string[] = [];
-		const { data } = await supabase
+		let imageURLs: string[] = [];
+		const { data: product } = await supabase
 			.from('m_product')
-			.select('id,sku,barcode,name,condition,m_product_category_id,imageurl')
+			.select('imageurl')
 			.eq('id', id)
-			.maybeSingle();
-		if (data?.imageurl) {
-			const imagesurl = data?.imageurl.split(';');
-			imagesurl.forEach(async (url) => {
-				const { data } = await supabase.storage.from('products').download(url);
-				if (data) images.push(URL.createObjectURL(data));
-			});
+			.single();
+
+		// Generate public image URLs from the Supabase bucket
+		const imageNames = product?.imageurl?.split(';');
+		if (imageNames) {
+			imageURLs = imageNames.map(
+				(imageName) => supabase.storage.from('products').getPublicUrl(imageName).data.publicUrl
+			);
 		}
-		return images;
+
+		return { imageURLs };
 	};
 
 	const getAttributeSet = async () => {
@@ -68,14 +67,15 @@ export const load = (async ({ params, parent, depends }) => {
 	};
 
 	depends('catalog:product:id');
-	//	console.log('imageUrl SSR', imageUrl, typeof imageUrl);
 	return {
 		product: getProduct(productId),
-		product_po: getProduct_po(productId),
-		replenish: getReplenish(productId),
-		storageonhand: getStorageonhand(productId),
-		images: getImages(productId),
 		attributeset: getAttributeSet(),
-		partners: getParners()
+		partners: getParners(),
+		streamed: {
+			images: getImages(productId),
+			product_po: getProduct_po(productId),
+			replenish: getReplenish(productId),
+			storageonhand: getStorageonhand(productId)
+		}
 	};
 }) satisfies PageLoad;

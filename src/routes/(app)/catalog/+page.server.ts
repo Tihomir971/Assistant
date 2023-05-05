@@ -8,10 +8,8 @@ export const actions: Actions = {
 		if (!session) {
 			throw error(401, { message: 'Unauthorized' });
 		}
-		console.log('url', url);
 
 		const activeCategoryId = url.searchParams.get('wh');
-		//console.log('activeCategoryId', wh);
 		if (!activeCategoryId) return;
 
 		const title = 'Market research';
