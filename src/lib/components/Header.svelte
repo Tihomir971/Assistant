@@ -18,7 +18,7 @@
 	} from 'carbon-components-svelte';
 	import { Email, Login, UserAvatar } from 'carbon-icons-svelte';
 
-	let selectedWarehouseId = $page.url.searchParams.get('wh');
+	let selectedWarehouseId = $page.url.searchParams.get('wh') || '5';
 
 	let loading = false;
 	const handleLogout: SubmitFunction = () => {
@@ -51,7 +51,7 @@
 	<HeaderNav>
 		{#if $page.data.session}
 			<HeaderNavItem
-				href="/catalog"
+				href="/catalog?wh={selectedWarehouseId}"
 				text="Products"
 				isSelected={$page.url.pathname === '/catalog'}
 			/>
