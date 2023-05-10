@@ -57,9 +57,9 @@
 			/>
 
 			<HeaderNavItem
-				href="/catalog/report/replenish"
-				text="Replenish"
-				isSelected={$page.url.pathname === '/catalog/report/replenish'}
+				href="/catalog/price"
+				text="Price"
+				isSelected={$page.url.pathname === '/catalog/price'}
 			/>
 			<HeaderNavMenu text="Admin">
 				<HeaderNavItem

@@ -6,7 +6,7 @@
 	import Toast from '$lib/components/toast/Toast.svelte';
 	import 'carbon-components-svelte/css/g90.css';
 	import 'open-props/style';
-	import 'open-props/normalize';
+	//	import 'open-props/normalize';
 	import 'open-props/buttons';
 	import Header from '$lib/components/Header.svelte';
 
