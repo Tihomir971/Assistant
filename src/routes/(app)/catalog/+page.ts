@@ -7,6 +7,7 @@ type Product = {
 	name: string | null;
 	qtyonhand: number;
 	pricePurchase: number;
+	oldPriceMarket?: number;
 	priceMarket?: number;
 	priceRetail: number;
 	priceRecommended?: number;
@@ -26,7 +27,7 @@ export const load = (async ({ parent, depends, url }) => {
 	const activeCategoryId = url.searchParams.get('cat') ? Number(url.searchParams.get('cat')) : null;
 
 	const columns =
-		'id,barcode,mpn,sku,name,c_taxcategory_id,c_uom_id,m_storageonhand(qtyonhand),qPriceRetail:m_productprice(pricestd),qPricePurchase:m_productprice(pricestd),m_product_po(pricelist),c_taxcategory(c_tax(rate))';
+		'id,barcode,mpn,sku,name,c_taxcategory_id,c_uom_id,m_storageonhand(qtyonhand),qPriceRetail:m_productprice(pricestd),qPricePurchase:m_productprice(pricestd),qPriceMarket:m_productprice(pricelist),m_product_po(pricelist),c_taxcategory(c_tax(rate))';
 
 	let query = supabase
 		.from('m_product')
@@ -35,13 +36,15 @@ export const load = (async ({ parent, depends, url }) => {
 		.eq('producttype', 'I')
 		.eq('m_storageonhand.warehouse_id', activeWarehouseId)
 		.eq('qPriceRetail.m_pricelist_version_id', 13)
-		.eq('qPricePurchase.m_pricelist_version_id', 5);
+		.eq('qPricePurchase.m_pricelist_version_id', 5)
+		.eq('qPriceMarket.m_pricelist_version_id', 15);
 	query =
 		typeof activeCategoryId === 'number'
 			? query.eq('m_product_category_id', activeCategoryId)
 			: query.is('m_product_category_id', null);
 
 	const { data } = await query;
+	console.log('data', data);
 
 	const products: Product[] = [];
 	data?.forEach((product) => {
@@ -55,6 +58,7 @@ export const load = (async ({ parent, depends, url }) => {
 			m_storageonhand,
 			qPriceRetail,
 			qPricePurchase,
+			qPriceMarket,
 			m_product_po
 		} = product;
 		// Assign quantity  for product if exist
@@ -75,6 +79,16 @@ export const load = (async ({ parent, depends, url }) => {
 			const { pricestd } = qPriceRetail[0];
 			priceRetail = pricestd;
 		}
+		console.log('qPriceMarket', qPriceMarket);
+
+		// Assign retail price for product if exist
+		let priceMarket = 0;
+		if (Array.isArray(qPriceMarket) && qPriceMarket?.length !== 0) {
+			const { pricelist } = qPriceMarket[0];
+			if (pricelist) {
+				priceMarket = pricelist;
+			}
+		}
 
 		// Assign quantity  for product if exist
 		let pricePurchase = 0;
@@ -84,10 +98,10 @@ export const load = (async ({ parent, depends, url }) => {
 		}
 
 		// Assign quantity  for product if exist
-		let priceMarket = 0;
+		let oldPriceMarket = 0;
 		if (Array.isArray(m_product_po) && m_product_po?.length > 0) {
 			const { pricelist } = m_product_po[0];
-			priceMarket = pricelist;
+			oldPriceMarket = pricelist;
 		}
 
 		let priceRecommended = 0;
@@ -114,6 +128,7 @@ export const load = (async ({ parent, depends, url }) => {
 			qtyonhand: qtyonhand,
 			priceRetail: priceRetail,
 			pricePurchase: pricePurchase,
+			oldPriceMarket: oldPriceMarket,
 			priceMarket: priceMarket,
 			priceRecommended: priceRecommended,
 			mpn: mpn,
