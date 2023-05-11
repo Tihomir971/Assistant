@@ -290,10 +290,6 @@
 		openProduct_po = false;
 	}}
 >
-	{#if partnerName}
-		<h3>Izabrani parner: {partnerName}</h3>
-		<br />
-	{/if}
 	{#if partners}
 		<ComboBox
 			titleText="Vendor"
@@ -317,4 +313,8 @@
 		bind:value={newUrl}
 		on:blur={searchPartner}
 	/>
+	{#if partnerName}
+		<h3>Izabrani parner: {partnerName}</h3>
+		<br />
+	{/if}
 </Modal>
