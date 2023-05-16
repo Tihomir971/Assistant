@@ -27,7 +27,7 @@ export const load = (async ({ parent, depends, url }) => {
 	const activeCategoryId = url.searchParams.get('cat') ? Number(url.searchParams.get('cat')) : null;
 
 	const columns =
-		'id,barcode,mpn,sku,name,c_taxcategory_id,c_uom_id,m_storageonhand(qtyonhand),qPriceRetail:m_productprice(pricestd),qPricePurchase:m_productprice(pricestd),qPriceMarket:m_productprice(pricelist),m_product_po(pricelist),c_taxcategory(c_tax(rate))';
+		'id,barcode,mpn,sku,name,c_taxcategory_id,c_uom_id,m_storageonhand(qtyonhand),qPriceRetail:m_productprice(pricestd),qPricePurchase:m_productprice(pricestd),qPriceMarket:m_productprice(pricelist),c_taxcategory(c_tax(rate))';
 
 	let query = supabase
 		.from('m_product')
@@ -58,8 +58,7 @@ export const load = (async ({ parent, depends, url }) => {
 			m_storageonhand,
 			qPriceRetail,
 			qPricePurchase,
-			qPriceMarket,
-			m_product_po
+			qPriceMarket
 		} = product;
 		// Assign quantity  for product if exist
 		let qtyonhand = 0;
@@ -97,13 +96,6 @@ export const load = (async ({ parent, depends, url }) => {
 			pricePurchase = pricestd * (1 + taxRate);
 		}
 
-		// Assign quantity  for product if exist
-		let oldPriceMarket = 0;
-		if (Array.isArray(m_product_po) && m_product_po?.length > 0) {
-			const { pricelist } = m_product_po[0];
-			oldPriceMarket = pricelist;
-		}
-
 		let priceRecommended = 0;
 		if (priceMarket === 0) {
 			priceRecommended = pricePurchase * 1.3;
@@ -128,7 +120,6 @@ export const load = (async ({ parent, depends, url }) => {
 			qtyonhand: qtyonhand,
 			priceRetail: priceRetail,
 			pricePurchase: pricePurchase,
-			oldPriceMarket: oldPriceMarket,
 			priceMarket: priceMarket,
 			priceRecommended: priceRecommended,
 			mpn: mpn,

@@ -42,7 +42,7 @@
 
 {#if category}
 	<Tile>
-		<form method="POST" action="?/update">
+		<form method="POST" action="?/update" use:enhance>
 			<FormGroup>
 				<TextInput readonly bind:value={category.id} name="id" labelText="Category ID" />
 			</FormGroup>

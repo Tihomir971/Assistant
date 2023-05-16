@@ -132,10 +132,6 @@
 				value: 'Purchase'
 			},
 			{
-				key: 'oldPriceMarket',
-				value: 'Old'
-			},
-			{
 				key: 'priceMarket',
 				value: 'Market'
 			},
