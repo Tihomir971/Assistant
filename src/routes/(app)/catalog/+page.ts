@@ -7,7 +7,6 @@ type Product = {
 	name: string | null;
 	qtyonhand: number;
 	pricePurchase: number;
-	oldPriceMarket?: number;
 	priceMarket?: number;
 	priceRetail: number;
 	priceRecommended?: number;
@@ -44,7 +43,6 @@ export const load = (async ({ parent, depends, url }) => {
 			: query.is('m_product_category_id', null);
 
 	const { data } = await query;
-	console.log('data', data);
 
 	const products: Product[] = [];
 	data?.forEach((product) => {
@@ -78,7 +76,6 @@ export const load = (async ({ parent, depends, url }) => {
 			const { pricestd } = qPriceRetail[0];
 			priceRetail = pricestd;
 		}
-		console.log('qPriceMarket', qPriceMarket);
 
 		// Assign retail price for product if exist
 		let priceMarket = 0;
